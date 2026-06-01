@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+.venv/
+venv/
+.env
+.pytest_cache/
+.mypy_cache/
+coverage.xml
+htmlcov/
+
+# VS Code
+.vscode/
+
+# Azure / IaC outputs
+.azure/
+*.bicepparam
+*.tfstate
+*.tfstate.*
+
+# OS
+.DS_Store
+Thumbs.db
