@@ -1,0 +1,7 @@
+name: foundry-agentic-workshop
+metadata:
+  template: foundry-agentic-workshop@0.0.1
+infra:
+  provider: terraform
+  path: infra
+services: {}

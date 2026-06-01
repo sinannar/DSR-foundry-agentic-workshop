@@ -1,7 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-RESOURCE_GROUP="${1:-rg-foundry-hol}"
-az group delete --name "$RESOURCE_GROUP" --yes --no-wait
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+ENV_NAME="${1:-hol}"
 
-echo "Teardown started for $RESOURCE_GROUP"
+pushd "$REPO_ROOT" >/dev/null
+azd env select "$ENV_NAME"
+azd down --force --purge --no-prompt
+popd >/dev/null
+
+echo "azd down complete for environment '$ENV_NAME'"

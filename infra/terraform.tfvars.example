@@ -1,0 +1,9 @@
+location                = "australiaeast"
+env_name                = "hol"
+resource_group_name     = "rg-foundry-hol"
+attendee_count          = 20
+attendee_project_prefix = "attendee"
+foundry_name            = "foundryhol001"
+foundry_sku             = "S0"
+search_name             = "foundryholsearch001"
+storage_account_name    = "foundryholstorage01"
