@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+.venv/
+venv/
+.env
+.pytest_cache/
+.mypy_cache/
+coverage.xml
+htmlcov/
+
+# VS Code
+.vscode/
+
+# Azure / IaC outputs
+.azure/
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+crash.log
+crash.*.log
+
+# OS
+.DS_Store
+Thumbs.db
