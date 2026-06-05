@@ -2,16 +2,27 @@
   "name": "foundry-agentic-workshop",
   "version": "1.0.0",
   "private": true,
+<<<<<<< HEAD
   "type": "module",
   "scripts": {
     "lint:md": "markdownlint-cli2 \"**/*.md\" \"#node_modules\" \"#.git\" \"#infra/.terraform\"",
     "lint:md:fix": "markdownlint-cli2 --fix \"**/*.md\" \"#node_modules\" \"#.git\" \"#infra/.terraform\"",
     "lint:md:ci": "markdownlint-cli2 \"**/*.md\" \"#node_modules\" \"#.git\" \"#infra/.terraform\""
+=======
+  "scripts": {
+    "lint:md": "markdownlint-cli2 \"**/*.md\" \"#node_modules\"",
+    "lint:md:fix": "markdownlint-cli2 --fix \"**/*.md\" \"#node_modules\"",
+    "lint:md:ci": "markdownlint-cli2 \"**/*.md\" \"#node_modules\""
+>>>>>>> fa338068585d5e87950fd32d4e1586414bffef83
   },
   "devDependencies": {
     "markdownlint-cli2": "^0.22.1"
   },
+<<<<<<< HEAD
   "description": "Microsoft Foundry Agentic Workshop",
+=======
+  "description": "Azure AI Foundry Agentic Workshop",
+>>>>>>> fa338068585d5e87950fd32d4e1586414bffef83
   "repository": {
     "type": "git",
     "url": "git+https://github.com/PlagueHO/foundry-agentic-workshop.git"

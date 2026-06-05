@@ -34,6 +34,9 @@ pnpm-debug.log*
 crash.log
 crash.*.log
 
+# Node.js
+node_modules/
+
 # OS
 .DS_Store
 Thumbs.db

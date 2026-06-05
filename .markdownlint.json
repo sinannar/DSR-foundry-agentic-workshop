@@ -1,14 +1,25 @@
 {
     "default": true,
+<<<<<<< HEAD
     "MD029": {
         "style": "one"
     },
+=======
+>>>>>>> fa338068585d5e87950fd32d4e1586414bffef83
     "MD013": false,
     "MD024": {
         "siblings_only": true
     },
+<<<<<<< HEAD
     "MD033": {
         "allowed_elements": ["ValidationError", "T", "Babble", "Template", "GeneratedPrompt", "LLMSettings", "Api", "string", "br"]
+=======
+    "MD029": {
+        "style": "one"
+    },
+    "MD033": {
+        "allowed_elements": ["br", "kbd"]
+>>>>>>> fa338068585d5e87950fd32d4e1586414bffef83
     },
     "MD034": true,
     "MD036": false,

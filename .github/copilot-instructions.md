@@ -15,6 +15,7 @@ Apply these instructions to generated code, Markdown edits, and PRs.
 ## Security and Safety Rules
 
 - Never commit secrets, tokens, keys, or connection strings.
+<<<<<<< HEAD
 - Keep credentials in environment variables and document only placeholder values.
 - Treat shared/.env.example as the source of truth for expected environment variable names.
 - Avoid destructive infrastructure guidance in docs unless explicitly requested and clearly labeled.
@@ -53,3 +54,39 @@ Apply these instructions to generated code, Markdown edits, and PRs.
 - Avoid broad refactors that touch multiple labs without a clear need.
 - Avoid introducing framework or language changes that break Python-first workshop flow.
 - Avoid introducing conflicting terms for the same Foundry concept across docs.
+=======
+- Keep workshop content aligned to Azure AI Foundry terminology and workflows.
+- Prefer small, reviewable changes that preserve numbered lab progression.
+
+## Markdown linting
+
+All `.md` files are linted with [markdownlint-cli2](https://github.com/DavidAnson/markdownlint-cli2).
+
+### Running locally
+
+```bash
+# Check for issues
+npm run lint:md
+
+# Auto-fix issues
+npm run lint:md:fix
+```
+
+### VS Code integration
+
+Install the [markdownlint extension](https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint) (`DavidAnson.vscode-markdownlint`) to see lint errors inline as you edit.
+
+### Key rules
+
+Configuration lives in `.markdownlint.json` and `.markdownlint-cli2.jsonc`. Notable settings:
+
+- **MD013** (line length): disabled — no line length limit.
+- **MD024** (duplicate headings): siblings only — duplicate headings allowed if not siblings.
+- **MD029** (ordered list style): `one` — all list items use `1.`.
+- **MD033** (inline HTML): only `br` and `kbd` are permitted.
+- **MD041** (first line heading): disabled — files need not start with a heading.
+
+### CI
+
+The `lint-markdown` workflow runs automatically on push and pull requests that touch `.md` files. Fix all issues before merging.
+>>>>>>> fa338068585d5e87950fd32d4e1586414bffef83
