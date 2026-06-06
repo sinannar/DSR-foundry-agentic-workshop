@@ -23,12 +23,12 @@ This repository scaffolds a **3–4 hour, L200–L300 instructor-led workshop** 
 | Module | Topic | Duration (min) |
 |---|---|---:|
 | 00 | Setup and access validation | 20 |
-| 01 | Hosted agents (framework-orchestrated ReAct + tools) | 30 |
+| 01 | Foundry Toolkit for VS Code tasks | 20 |
 | 02 | Prompt-based agents (prompt-orchestrated ReAct + tools) | 30 |
-| 03 | Multi-agent-as-tools patterns | 30 |
-| 04 | Microsoft Agent Framework (Python) | 25 |
-| 05 | Foundry IQ retrieval across enterprise sources | 30 |
-| 06 | Foundry Toolkit for VS Code tasks | 20 |
+| 03 | Hosted agents (framework-orchestrated ReAct + tools) | 30 |
+| 04 | Multi-agent-as-tools patterns | 30 |
+| 05 | Microsoft Agent Framework (Python) | 25 |
+| 06 | Foundry IQ retrieval across enterprise sources | 30 |
 | 07 | Foundry Toolboxes (optional) | 15 |
 | 08 | Agent ID and publishing | 20 |
 
@@ -38,12 +38,12 @@ Use this mapping to align each lab with relevant Microsoft Build 2026 sessions.
 
 | Module | Recommended session(s) | Why it fits |
 |---|---|---|
-| 01 Hosted agents | [BRK243](https://build.microsoft.com/en-US/sessions/BRK243), [BRK241](https://build.microsoft.com/en-US/sessions/BRK241) | Hosted agent architecture, runtime patterns, and production scale guidance |
+| 01 Foundry Toolkit for VS Code | [LTG461](https://build.microsoft.com/en-US/sessions/LTG461), [LTG424](https://build.microsoft.com/en-US/sessions/LTG424) | Practical VS Code toolkit workflows for building and hardening agents |
 | 02 Prompt-based agents | [BRK230](https://build.microsoft.com/en-US/sessions/BRK230) | Prompt-centric design in Foundry with model and cost trade-offs |
-| 03 Multi-agent-as-tools | [DEM312](https://build.microsoft.com/en-US/sessions/DEM312), [BRK240](https://build.microsoft.com/en-US/sessions/BRK240) | Multi-agent orchestration and context-aware decision flows |
-| 04 Agent Framework (Python) | [DEM361](https://build.microsoft.com/en-US/sessions/DEM361), [BRK250](https://build.microsoft.com/en-US/sessions/BRK250) | Agent Framework debugging, observability, and cross-framework control |
-| 05 Foundry IQ | [BRK246](https://build.microsoft.com/en-US/sessions/BRK246), [LAB532](https://build.microsoft.com/en-US/sessions/LAB532) | Enterprise retrieval, grounding, and agent-ready knowledge workflows |
-| 06 Foundry Toolkit for VS Code | [LTG461](https://build.microsoft.com/en-US/sessions/LTG461), [LTG424](https://build.microsoft.com/en-US/sessions/LTG424) | Practical VS Code toolkit workflows for building and hardening agents |
+| 03 Hosted agents | [BRK243](https://build.microsoft.com/en-US/sessions/BRK243), [BRK241](https://build.microsoft.com/en-US/sessions/BRK241) | Hosted agent architecture, runtime patterns, and production scale guidance |
+| 04 Multi-agent-as-tools | [DEM312](https://build.microsoft.com/en-US/sessions/DEM312), [BRK240](https://build.microsoft.com/en-US/sessions/BRK240) | Multi-agent orchestration and context-aware decision flows |
+| 05 Agent Framework (Python) | [DEM361](https://build.microsoft.com/en-US/sessions/DEM361), [BRK250](https://build.microsoft.com/en-US/sessions/BRK250) | Agent Framework debugging, observability, and cross-framework control |
+| 06 Foundry IQ | [BRK246](https://build.microsoft.com/en-US/sessions/BRK246), [LAB532](https://build.microsoft.com/en-US/sessions/LAB532) | Enterprise retrieval, grounding, and agent-ready knowledge workflows |
 | 07 Foundry Toolboxes | [LIVE163](https://build.microsoft.com/en-US/sessions/LIVE163) | Tool discovery, governance, and toolbox integration patterns |
 | 08 Agent ID and publishing | [DEM340](https://build.microsoft.com/en-US/sessions/DEM340), [LTG422](https://build.microsoft.com/en-US/sessions/LTG422) | Work-ready agent governance, identity, and publishing/monetization pathways |
 

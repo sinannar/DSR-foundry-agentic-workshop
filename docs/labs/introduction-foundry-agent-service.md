@@ -7,11 +7,11 @@ The module pages are generated automatically during docs build and preview from 
 ## Modules
 
 1. Lab 00 Setup
-1. Lab 01 Hosted Agents
+1. Lab 01 Foundry Toolkit VS Code
 1. Lab 02 Prompt-based Agents
-1. Lab 03 Multi-agent as Tools
-1. Lab 04 Agent Framework Python
-1. Lab 05 Foundry IQ
-1. Lab 06 Foundry Toolkit VS Code
+1. Lab 03 Hosted Agents
+1. Lab 04 Multi-agent as Tools
+1. Lab 05 Agent Framework Python
+1. Lab 06 Foundry IQ
 1. Lab 07 Foundry Toolboxes
 1. Lab 08 Agent ID and Publishing
