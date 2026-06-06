@@ -11,7 +11,10 @@
                 "kind": "build",
                 "isDefault": false
             },
-            "icon": { "id": "check" },
+            "icon": {
+                "id": "symbol-method",
+                "color": "terminal.ansiBlue"
+            },
             "presentation": { "reveal": "always" },
             "problemMatcher": []
         },
@@ -24,7 +27,10 @@
                 "kind": "build",
                 "isDefault": false
             },
-            "icon": { "id": "check" },
+            "icon": {
+                "id": "symbol-constant",
+                "color": "terminal.ansiCyan"
+            },
             "problemMatcher": ["$python"],
             "presentation": { "reveal": "always" }
         },
@@ -37,7 +43,10 @@
                 "kind": "build",
                 "isDefault": true
             },
-            "icon": { "id": "tools" },
+            "icon": {
+                "id": "tools",
+                "color": "terminal.ansiYellow"
+            },
             "problemMatcher": ["$python"]
         },
         {
@@ -49,7 +58,10 @@
                 "kind": "build",
                 "isDefault": false
             },
-            "icon": { "id": "check" },
+            "icon": {
+                "id": "symbol-class",
+                "color": "terminal.ansiMagenta"
+            },
             "problemMatcher": ["$python"]
         },
 
@@ -63,16 +75,23 @@
                 "kind": "test",
                 "isDefault": true
             },
-            "icon": { "id": "beaker" },
+            "icon": {
+                "id": "beaker",
+                "color": "terminal.ansiGreen"
+            },
             "problemMatcher": ["$python"]
         },
 
         // Bicep tasks
         {
-            "label": "bicep: build",
+            "label": "infra: build (bicep)",
             "type": "shell",
-            "command": "az",
-            "args": ["bicep", "build", "--file", "main.bicep"],
+            "command": "pwsh",
+            "args": [
+              "-NoProfile",
+              "-Command",
+              "Get-ChildItem -Path infra -Recurse -Filter '*.bicep' | ForEach-Object { Write-Host \"Building $($_.FullName)...\"; az bicep build --file $($_.FullName) }"
+            ],
             "options": {
                 "cwd": "${workspaceFolder}/infra"
             },
@@ -81,14 +100,17 @@
                 "kind": "build",
                 "isDefault": false
             },
-            "icon": { "id": "server-environment" },
+            "icon": {
+                "id": "server-environment",
+                "color": "terminal.ansiBlue"
+            },
             "presentation": {
                 "reveal": "always",
                 "panel": "shared"
             }
         },
         {
-            "label": "bicep: lint",
+            "label": "infra: lint (bicep)",
             "type": "shell",
             "command": "az",
             "args": ["bicep", "lint", "--file", "main.bicep"],
@@ -100,7 +122,10 @@
                 "kind": "build",
                 "isDefault": false
             },
-            "icon": { "id": "check" },
+            "icon": {
+                "id": "pass",
+                "color": "terminal.ansiCyan"
+            },
             "presentation": {
                 "reveal": "always",
                 "panel": "shared"
@@ -115,7 +140,28 @@
                 "cwd": "${workspaceFolder}"
             },
             "problemMatcher": [],
-            "icon": { "id": "play" },
+            "icon": {
+                "id": "tools",
+                "color": "terminal.ansiBlue"
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "azd: up",
+            "type": "shell",
+            "command": "azd",
+            "args": ["up"],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "icon": {
+                "id": "rocket",
+                "color": "terminal.ansiGreen"
+            },
             "presentation": {
                 "reveal": "always",
                 "panel": "shared"
@@ -130,7 +176,10 @@
                 "cwd": "${workspaceFolder}"
             },
             "problemMatcher": [],
-            "icon": { "id": "trash" },
+            "icon": {
+                "id": "trash",
+                "color": "terminal.ansiRed"
+            },
             "presentation": {
                 "reveal": "always",
                 "panel": "shared"
@@ -152,7 +201,8 @@
                 "isDefault": false
             },
             "icon": {
-                "id": "repo-pull"
+                "id": "repo-pull",
+                "color": "terminal.ansiBlue"
             },
             "presentation": {
                 "reveal": "always",
@@ -173,7 +223,8 @@
                 "isDefault": false
             },
             "icon": {
-                "id": "book"
+                "id": "book",
+                "color": "terminal.ansiCyan"
             },
             "presentation": {
                 "reveal": "always",
@@ -194,7 +245,7 @@
             "group": "test",
             "icon": {
                 "id": "checklist",
-                "color": "terminal.ansiMagenta"
+                "color": "terminal.ansiYellow"
             },
             "presentation": {
                 "reveal": "always",
