@@ -6,7 +6,7 @@
             "label": "python: ruff check",
             "type": "shell",
             "command": "${command:python.interpreterPath}",
-            "args": ["-m", "ruff", "check", "tools/python/src/", "samples/python/src/"],
+            "args": ["-m", "ruff", "check", "labs/", "scripts/", "shared/"],
             "group": {
                 "kind": "build",
                 "isDefault": false
@@ -19,7 +19,7 @@
             "label": "python: flake8",
             "type": "shell",
             "command": "${command:python.interpreterPath}",
-            "args": ["-m", "flake8", "tools/python/src/", "samples/python/src/"],
+            "args": ["-m", "flake8", "labs/", "scripts/", "shared/"],
             "group": {
                 "kind": "build",
                 "isDefault": false
@@ -32,7 +32,7 @@
             "label": "python: pylint",
             "type": "shell",
             "command": "${command:python.interpreterPath}",
-            "args": ["-m", "pylint", "tools/python/src/", "samples/python/src/"],
+            "args": ["-m", "pylint", "labs/", "scripts/", "shared/"],
             "group": {
                 "kind": "build",
                 "isDefault": true
@@ -44,7 +44,7 @@
             "label": "python: mypy",
             "type": "shell",
             "command": "${command:python.interpreterPath}",
-            "args": ["-m", "mypy", "tools/python/src/", "samples/python/src/"],
+            "args": ["-m", "mypy", "labs/", "scripts/", "shared/"],
             "group": {
                 "kind": "build",
                 "isDefault": false
@@ -58,7 +58,7 @@
             "label": "python: test",
             "type": "shell",
             "command": "${command:python.interpreterPath}",
-            "args": ["-m", "pytest", "tools/python/tests/", "samples/python/tests/"],
+            "args": ["-m", "pytest", "labs/", "scripts/", "shared/"],
             "group": {
                 "kind": "test",
                 "isDefault": true
@@ -176,6 +176,50 @@
             },
             "problemMatcher": [],
             "icon": { "id": "trash" },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+
+        // Docs tasks
+        {
+            "label": "docs: generate-labs",
+            "type": "shell",
+            "command": "pnpm",
+            "args": ["run", "docs:generate-labs"],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "icon": {
+                "id": "repo-pull"
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "docs: build",
+            "type": "shell",
+            "command": "pnpm",
+            "args": ["run", "docs:build"],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "icon": {
+                "id": "book"
+            },
             "presentation": {
                 "reveal": "always",
                 "panel": "shared"

@@ -12,19 +12,11 @@
   "ignores": [
     "**/node_modules/**",
     "**/coverage/**",
-<<<<<<< HEAD
-    "**/TestResults/**",
     "**/.vscode/**",
-    "**/.github/**",
-    "**/prompt-babbler-app/**",
-    "**/prompt-babbler-service/**"
+    "**/.github/instructions/**",
+    "**/.azure/**",
+    "**/.terraform/**"
   ],
-  // Fix mode settings
-  "fix": true,
-=======
-    "**/.vscode/**"
-  ],
->>>>>>> fa338068585d5e87950fd32d4e1586414bffef83
   // Output formatting
   "outputFormatters": [
     [

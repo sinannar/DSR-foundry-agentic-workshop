@@ -1,6 +1,6 @@
 ---
 title: Agent Operating Guide
-description: Operating guidance for AI agents in the Azure AI Foundry workshop repo.
+description: Operating guidance for AI agents in the Microsoft Foundry workshop repo.
 author: Foundry Agentic Workshop Maintainers
 ms.date: 2026-06-06
 ms.topic: how-to
@@ -8,7 +8,7 @@ ms.topic: how-to
 
 ## Scope
 
-This repository hosts an instructor-led Azure AI Foundry workshop with numbered labs, Terraform, and shared Python utilities.
+This repository hosts an instructor-led Microsoft Foundry workshop with numbered labs, Terraform, and shared Python utilities.
 
 ## Repository Layout
 

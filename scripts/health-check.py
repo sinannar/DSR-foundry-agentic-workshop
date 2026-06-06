@@ -1,6 +1,7 @@
 """Basic workshop environment health check."""
 
 import os
+import subprocess
 import sys
 
 REQUIRED_ENV_VARS = [
@@ -19,7 +20,26 @@ def main() -> int:
             print(f'- {name}')
         return 1
 
-    print('Environment variables look good. Next: validate az login and Foundry access.')
+    try:
+        subscription_id = subprocess.check_output(
+            ['az', 'account', 'show', '--query', 'id', '-o', 'tsv'],
+            text=True,
+            stderr=subprocess.STDOUT,
+        ).strip()
+    except (FileNotFoundError, subprocess.CalledProcessError):
+        print('Azure CLI check failed. Run `az login` and ensure `az` is installed.')
+        return 1
+
+    configured_subscription = os.getenv('AZURE_SUBSCRIPTION_ID', '').strip()
+    if configured_subscription and subscription_id != configured_subscription:
+        print('AZURE_SUBSCRIPTION_ID does not match the active Azure CLI subscription.')
+        print(f'- Active: {subscription_id}')
+        print(f'- Expected: {configured_subscription}')
+        print('Run `az account set --subscription <AZURE_SUBSCRIPTION_ID>` and try again.')
+        return 1
+
+    print('Environment variables and Azure CLI context look good.')
+    print('Next: run the lab setup in labs/agent-service-introduction/00-setup.')
     return 0
 
 

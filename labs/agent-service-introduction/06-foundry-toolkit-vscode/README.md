@@ -3,7 +3,7 @@
 ## Objectives
 
 - Understand the module outcome.
-- Complete the guided build with Azure AI Foundry.
+- Complete the guided build with Microsoft Foundry.
 - Validate behavior before moving to the next module.
 
 ## Steps

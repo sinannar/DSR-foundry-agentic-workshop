@@ -4,4 +4,8 @@ metadata:
 infra:
   provider: terraform
   path: infra
+hooks:
+  postprovision:
+    shell: sh
+    run: python scripts/seed-search-index.py
 services: {}

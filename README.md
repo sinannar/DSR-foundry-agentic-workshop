@@ -1,12 +1,12 @@
-# Azure AI Foundry Agentic Workshop (HOL)
+# Microsoft Foundry Agentic Workshop (HOL)
 
-This repository scaffolds a **3–4 hour, L200–L300 instructor-led workshop** for building agentic solutions on **Azure AI Foundry**.
+This repository scaffolds a **3–4 hour, L200–L300 instructor-led workshop** for building agentic solutions on **Microsoft Foundry**.
 
 ## Audience
 
 - Software engineers and technical data scientists
 - Comfortable with Azure basics
-- Mostly new to Azure AI Foundry
+- Mostly new to Microsoft Foundry
 
 ## Prerequisites
 
@@ -50,16 +50,94 @@ Use this mapping to align each lab with relevant Microsoft Build 2026 sessions.
 
 If sessions are repeated or updated during the event, keep the same session code links and adjust your facilitation schedule based on the latest time slot in the Build portal.
 
-## Attendee setup flow
+## Quick start for lab organizers
 
-1. Deploy shared environment from `infra/` using `azd provision`.
-1. Assign each attendee their parameterized Foundry project.
-<<<<<<< HEAD
-1. Complete `labs/00-setup` to verify auth, tools, and project access.
-=======
-1. Complete `labs/agent-service-introduction/00-setup` to verify auth, tools, and project access.
->>>>>>> fa338068585d5e87950fd32d4e1586414bffef83
-1. Progress through labs in numerical order.
+Use this path when one organizer deploys a shared environment for multiple learners.
+
+1. Sign in to Azure and azd.
+
+```bash
+az login
+azd auth login
+```
+
+1. Select or create an azd environment name.
+
+```bash
+azd env new hol-shared
+azd env select hol-shared
+```
+
+1. Set core Terraform variables.
+
+```bash
+azd env set AZURE_LOCATION australiaeast
+azd env set TF_VAR_location australiaeast
+azd env set TF_VAR_env_name hol-shared
+azd env set TF_VAR_resource_group_name rg-foundry-hol-shared
+azd env set TF_VAR_attendee_count 20
+azd env set TF_VAR_attendee_project_prefix attendee
+```
+
+1. Optional: set RBAC profile and attendee identities.
+
+```bash
+azd env set TF_VAR_attendee_access_profile project-user
+azd env set TF_VAR_attendee_user_principal_names '["learner1@contoso.com","learner2@contoso.com"]'
+```
+
+Use `project-user` for least-privilege labs (00-07). For publishing scenarios in lab 08, switch to `project-publisher`.
+
+1. Provision infrastructure.
+
+```bash
+azd up
+```
+
+1. View project assignments and share each learner's `FOUNDRY_PROJECT_NAME` value.
+
+```bash
+cd infra
+terraform output attendee_project_assignments
+```
+
+1. Tear down when the workshop is finished.
+
+```bash
+azd down --force --purge
+```
+
+## Quick start for learners
+
+Use this path when an organizer has already deployed shared infrastructure.
+
+1. Copy `shared/.env.example` to a local `.env` file and fill in assigned values:
+   - `AZURE_SUBSCRIPTION_ID`
+   - `AZURE_RESOURCE_GROUP`
+   - `FOUNDRY_RESOURCE_NAME`
+   - `FOUNDRY_PROJECT_NAME`
+   - `AZURE_SEARCH_SERVICE_NAME`
+
+1. Sign in and confirm the correct subscription is active.
+
+```bash
+az login
+az account set --subscription <your-subscription-id>
+```
+
+1. Run the environment check.
+
+```bash
+python scripts/health-check.py
+```
+
+1. Complete `labs/agent-service-introduction/00-setup` first, then progress through labs 01-08 in order.
+
+## Multi-environment model
+
+- Shared environment model: one organizer deploys a shared Foundry account with multiple attendee projects.
+- Per-learner environment model: each learner runs `azd env new <name>` with `TF_VAR_attendee_count=1`.
+- Environments are isolated by azd environment name and resource group naming.
 
 ## Cost note
 
@@ -67,21 +145,26 @@ Plan for approximately **AUD 50/day** for a sandbox environment, depending on re
 
 ## Reset between runs
 
-Use `infra/teardown.sh` or `infra/teardown.ps1` to remove workshop resources between instructor deliveries, then redeploy with updated attendee count.
+Use `azd down --force --purge` to remove workshop resources between deliveries, then redeploy with updated attendee count.
 
 ## Infrastructure deployment (Terraform + azd)
 
 The infrastructure is defined in Terraform using:
 
 - **Azure Verified Modules (AVM)** for Foundry account, Azure AI Search, and Storage
-- **AzAPI** for Azure AI Foundry project child resources and Foundry-to-Search connection
+- **AzAPI** for Microsoft Foundry project child resources and Foundry-to-Search connection
 
 ### Quick start
 
 ```bash
 az login
 azd auth login
-./infra/deploy.sh hol australiaeast rg-foundry-hol 20
+azd env new hol
+azd env set TF_VAR_location australiaeast
+azd env set TF_VAR_env_name hol
+azd env set TF_VAR_resource_group_name rg-foundry-hol
+azd env set TF_VAR_attendee_count 20
+azd up
 ```
 
 ### Optional custom naming
@@ -98,13 +181,13 @@ azd provision
 ### Teardown
 
 ```bash
-./infra/teardown.sh hol
+azd down --force --purge
 ```
 
 ## Repository layout
 
 - `.github/` Copilot guidance and issue/PR templates
-- `infra/` Terraform IaC (AVM + AzAPI), azd-friendly deploy wrappers
+- `infra/` Terraform IaC (AVM + AzAPI) and variable templates
 - `labs/agent-service-introduction/` numbered module content with `src/` starters and `solution/` placeholders
 - `shared/` reusable Python utilities, common dependencies, sample data
 - `docs/` instructor and facilitator assets

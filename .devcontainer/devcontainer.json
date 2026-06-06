@@ -49,7 +49,12 @@
                 "ms-dotnettools.csdevkit",
                 "ms-dotnettools.vscode-dotnet-runtime",
                 "ms-toolsai.prompty",
-                "ms-semantic-kernel.semantic-kernel"
+                "hashicorp.terraform",
+                "ms-vscode.vscode-node-azure-pack",
+                "ms-vscode.azurecli",
+                "ms-azuretools.vscode-azure-github-copilot",
+                "ms-python.debugpy",
+                "ms-python.vscode-python-envs"
             ],
             "settings": {
                 "python.defaultInterpreterPath": "/usr/local/python/current/bin/python3"
