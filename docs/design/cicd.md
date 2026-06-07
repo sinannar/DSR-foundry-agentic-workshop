@@ -85,6 +85,36 @@ The pipeline reads configuration exclusively from the `test` GitHub environment 
 
 The managed identity needs `Owner` or `Contributor + User Access Administrator` on the target subscription so it can create resource groups and assign Foundry RBAC roles.
 
+It also needs the `User.ReadBasic.All` Microsoft Graph application permission so that `scripts/assign-attendee-roles.py` and `tests/smoke/Smoke.Tests.ps1` can resolve attendee UPNs to Entra object IDs via `az ad user show`.
+
+### Granting User.ReadBasic.All to the managed identity
+
+This is a Microsoft Graph app role assignment, not an Azure RBAC role, so it must be applied through the Microsoft Graph API. Run the following commands once per managed identity after it is created. The caller must have the `Application Administrator` or `Global Administrator` Entra role, or hold the `AppRoleAssignment.ReadWrite.All` Graph permission.
+
+```powershell
+# Look up the Graph service principal object ID in this tenant
+$graphSpId = az ad sp show --id "00000003-0000-0000-c000-000000000000" --query id -o tsv
+
+# Look up the exact app role ID for User.ReadBasic.All from this tenant's Graph service principal
+$appRoleId = az ad sp show --id "00000003-0000-0000-c000-000000000000" `
+    --query "appRoles[?value=='User.ReadBasic.All'].id | [0]" -o tsv
+
+# Object ID of the managed identity's service principal
+$miObjectId = "<object-id-of-managed-identity>"
+
+# Write the request body to a temp file to avoid PowerShell JSON-escaping issues
+"{`"principalId`":`"$miObjectId`",`"resourceId`":`"$graphSpId`",`"appRoleId`":`"$appRoleId`"}" `
+    | Out-File -FilePath "$env:TEMP\graph-body.json" -Encoding utf8 -NoNewline
+
+az rest --method POST `
+    --uri "https://graph.microsoft.com/v1.0/servicePrincipals/$miObjectId/appRoleAssignments" `
+    --headers "Content-Type=application/json" `
+    --body "@$env:TEMP\graph-body.json"
+```
+
+> [!NOTE]
+> The `User.ReadBasic.All` app role ID varies by tenant. Always query it from the Graph service principal in your tenant rather than hardcoding a GUID.
+
 ### Variables reference
 
 All variables use the pattern `vars.VAR_NAME || 'default'` in workflow files, so omitting a variable from the environment is equivalent to accepting the default.
