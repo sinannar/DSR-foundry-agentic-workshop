@@ -203,7 +203,7 @@ The `test` environment is configured with the following attendee list that maps 
   {"upn":"lab.attendee.1@MngEnvMCAP199525.onmicrosoft.com"},
   {"upn":"lab.attendee.2@MngEnvMCAP199525.onmicrosoft.com"},
   {"upn":"lab.attendee.3@MngEnvMCAP199525.onmicrosoft.com"},
-  {"upn":"lab.instructor.1@MngEnvMCAP199525.onmicrosoft.com","role":"facilitator"},
+  {"upn":"lab.facilitator.1@MngEnvMCAP199525.onmicrosoft.com","role":"facilitator"},
   {"upn":"lab.organizer.1@MngEnvMCAP199525.onmicrosoft.com","role":"organizer"},
   {"upn":"lab.proctor.1@MngEnvMCAP199525.onmicrosoft.com","role":"proctor"}
 ]
@@ -216,7 +216,7 @@ This produces the following project-to-role mapping:
 | `lab.attendee.1` | `foundry-user` | `attendee-01` | project |
 | `lab.attendee.2` | `foundry-user` | `attendee-02` | project |
 | `lab.attendee.3` | `foundry-user` | `attendee-03` | project |
-| `lab.instructor.1` | `facilitator` (Foundry Owner) | `facilitator-01` | account |
+| `lab.facilitator.1` | `facilitator` (Foundry Owner) | `facilitator-01` | account |
 | `lab.organizer.1` | `organizer` (Foundry Owner) | `organizer-01` | account |
 | `lab.proctor.1` | `proctor` (Foundry Owner) | `proctor-01` | account |
 
@@ -224,7 +224,7 @@ Set the following variables in the `test` GitHub environment to activate this sc
 
 | Variable | Value |
 |----------|-------|
-| `AZURE_ATTENDEE_LIST` | `[{"upn":"lab.attendee.1@MngEnvMCAP199525.onmicrosoft.com"},{"upn":"lab.attendee.2@MngEnvMCAP199525.onmicrosoft.com"},{"upn":"lab.attendee.3@MngEnvMCAP199525.onmicrosoft.com"},{"upn":"lab.instructor.1@MngEnvMCAP199525.onmicrosoft.com","role":"facilitator"},{"upn":"lab.organizer.1@MngEnvMCAP199525.onmicrosoft.com","role":"organizer"},{"upn":"lab.proctor.1@MngEnvMCAP199525.onmicrosoft.com","role":"proctor"}]` |
+| `AZURE_ATTENDEE_LIST` | `[{"upn":"lab.attendee.1@MngEnvMCAP199525.onmicrosoft.com"},{"upn":"lab.attendee.2@MngEnvMCAP199525.onmicrosoft.com"},{"upn":"lab.attendee.3@MngEnvMCAP199525.onmicrosoft.com"},{"upn":"lab.facilitator.1@MngEnvMCAP199525.onmicrosoft.com","role":"facilitator"},{"upn":"lab.organizer.1@MngEnvMCAP199525.onmicrosoft.com","role":"organizer"},{"upn":"lab.proctor.1@MngEnvMCAP199525.onmicrosoft.com","role":"proctor"}]` |
 | `AZURE_ATTENDEE_COUNT` | `3` |
 | `AZURE_ATTENDEE_DEFAULT_ROLE` | `foundry-user` |
 | `AZURE_ATTENDEE_PROJECT_PREFIX` | `attendee` |
