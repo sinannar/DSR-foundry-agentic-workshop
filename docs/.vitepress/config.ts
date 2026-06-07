@@ -11,9 +11,9 @@ export default defineConfig({
     nav: [
       { text: 'Home', link: '/' },
       { text: 'Organizer Quickstart', link: '/quickstart-organizer' },
-      { text: 'Learner Quickstart', link: '/quickstart-learner' },
-      { text: 'Instructor Guide', link: '/instructor-guide' },
-      { text: 'Facilitator Notes', link: '/facilitator-notes' },
+      { text: 'Attendee Quickstart', link: '/quickstart-attendee' },
+      { text: 'Instructor Quickstart', link: '/quickstart-instructor' },
+      { text: 'Proctor Guide', link: '/guide-proctor' },
     ],
     sidebar: [
       {
@@ -21,15 +21,24 @@ export default defineConfig({
         items: [
           { text: 'Overview', link: '/' },
           { text: 'Organizer Quickstart', link: '/quickstart-organizer' },
-          { text: 'Learner Quickstart', link: '/quickstart-learner' },
+          { text: 'Attendee Quickstart', link: '/quickstart-attendee' },
+          { text: 'Instructor Quickstart', link: '/quickstart-instructor' },
         ],
       },
       {
-        text: 'Workshop Delivery',
+        text: 'Role Guides',
         items: [
-          { text: 'Instructor Guide', link: '/instructor-guide' },
-          { text: 'Facilitator Notes', link: '/facilitator-notes' },
+          { text: 'Organizer Guide', link: '/guide-organizer' },
+          { text: 'Attendee Guide', link: '/guide-attendee' },
+          { text: 'Instructor Guide', link: '/guide-instructor' },
+          { text: 'Proctor Guide', link: '/guide-proctor' },
           { text: 'Architecture Diagram', link: '/architecture-diagram' },
+        ],
+      },
+      {
+        text: 'Design',
+        items: [
+          { text: 'CI/CD Pipeline', link: '/design/cicd' },
         ],
       },
       {

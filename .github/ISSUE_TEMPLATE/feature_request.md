@@ -15,4 +15,4 @@ assignees: ''
 - [ ] Setup
 - [ ] Lab flow
 - [ ] Infra
-- [ ] Instructor guidance
+- [ ] Facilitator guidance

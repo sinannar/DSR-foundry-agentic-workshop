@@ -81,6 +81,10 @@ jobs:
           azd env set AZURE_AI_SEARCH_CAPABILITY_HOST "${{ vars.AZURE_AI_SEARCH_CAPABILITY_HOST || 'false' }}"
           azd env set AZURE_COSMOS_DB_CAPABILITY_HOST "${{ vars.AZURE_COSMOS_DB_CAPABILITY_HOST || 'false' }}"
           azd env set AZURE_STORAGE_ACCOUNT_CAPABILITY_HOST "${{ vars.AZURE_STORAGE_ACCOUNT_CAPABILITY_HOST || 'false' }}"
+          azd env set AZURE_FACILITATOR_PROJECT_PREFIX "${{ vars.AZURE_FACILITATOR_PROJECT_PREFIX || 'facilitator' }}"
+          azd env set AZURE_PROCTOR_PROJECT_PREFIX "${{ vars.AZURE_PROCTOR_PROJECT_PREFIX || 'proctor' }}"
+          azd env set AZURE_ORGANIZER_PROJECT_PREFIX "${{ vars.AZURE_ORGANIZER_PROJECT_PREFIX || 'organizer' }}"
+          azd env set AZURE_ENSURE_FACILITATOR_PROJECT "${{ vars.AZURE_ENSURE_FACILITATOR_PROJECT || 'true' }}"
 
       - name: Preview Infrastructure using Azure Developer CLI
         run: azd provision --preview --no-prompt

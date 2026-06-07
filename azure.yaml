@@ -6,6 +6,10 @@ infra:
   path: infra
 hooks:
   postprovision:
-    shell: sh
-    run: python scripts/assign-attendee-roles.py
+    posix:
+      shell: sh
+      run: python scripts/assign-attendee-roles.py && python scripts/seed-product-index.py && python scripts/seed-document-index.py
+    windows:
+      shell: pwsh
+      run: python scripts/assign-attendee-roles.py; python scripts/seed-product-index.py; python scripts/seed-document-index.py
 services: {}

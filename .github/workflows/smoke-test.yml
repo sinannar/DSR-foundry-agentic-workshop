@@ -1,0 +1,116 @@
+name: Smoke Test
+
+on:
+  workflow_call:
+    inputs:
+      ENVIRONMENT:
+        description: The environment to run smoke tests against.
+        required: true
+        type: string
+      AZURE_ENV_NAME:
+        description: The Azure Developer CLI environment name.
+        required: true
+        type: string
+      AZURE_LOCATION:
+        description: The Azure region where resources are deployed.
+        required: true
+        type: string
+
+    secrets:
+      AZURE_TENANT_ID:
+        description: Azure tenant ID for authentication.
+        required: true
+      AZURE_SUBSCRIPTION_ID:
+        description: Azure subscription ID for authentication.
+        required: true
+      AZURE_CLIENT_ID:
+        description: Azure client ID for authentication.
+        required: true
+
+jobs:
+  smoke-test:
+    name: Smoke Test ${{ inputs.ENVIRONMENT }}
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.ENVIRONMENT }}
+    permissions:
+      id-token: write
+      contents: read
+      checks: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Authenticate Azure CLI (Federated Credentials)
+        uses: azure/login@v3
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Install Pester
+        shell: pwsh
+        run: Install-Module -Name Pester -MinimumVersion 5.5.0 -Force -Scope CurrentUser
+
+      - name: Run smoke tests
+        shell: pwsh
+        env:
+          AZURE_ENV_NAME: ${{ vars.AZURE_ENV_NAME || inputs.AZURE_ENV_NAME }}
+          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          AZURE_ATTENDEE_COUNT: ${{ vars.AZURE_ATTENDEE_COUNT || '2' }}
+          AZURE_ATTENDEE_PROJECT_PREFIX: ${{ vars.AZURE_ATTENDEE_PROJECT_PREFIX || 'attendee' }}
+          AZURE_ATTENDEE_DEFAULT_ROLE: ${{ vars.AZURE_ATTENDEE_DEFAULT_ROLE || 'foundry-user' }}
+          AZURE_ATTENDEE_LIST: ${{ vars.AZURE_ATTENDEE_LIST || '' }}
+          AZURE_AI_SEARCH_CAPABILITY_HOST: ${{ vars.AZURE_AI_SEARCH_CAPABILITY_HOST || 'false' }}
+          AZURE_COSMOS_DB_CAPABILITY_HOST: ${{ vars.AZURE_COSMOS_DB_CAPABILITY_HOST || 'false' }}
+          AZURE_STORAGE_ACCOUNT_CAPABILITY_HOST: ${{ vars.AZURE_STORAGE_ACCOUNT_CAPABILITY_HOST || 'false' }}
+          AZURE_FACILITATOR_PROJECT_PREFIX: ${{ vars.AZURE_FACILITATOR_PROJECT_PREFIX || 'facilitator' }}
+          AZURE_PROCTOR_PROJECT_PREFIX: ${{ vars.AZURE_PROCTOR_PROJECT_PREFIX || 'proctor' }}
+          AZURE_ORGANIZER_PROJECT_PREFIX: ${{ vars.AZURE_ORGANIZER_PROJECT_PREFIX || 'organizer' }}
+          AZURE_ENSURE_FACILITATOR_PROJECT: ${{ vars.AZURE_ENSURE_FACILITATOR_PROJECT || 'true' }}
+        run: |
+          $aiSearchEnabled          = $env:AZURE_AI_SEARCH_CAPABILITY_HOST -eq 'true'
+          $cosmosDbEnabled          = $env:AZURE_COSMOS_DB_CAPABILITY_HOST -eq 'true'
+          $storageAccountEnabled    = $env:AZURE_STORAGE_ACCOUNT_CAPABILITY_HOST -eq 'true'
+          $ensureFacilitatorProject = $env:AZURE_ENSURE_FACILITATOR_PROJECT -ne 'false'
+
+          New-Item -ItemType Directory -Path 'TestResults' -Force | Out-Null
+
+          $containerData = @{
+              SubscriptionId           = $env:AZURE_SUBSCRIPTION_ID
+              EnvironmentName          = $env:AZURE_ENV_NAME
+              AttendeeProjectPrefix    = $env:AZURE_ATTENDEE_PROJECT_PREFIX
+              AttendeeCount            = [int]$env:AZURE_ATTENDEE_COUNT
+              AttendeeDefaultRole      = $env:AZURE_ATTENDEE_DEFAULT_ROLE
+              AttendeeList             = $env:AZURE_ATTENDEE_LIST
+              FacilitatorProjectPrefix = $env:AZURE_FACILITATOR_PROJECT_PREFIX
+              ProctorProjectPrefix     = $env:AZURE_PROCTOR_PROJECT_PREFIX
+              OrganizerProjectPrefix   = $env:AZURE_ORGANIZER_PROJECT_PREFIX
+              EnsureFacilitatorProject = $ensureFacilitatorProject
+              AiSearchEnabled          = $aiSearchEnabled
+              CosmosDbEnabled          = $cosmosDbEnabled
+              StorageAccountEnabled    = $storageAccountEnabled
+          }
+
+          $container = New-PesterContainer -Path 'tests/smoke/Smoke.Tests.ps1' -Data $containerData
+
+          $config = New-PesterConfiguration
+          $config.Run.Container = $container
+          $config.Run.PassThru = $true
+          $config.Output.Verbosity = 'Detailed'
+          $config.TestResult.Enabled = $true
+          $config.TestResult.OutputPath = 'TestResults/smoke-tests.xml'
+          $config.TestResult.OutputFormat = 'NUnitXml'
+
+          $result = Invoke-Pester -Configuration $config
+
+          if ($result.FailedCount -gt 0) {
+              exit 1
+          }
+
+      - name: Upload smoke test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: smoke-test-results-${{ inputs.ENVIRONMENT }}
+          path: TestResults/

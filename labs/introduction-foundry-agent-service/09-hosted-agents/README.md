@@ -1,0 +1,32 @@
+# Step 09: Build and run a hosted agent
+
+## Objectives
+
+- Create a hosted agent in your Foundry project.
+- Interact with the hosted agent from Python using the Agent Framework.
+
+## Steps
+
+1. Create a hosted agent in the portal or Foundry Toolkit:
+   1. Select the deployed `chat` model.
+   1. Provide instructions and attach any tools or knowledge from earlier steps.
+1. Note the hosted agent name or identifier.
+1. Open `src/starter.py` and set the hosted agent target.
+1. Run the starter and confirm it invokes the hosted agent and returns a
+   response.
+1. Send a follow-up prompt to confirm the hosted agent maintains context.
+
+## Validation
+
+- The hosted agent appears in the Agents list.
+- `python src/starter.py` invokes the hosted agent and prints its response.
+- A follow-up prompt returns a contextually consistent response.
+
+## Troubleshooting
+
+- If the hosted agent is not found, confirm the agent name and that it is saved
+  and available in your project.
+- If invocation fails, confirm your role grants access to invoke agents in the
+  project.
+- If responses ignore tools or knowledge, confirm they are attached to the
+  hosted agent configuration.

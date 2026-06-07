@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/PlagueHO/foundry-agentic-workshop/main/shared/schemas/attendee-list.schema.json",
+  "title": "AZURE_ATTENDEE_LIST",
+  "description": "Schema for the AZURE_ATTENDEE_LIST environment variable. The value must be a single-line JSON array because it is persisted with 'azd env set' and read by both Bicep (project creation) and the postprovision hook (role assignment). Both consumers derive project names and role scopes from the same array, so the array is the single source of truth for the entire attendee roster.",
+  "type": "array",
+  "items": {
+    "$ref": "#/$defs/attendee"
+  },
+  "$defs": {
+    "attendee": {
+      "type": "object",
+      "description": "A single workshop attendee entry.",
+      "required": ["upn"],
+      "additionalProperties": false,
+      "properties": {
+        "upn": {
+          "type": "string",
+          "description": "Microsoft Entra ID user principal name (UPN) of the attendee. Resolved to an object ID at role-assignment time by the postprovision hook.",
+          "pattern": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$",
+          "minLength": 5,
+          "examples": ["ana@contoso.com", "ben@fabrikam.onmicrosoft.com"]
+        },
+        "role": {
+          "type": "string",
+          "description": "Foundry role key to grant this attendee. Overrides AZURE_ATTENDEE_DEFAULT_ROLE for this entry. Staff roles (facilitator, proctor, organizer) receive a project under their role-specific prefix and Foundry Owner at account scope. Standard roles are scoped to the attendee's individual project (foundry-user) or the account (all others).",
+          "enum": [
+            "foundry-user",
+            "foundry-project-manager",
+            "foundry-account-owner",
+            "foundry-owner",
+            "facilitator",
+            "proctor",
+            "organizer"
+          ]
+        },
+        "individualProject": {
+          "type": "boolean",
+          "description": "When true (the default), a dedicated Foundry project is created for this attendee. When false, the attendee shares the first project in the list and no new project is created.",
+          "default": true
+        },
+        "projectName": {
+          "type": "string",
+          "description": "Explicit Foundry project name for this attendee. When omitted, the name is derived as '<prefix>-NN' where NN is the attendee's 1-based position within their role group. Must be lowercase alphanumeric with hyphens, starting and ending with an alphanumeric character.",
+          "minLength": 2,
+          "maxLength": 64,
+          "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$",
+          "examples": ["team-red", "attendee-01", "facilitator-01"]
+        }
+      }
+    }
+  },
+  "examples": [
+    [],
+    [
+      { "upn": "ana@contoso.com" },
+      { "upn": "ben@contoso.com", "role": "foundry-project-manager" },
+      { "upn": "cy@contoso.com", "individualProject": false },
+      { "upn": "di@contoso.com", "projectName": "team-red" },
+      { "upn": "fac@contoso.com", "role": "facilitator" },
+      { "upn": "prc@contoso.com", "role": "proctor" }
+    ]
+  ]
+}

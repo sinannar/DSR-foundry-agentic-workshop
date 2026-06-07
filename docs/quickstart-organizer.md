@@ -1,61 +1,81 @@
 # Organizer Quickstart
 
-Use this guide when an organizer deploys one shared Microsoft Foundry environment for multiple learners.
+Use this quickstart when you provision one shared Microsoft Foundry environment for many
+attendees. It is the high-level flow; see the [Organizer Guide](./guide-organizer.md) for
+detailed steps, the RBAC model, and troubleshooting.
 
-## Prerequisites
+## Who does what
 
-1. Azure subscription with sufficient quota.
-1. Azure CLI and Azure Developer CLI installed.
-1. Python 3.11 or later.
+| Role | Responsibility |
+|------|----------------|
+| Organizer | Deploys infrastructure, assigns attendee access, shares project assignments, tears down. |
+| Facilitator | Delivers the labs and sets pacing. See the [Facilitator Quickstart](./quickstart-facilitator.md). |
+| Proctor | Floor support during delivery. See the [Proctor Guide](./guide-proctor.md). |
+| Attendee | Runs the labs. See the [Attendee Quickstart](./quickstart-attendee.md). |
 
-## Sign in
+## Before the workshop
+
+1. Confirm an Azure subscription with sufficient model quota in your target region.
+1. Install [Azure Developer CLI](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd)
+   and [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli).
+1. Collect the attendee user principal names (UPNs) you will grant access to.
+1. Decide the default Foundry role for attendees (see [Attendee access](#attendee-access)).
+
+## Deploy
+
+1. Sign in.
+
+   ```bash
+   az login
+   azd auth login
+   ```
+
+1. Create an environment and set core variables.
+
+   ```bash
+   azd env new hol-shared
+   azd env set AZURE_LOCATION australiaeast
+   azd env set AZURE_RESOURCE_GROUP rg-foundry-hol-shared
+   azd env set AZURE_ATTENDEE_PROJECT_PREFIX attendee
+   ```
+
+1. Configure [attendee access](#attendee-access).
+
+1. Provision.
+
+   ```bash
+   azd provision
+   ```
+
+## Attendee access
+
+`AZURE_ATTENDEE_LIST` is the single source of truth for both per-attendee project creation
+and role assignment. Set it as a single-line JSON array, then provision.
 
 ```bash
-az login
-azd auth login
+azd env set AZURE_ATTENDEE_DEFAULT_ROLE foundry-user
+azd env set AZURE_ATTENDEE_LIST '[{"upn":"ana@contoso.com"},{"upn":"ben@contoso.com","role":"foundry-project-manager"}]'
 ```
 
-## Create or select an environment
+| Role key | Capability | Scope |
+|----------|------------|-------|
+| `foundry-user` | Build agents and use deployed models (labs 00-07). Default, least privilege. | Project |
+| `foundry-project-manager` | Publish agents (lab 08) plus everything above. | Account |
+| `foundry-account-owner` | Deploy models plus everything above. | Account |
+| `foundry-owner` | Full build and manage. | Account |
 
-```bash
-azd env new hol-shared
-azd env select hol-shared
-```
+Attendees cannot deploy models with the default role; you pre-deploy models during
+provisioning. The [Organizer Guide](./guide-organizer.md#per-attendee-rbac) explains the
+full model and the provisioning audit CSV.
 
-## Configure core variables
-
-```bash
-azd env set AZURE_LOCATION australiaeast
-azd env set AZURE_RESOURCE_GROUP rg-foundry-hol-shared
-azd env set AZURE_ATTENDEE_COUNT 20
-azd env set AZURE_ATTENDEE_PROJECT_PREFIX attendee
-```
-
-## Optional RBAC configuration
-
-If your subscription already grants broad access, skip this section.
-
-```bash
-azd env set AZURE_ATTENDEE_ACCESS_PROFILE project-user
-azd env set AZURE_ATTENDEE_USER_PRINCIPAL_NAMES '["learner1@contoso.com","learner2@contoso.com"]'
-```
-
-Use `project-user` for least-privilege labs 00-07.
-Use `project-publisher` when learners need publishing rights for lab 08.
-
-## Provision
-
-```bash
-azd provision
-```
-
-## Share attendee assignments
+## Share assignments
 
 ```bash
 azd env get-value AZURE_ATTENDEE_PROJECT_NAMES
 ```
 
-Give each learner their assigned `FOUNDRY_PROJECT_NAME`.
+Give each attendee their assigned `FOUNDRY_PROJECT_NAME` and the shared resource values
+they need for the [Attendee Quickstart](./quickstart-attendee.md).
 
 ## Teardown
 

@@ -4,9 +4,16 @@ Build and deliver a 3-4 hour, instructor-led workshop for agentic applications w
 
 ## Start here
 
-1. If you run workshops, start with [Organizer Quickstart](./quickstart-organizer.md).
-1. If you are a learner, start with [Learner Quickstart](./quickstart-learner.md).
-1. Run labs in order from 00 through 08.
+Pick the path that matches your role.
+
+| Role | Start with | Then read |
+|------|------------|-----------|
+| Organizer | [Organizer Quickstart](./quickstart-organizer.md) | [Organizer Guide](./guide-organizer.md) |
+| Attendee | [Attendee Quickstart](./quickstart-attendee.md) | [Attendee Guide](./guide-attendee.md) |
+| Facilitator | [Facilitator Quickstart](./quickstart-facilitator.md) | [Facilitator Guide](./guide-facilitator.md) |
+| Proctor | [Proctor Guide](./guide-proctor.md) | — |
+
+Run labs in order from 00 through 08.
 
 ## Labs
 

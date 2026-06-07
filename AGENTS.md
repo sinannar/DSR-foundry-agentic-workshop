@@ -15,9 +15,9 @@ This repository hosts an instructor-led Microsoft Foundry workshop with numbered
 | Path | Purpose |
 |------|---------|
 | .github/ | Workflow and Copilot repo configuration |
-| docs/ | Instructor and facilitator material |
+| docs/ | Role-based workshop guides and delivery material |
 | infra/ | Bicep infrastructure and deploy wrappers |
-| labs/00-setup ... labs/08-agent-id-and-publishing | Sequential workshop modules |
+| labs/00-setup ... labs/11-publishing-agents | Sequential workshop modules |
 | scripts/ | Operational helper scripts |
 | shared/ | Shared Python dependencies, environment template, data, and utilities |
 

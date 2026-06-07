@@ -2,6 +2,21 @@ targetScope = 'subscription'
 
 import { capabilityHostType } from './cognitive-services/accounts/capabilityHost/main.bicep'
 
+@description('A single workshop attendee parsed from AZURE_ATTENDEE_LIST.')
+type attendeeType = {
+  @description('Attendee user principal name (UPN).')
+  upn: string
+
+  @description('Optional Foundry role key. Defaults to AZURE_ATTENDEE_DEFAULT_ROLE in the postprovision role-assignment hook.')
+  role: string?
+
+  @description('Whether the attendee receives a dedicated project. Defaults to true.')
+  individualProject: bool?
+
+  @description('Optional explicit project name. Defaults to "<prefix>-NN" by list position.')
+  projectName: string?
+}
+
 // The main bicep module to provision Azure resources for the Microsoft Foundry workshop.
 // For a more complete walkthrough to understand how this file works with azd,
 // see https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/make-azd-compatible?pivots=azd-create
@@ -42,6 +57,27 @@ param attendeeCount int = 1
 @maxLength(16)
 param attendeeProjectPrefix string = 'attendee'
 
+@description('Structured attendee list parsed from AZURE_ATTENDEE_LIST. When provided, it is the single source of truth for per-attendee project creation; otherwise attendeeCount sequential projects are created.')
+param attendeeList attendeeType[] = []
+
+@description('Name prefix for facilitator Foundry projects. Facilitators receive a dedicated project named "<prefix>-NN".')
+@minLength(1)
+@maxLength(16)
+param facilitatorProjectPrefix string = 'facilitator'
+
+@description('Name prefix for proctor Foundry projects. Proctors receive a dedicated project named "<prefix>-NN".')
+@minLength(1)
+@maxLength(16)
+param proctorProjectPrefix string = 'proctor'
+
+@description('Name prefix for organizer Foundry projects. Organizers receive a dedicated project named "<prefix>-NN".')
+@minLength(1)
+@maxLength(16)
+param organizerProjectPrefix string = 'organizer'
+
+@description('Always provision at least one facilitator project, even when no facilitator entry appears in attendeeList.')
+param ensureFacilitatorProject bool = true
+
 @description('Enable Azure AI Search as a vector store capability host connection for Foundry agents.')
 param azureAiSearchCapabilityHost bool = false
 
@@ -75,22 +111,78 @@ var aiSearchName = '${abbrs.aiSearchSearchServices}${environmentName}'
 var aiFoundryName = '${abbrs.aiFoundryAccounts}${environmentName}'
 var aiFoundryCustomSubDomainName = toLower(replace(environmentName, '-', ''))
 
-// Build the per-attendee Foundry projects. Attendee role assignments are applied
+// Build per-attendee and per-role Foundry projects. Role assignments are applied
 // out-of-band by the postprovision hook (scripts/assign-attendee-roles.py), which
 // resolves each attendee UPN to its Microsoft Entra object ID (not possible in Bicep).
+//
+// Attendees with role 'facilitator', 'proctor', or 'organizer' receive projects under
+// their role-specific prefix (e.g. facilitator-01). All other attendees use the standard
+// attendeeProjectPrefix. When attendeeList is empty the fallback is attendeeCount sequential
+// projects. The postprovision hook derives the same names so role scopes line up exactly.
+// The ensureFacilitatorProject flag (default true) guarantees at least one facilitator
+// project even when attendeeList contains no facilitator entries.
+
+// Separate attendees by role group for per-role project prefix derivation.
+var standardAttendeeEntries = filter(attendeeList, a =>
+  a.?role != 'facilitator' && a.?role != 'proctor' && a.?role != 'organizer')
+var facilitatorEntries = filter(attendeeList, a => a.?role == 'facilitator')
+var proctorEntries = filter(attendeeList, a => a.?role == 'proctor')
+var organizerEntries = filter(attendeeList, a => a.?role == 'organizer')
+
+// Standard attendee project names (indexed sequentially within the standard-attendee group only).
+var standardAttendeeProjectNames = [
+  for (attendee, i) in standardAttendeeEntries: (attendee.?individualProject ?? true)
+    ? (attendee.?projectName ?? '${attendeeProjectPrefix}-${padLeft(string(i + 1), 2, '0')}')
+    : ''
+]
+var standardAttendeeProjectNamesFiltered = filter(standardAttendeeProjectNames, name => !empty(name))
+var standardAttendeeDistinctProjectNames = union(standardAttendeeProjectNamesFiltered, standardAttendeeProjectNamesFiltered)
+var countProjectNames = [for i in range(1, attendeeCount): '${attendeeProjectPrefix}-${padLeft(string(i), 2, '0')}']
+var effectiveStandardProjectNames = empty(attendeeList)
+  ? countProjectNames
+  : (!empty(standardAttendeeDistinctProjectNames)
+      ? standardAttendeeDistinctProjectNames
+      : ['${attendeeProjectPrefix}-01'])
+
+// Role-specific project names (indexed sequentially within each role group).
+var facilitatorProjectNamesFromList = [
+  for (attendee, i) in facilitatorEntries: (attendee.?projectName ?? '${facilitatorProjectPrefix}-${padLeft(string(i + 1), 2, '0')}')
+]
+var proctorProjectNamesFromList = [
+  for (attendee, i) in proctorEntries: (attendee.?projectName ?? '${proctorProjectPrefix}-${padLeft(string(i + 1), 2, '0')}')
+]
+var organizerProjectNamesFromList = [
+  for (attendee, i) in organizerEntries: (attendee.?projectName ?? '${organizerProjectPrefix}-${padLeft(string(i + 1), 2, '0')}')
+]
+
+// Apply ensureFacilitatorProject: always provision at least one facilitator project.
+var effectiveFacilitatorProjectNames = !empty(facilitatorProjectNamesFromList)
+  ? facilitatorProjectNamesFromList
+  : (ensureFacilitatorProject ? ['${facilitatorProjectPrefix}-01'] : [])
+var effectiveProctorProjectNames = proctorProjectNamesFromList
+var effectiveOrganizerProjectNames = organizerProjectNamesFromList
+
+// Combine all role groups into a single ordered project list.
+var allProjectNames = concat(
+  effectiveStandardProjectNames,
+  effectiveFacilitatorProjectNames,
+  effectiveProctorProjectNames,
+  effectiveOrganizerProjectNames
+)
+
 var attendeeProjects = [
-  for i in range(1, attendeeCount): {
-    name: '${attendeeProjectPrefix}-${padLeft(string(i), 2, '0')}'
+  for name in allProjectNames: {
+    name: name
     location: location
     properties: {
-      displayName: '${attendeeProjectPrefix}-${padLeft(string(i), 2, '0')}'
-      description: 'Foundry workshop project for ${attendeeProjectPrefix}-${padLeft(string(i), 2, '0')}.'
+      displayName: name
+      description: 'Foundry workshop project for ${name}.'
     }
     tags: tags
   }
 ]
 
-var defaultAttendeeProjectName = attendeeCount > 0 ? '${attendeeProjectPrefix}-${padLeft(string(1), 2, '0')}' : ''
+var defaultAttendeeProjectName = !empty(effectiveStandardProjectNames) ? effectiveStandardProjectNames[0] : ''
 
 // ---------- CAPABILITY HOSTS CONFIGURATION ----------
 var aiSearchConnectionName = replace(aiSearchName, '-', '')
@@ -343,7 +435,7 @@ module aiFoundryAccount './cognitive-services/accounts/main.bicep' = {
     connections: foundryServiceConnections
     capabilityHosts: effectiveCapabilityHosts
     projects: attendeeProjects
-    defaultProject: attendeeCount > 0 ? defaultAttendeeProjectName : null
+    defaultProject: !empty(effectiveStandardProjectNames) ? defaultAttendeeProjectName : null
     raiPolicies: [
       {
         name: 'FoundryWorkshopContentPolicy'
@@ -579,7 +671,10 @@ output AZURE_AI_FOUNDRY_ENDPOINT string = aiFoundryAccount.outputs.endpoint
 @description('The default Foundry project name targeted in single-attendee mode.')
 output FOUNDRY_PROJECT_NAME string = defaultAttendeeProjectName
 
-@description('The names of the per-attendee Foundry projects.')
+@description('The name of the first facilitator Foundry project. Use this endpoint and project name for data generation.')
+output FOUNDRY_FACILITATOR_PROJECT_NAME string = !empty(effectiveFacilitatorProjectNames) ? effectiveFacilitatorProjectNames[0] : ''
+
+@description('The names of all provisioned Foundry projects (standard attendees, facilitators, proctors, and organizers).')
 output AZURE_ATTENDEE_PROJECT_NAMES array = [for project in attendeeProjects: project.name]
 
 @description('The name of the Azure AI Search service.')

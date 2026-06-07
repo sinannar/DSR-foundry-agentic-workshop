@@ -91,18 +91,46 @@ jobs:
           azd env set AZURE_RESOURCE_GROUP "rg-${AZURE_ENV_NAME}"
           azd env set AZURE_ATTENDEE_COUNT "${{ vars.AZURE_ATTENDEE_COUNT || '2' }}"
           azd env set AZURE_ATTENDEE_PROJECT_PREFIX "${{ vars.AZURE_ATTENDEE_PROJECT_PREFIX || 'attendee' }}"
-          azd env set AZURE_ATTENDEE_ACCESS_PROFILE "${{ vars.AZURE_ATTENDEE_ACCESS_PROFILE || 'project-user' }}"
+          azd env set AZURE_ATTENDEE_DEFAULT_ROLE "${{ vars.AZURE_ATTENDEE_DEFAULT_ROLE || 'foundry-user' }}"
           azd env set AZURE_AI_SEARCH_CAPABILITY_HOST "${{ vars.AZURE_AI_SEARCH_CAPABILITY_HOST || 'false' }}"
           azd env set AZURE_COSMOS_DB_CAPABILITY_HOST "${{ vars.AZURE_COSMOS_DB_CAPABILITY_HOST || 'false' }}"
           azd env set AZURE_STORAGE_ACCOUNT_CAPABILITY_HOST "${{ vars.AZURE_STORAGE_ACCOUNT_CAPABILITY_HOST || 'false' }}"
+          azd env set AZURE_FACILITATOR_PROJECT_PREFIX "${{ vars.AZURE_FACILITATOR_PROJECT_PREFIX || 'facilitator' }}"
+          azd env set AZURE_PROCTOR_PROJECT_PREFIX "${{ vars.AZURE_PROCTOR_PROJECT_PREFIX || 'proctor' }}"
+          azd env set AZURE_ORGANIZER_PROJECT_PREFIX "${{ vars.AZURE_ORGANIZER_PROJECT_PREFIX || 'organizer' }}"
+          azd env set AZURE_ENSURE_FACILITATOR_PROJECT "${{ vars.AZURE_ENSURE_FACILITATOR_PROJECT || 'true' }}"
 
-          ATTENDEE_UPNS="${{ vars.AZURE_ATTENDEE_USER_PRINCIPAL_NAMES || '' }}"
-          if [ -n "$ATTENDEE_UPNS" ]; then
-            azd env set AZURE_ATTENDEE_USER_PRINCIPAL_NAMES "$ATTENDEE_UPNS"
+          ATTENDEE_LIST="${{ vars.AZURE_ATTENDEE_LIST || '' }}"
+          if [ -n "$ATTENDEE_LIST" ]; then
+            azd env set AZURE_ATTENDEE_LIST "$ATTENDEE_LIST"
           fi
 
       - name: Provision Infrastructure using Azure Developer CLI
         run: azd provision --no-prompt
+
+      - name: Verify attendee role assignments
+        if: ${{ vars.AZURE_ATTENDEE_LIST != '' }}
+        run: |
+          python - <<'EOF'
+          import csv, glob, sys
+          files = sorted(glob.glob('.azure/attendee-provisioning-*.csv'))
+          if not files:
+              print("No attendee provisioning audit file found. Skipping verification.")
+              sys.exit(0)
+          audit_file = files[-1]
+          failed = []
+          with open(audit_file, newline='') as f:
+              for row in csv.DictReader(f):
+                  if row['status'] == 'failed':
+                      failed.append(row)
+          if failed:
+              print(f"::error::{len(failed)} attendee role assignment(s) failed:")
+              for r in failed:
+                  print(f"  {r['upn']}: {r['message']}")
+              sys.exit(1)
+          total = sum(1 for _ in open(audit_file)) - 1
+          print(f"All {total} attendee role assignment(s) succeeded (audit: {audit_file})")
+          EOF
 
       - name: Python syntax smoke checks
         run: python -m compileall labs scripts shared

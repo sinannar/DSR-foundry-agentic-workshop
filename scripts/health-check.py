@@ -2,7 +2,6 @@
 
 import os
 import subprocess
-import sys
 
 REQUIRED_ENV_VARS = [
     'AZURE_SUBSCRIPTION_ID',

@@ -6,10 +6,45 @@
     "_generator": {
       "name": "bicep",
       "version": "0.43.8.12551",
-      "templateHash": "5726118628001152660"
+      "templateHash": "5524318076731616723"
     }
   },
   "definitions": {
+    "attendeeType": {
+      "type": "object",
+      "properties": {
+        "upn": {
+          "type": "string",
+          "metadata": {
+            "description": "Attendee user principal name (UPN)."
+          }
+        },
+        "role": {
+          "type": "string",
+          "nullable": true,
+          "metadata": {
+            "description": "Optional Foundry role key. Defaults to AZURE_ATTENDEE_DEFAULT_ROLE in the postprovision role-assignment hook."
+          }
+        },
+        "individualProject": {
+          "type": "bool",
+          "nullable": true,
+          "metadata": {
+            "description": "Whether the attendee receives a dedicated project. Defaults to true."
+          }
+        },
+        "projectName": {
+          "type": "string",
+          "nullable": true,
+          "metadata": {
+            "description": "Optional explicit project name. Defaults to \"<prefix>-NN\" by list position."
+          }
+        }
+      },
+      "metadata": {
+        "description": "A single workshop attendee parsed from AZURE_ATTENDEE_LIST."
+      }
+    },
     "capabilityHostType": {
       "type": "object",
       "properties": {
@@ -126,6 +161,50 @@
         "description": "Name prefix for per-attendee Foundry projects. Projects are named \"<prefix>-NN\" (for example, attendee-01)."
       }
     },
+    "attendeeList": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/attendeeType"
+      },
+      "defaultValue": [],
+      "metadata": {
+        "description": "Structured attendee list parsed from AZURE_ATTENDEE_LIST. When provided, it is the single source of truth for per-attendee project creation; otherwise attendeeCount sequential projects are created."
+      }
+    },
+    "facilitatorProjectPrefix": {
+      "type": "string",
+      "defaultValue": "facilitator",
+      "minLength": 1,
+      "maxLength": 16,
+      "metadata": {
+        "description": "Name prefix for facilitator Foundry projects. Facilitators receive a dedicated project named \"<prefix>-NN\"."
+      }
+    },
+    "proctorProjectPrefix": {
+      "type": "string",
+      "defaultValue": "proctor",
+      "minLength": 1,
+      "maxLength": 16,
+      "metadata": {
+        "description": "Name prefix for proctor Foundry projects. Proctors receive a dedicated project named \"<prefix>-NN\"."
+      }
+    },
+    "organizerProjectPrefix": {
+      "type": "string",
+      "defaultValue": "organizer",
+      "minLength": 1,
+      "maxLength": 16,
+      "metadata": {
+        "description": "Name prefix for organizer Foundry projects. Organizers receive a dedicated project named \"<prefix>-NN\"."
+      }
+    },
+    "ensureFacilitatorProject": {
+      "type": "bool",
+      "defaultValue": true,
+      "metadata": {
+        "description": "Always provision at least one facilitator project, even when no facilitator entry appears in attendeeList."
+      }
+    },
     "azureAiSearchCapabilityHost": {
       "type": "bool",
       "defaultValue": false,
@@ -161,14 +240,39 @@
   "variables": {
     "copy": [
       {
-        "name": "attendeeProjects",
+        "name": "standardAttendeeProjectNames",
+        "count": "[length(variables('standardAttendeeEntries'))]",
+        "input": "[if(coalesce(tryGet(variables('standardAttendeeEntries')[copyIndex('standardAttendeeProjectNames')], 'individualProject'), true()), coalesce(tryGet(variables('standardAttendeeEntries')[copyIndex('standardAttendeeProjectNames')], 'projectName'), format('{0}-{1}', parameters('attendeeProjectPrefix'), padLeft(string(add(copyIndex('standardAttendeeProjectNames'), 1)), 2, '0'))), '')]"
+      },
+      {
+        "name": "countProjectNames",
         "count": "[length(range(1, parameters('attendeeCount')))]",
+        "input": "[format('{0}-{1}', parameters('attendeeProjectPrefix'), padLeft(string(range(1, parameters('attendeeCount'))[copyIndex('countProjectNames')]), 2, '0'))]"
+      },
+      {
+        "name": "facilitatorProjectNamesFromList",
+        "count": "[length(variables('facilitatorEntries'))]",
+        "input": "[coalesce(tryGet(variables('facilitatorEntries')[copyIndex('facilitatorProjectNamesFromList')], 'projectName'), format('{0}-{1}', parameters('facilitatorProjectPrefix'), padLeft(string(add(copyIndex('facilitatorProjectNamesFromList'), 1)), 2, '0')))]"
+      },
+      {
+        "name": "proctorProjectNamesFromList",
+        "count": "[length(variables('proctorEntries'))]",
+        "input": "[coalesce(tryGet(variables('proctorEntries')[copyIndex('proctorProjectNamesFromList')], 'projectName'), format('{0}-{1}', parameters('proctorProjectPrefix'), padLeft(string(add(copyIndex('proctorProjectNamesFromList'), 1)), 2, '0')))]"
+      },
+      {
+        "name": "organizerProjectNamesFromList",
+        "count": "[length(variables('organizerEntries'))]",
+        "input": "[coalesce(tryGet(variables('organizerEntries')[copyIndex('organizerProjectNamesFromList')], 'projectName'), format('{0}-{1}', parameters('organizerProjectPrefix'), padLeft(string(add(copyIndex('organizerProjectNamesFromList'), 1)), 2, '0')))]"
+      },
+      {
+        "name": "attendeeProjects",
+        "count": "[length(variables('allProjectNames'))]",
         "input": {
-          "name": "[format('{0}-{1}', parameters('attendeeProjectPrefix'), padLeft(string(range(1, parameters('attendeeCount'))[copyIndex('attendeeProjects')]), 2, '0'))]",
+          "name": "[variables('allProjectNames')[copyIndex('attendeeProjects')]]",
           "location": "[parameters('location')]",
           "properties": {
-            "displayName": "[format('{0}-{1}', parameters('attendeeProjectPrefix'), padLeft(string(range(1, parameters('attendeeCount'))[copyIndex('attendeeProjects')]), 2, '0'))]",
-            "description": "[format('Foundry workshop project for {0}-{1}.', parameters('attendeeProjectPrefix'), padLeft(string(range(1, parameters('attendeeCount'))[copyIndex('attendeeProjects')]), 2, '0'))]"
+            "displayName": "[variables('allProjectNames')[copyIndex('attendeeProjects')]]",
+            "description": "[format('Foundry workshop project for {0}.', variables('allProjectNames')[copyIndex('attendeeProjects')])]"
           },
           "tags": "[variables('tags')]"
         }
@@ -354,7 +458,18 @@
     "aiSearchName": "[format('{0}{1}', variables('abbrs').aiSearchSearchServices, parameters('environmentName'))]",
     "aiFoundryName": "[format('{0}{1}', variables('abbrs').aiFoundryAccounts, parameters('environmentName'))]",
     "aiFoundryCustomSubDomainName": "[toLower(replace(parameters('environmentName'), '-', ''))]",
-    "defaultAttendeeProjectName": "[if(greater(parameters('attendeeCount'), 0), format('{0}-{1}', parameters('attendeeProjectPrefix'), padLeft(string(1), 2, '0')), '')]",
+    "standardAttendeeEntries": "[filter(parameters('attendeeList'), lambda('a', and(and(not(equals(tryGet(lambdaVariables('a'), 'role'), 'facilitator')), not(equals(tryGet(lambdaVariables('a'), 'role'), 'proctor'))), not(equals(tryGet(lambdaVariables('a'), 'role'), 'organizer')))))]",
+    "facilitatorEntries": "[filter(parameters('attendeeList'), lambda('a', equals(tryGet(lambdaVariables('a'), 'role'), 'facilitator')))]",
+    "proctorEntries": "[filter(parameters('attendeeList'), lambda('a', equals(tryGet(lambdaVariables('a'), 'role'), 'proctor')))]",
+    "organizerEntries": "[filter(parameters('attendeeList'), lambda('a', equals(tryGet(lambdaVariables('a'), 'role'), 'organizer')))]",
+    "standardAttendeeProjectNamesFiltered": "[filter(variables('standardAttendeeProjectNames'), lambda('name', not(empty(lambdaVariables('name')))))]",
+    "standardAttendeeDistinctProjectNames": "[union(variables('standardAttendeeProjectNamesFiltered'), variables('standardAttendeeProjectNamesFiltered'))]",
+    "effectiveStandardProjectNames": "[if(empty(parameters('attendeeList')), variables('countProjectNames'), if(not(empty(variables('standardAttendeeDistinctProjectNames'))), variables('standardAttendeeDistinctProjectNames'), createArray(format('{0}-01', parameters('attendeeProjectPrefix')))))]",
+    "effectiveFacilitatorProjectNames": "[if(not(empty(variables('facilitatorProjectNamesFromList'))), variables('facilitatorProjectNamesFromList'), if(parameters('ensureFacilitatorProject'), createArray(format('{0}-01', parameters('facilitatorProjectPrefix'))), createArray()))]",
+    "effectiveProctorProjectNames": "[variables('proctorProjectNamesFromList')]",
+    "effectiveOrganizerProjectNames": "[variables('organizerProjectNamesFromList')]",
+    "allProjectNames": "[concat(variables('effectiveStandardProjectNames'), variables('effectiveFacilitatorProjectNames'), variables('effectiveProctorProjectNames'), variables('effectiveOrganizerProjectNames'))]",
+    "defaultAttendeeProjectName": "[if(not(empty(variables('effectiveStandardProjectNames'))), variables('effectiveStandardProjectNames')[0], '')]",
     "aiSearchConnectionName": "[replace(variables('aiSearchName'), '-', '')]",
     "storageConnectionName": "[replace(variables('storageAccounName'), '-', '')]",
     "cosmosDbConnectionName": "[replace(variables('cosmosDbAccountName'), '-', '')]",
@@ -24964,7 +25079,7 @@
           "projects": {
             "value": "[variables('attendeeProjects')]"
           },
-          "defaultProject": "[if(greater(parameters('attendeeCount'), 0), createObject('value', variables('defaultAttendeeProjectName')), createObject('value', null()))]",
+          "defaultProject": "[if(not(empty(variables('effectiveStandardProjectNames'))), createObject('value', variables('defaultAttendeeProjectName')), createObject('value', null()))]",
           "raiPolicies": {
             "value": [
               {
@@ -34367,10 +34482,17 @@
       },
       "value": "[variables('defaultAttendeeProjectName')]"
     },
+    "FOUNDRY_FACILITATOR_PROJECT_NAME": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the first facilitator Foundry project. Use this endpoint and project name for data generation."
+      },
+      "value": "[if(not(empty(variables('effectiveFacilitatorProjectNames'))), variables('effectiveFacilitatorProjectNames')[0], '')]"
+    },
     "AZURE_ATTENDEE_PROJECT_NAMES": {
       "type": "array",
       "metadata": {
-        "description": "The names of the per-attendee Foundry projects."
+        "description": "The names of all provisioned Foundry projects (standard attendees, facilitators, proctors, and organizers)."
       },
       "copy": {
         "count": "[length(variables('attendeeProjects'))]",
