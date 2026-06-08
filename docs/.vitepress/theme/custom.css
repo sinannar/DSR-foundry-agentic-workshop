@@ -58,3 +58,9 @@
   --vp-c-text-1: oklch(0.985 0 0);
   --vp-c-text-2: oklch(0.63 0.045 138);
 }
+
+/* Allow the nav bar site title to wrap when the sidebar is visible */
+.VPNavBarTitle.has-sidebar .title {
+  white-space: normal;
+  word-break: break-word;
+}

@@ -15,15 +15,15 @@ The module pages are generated automatically during docs build and preview from 
 
 ## Steps
 
-1. Step 00 Setup
-1. Step 01 Foundry Portal Walkthrough
-1. Step 02 Foundry Toolkit for VS Code
-1. Step 03 Prompt-based Agents
-1. Step 04 Agent Tools and Evaluations
-1. Step 05 MCP Tools
-1. Step 06 Foundry Toolboxes (optional)
-1. Step 07 Foundry IQ
-1. Step 08 Agent Framework Python
-1. Step 09 Hosted Agents
-1. Step 10 Agent Ops and Agent ID
-1. Step 11 Publishing Agents (optional)
+- 00: Setup
+- 01: Foundry Portal Walkthrough
+- 02: Foundry Toolkit for VS Code
+- 03: Prompt-based Agents
+- 04: Agent Tools and Evaluations
+- 05: MCP Tools
+- 06: Foundry Toolboxes (optional)
+- 07: Foundry IQ
+- 08: Agent Framework Python
+- 09: Hosted Agents
+- 10: Agent Ops and Agent ID
+- 11: Publishing Agents (optional)
