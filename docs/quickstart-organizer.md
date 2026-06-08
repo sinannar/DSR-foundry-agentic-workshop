@@ -15,6 +15,13 @@ detailed steps, the RBAC model, and troubleshooting.
 
 ## Before the workshop
 
+1. Clone this repository to your machine.
+
+   ```bash
+   git clone https://github.com/PlagueHO/foundry-agentic-workshop.git
+   cd foundry-agentic-workshop
+   ```
+
 1. Confirm an Azure subscription with sufficient model quota in your target region.
 1. Install [Azure Developer CLI](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd)
    and [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli).

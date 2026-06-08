@@ -5,6 +5,13 @@ guide and the attendee assignment list handy throughout the session.
 
 ## Before the session
 
+1. Clone this repository to your machine.
+
+   ```bash
+   git clone https://github.com/PlagueHO/foundry-agentic-workshop.git
+   cd foundry-agentic-workshop
+   ```
+
 1. Get the attendee assignment list from the organizer (UPN to `FOUNDRY_PROJECT_NAME`).
 1. Confirm the environment is provisioned: run `python scripts/list-attendee-projects.py` to
    see the expected project names.

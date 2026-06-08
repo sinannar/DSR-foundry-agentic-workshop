@@ -13,6 +13,13 @@ attendees hit most often. For the condensed flow, see the
 
 ## Prepare
 
+1. Clone this repository to your machine.
+
+   ```bash
+   git clone https://github.com/PlagueHO/foundry-agentic-workshop.git
+   cd foundry-agentic-workshop
+   ```
+
 1. Confirm the organizer has provisioned the environment and that
    `azd env get-value AZURE_ATTENDEE_PROJECT_NAMES` lists a project per attendee.
 1. Run all labs once on a `foundry-user` test identity. This surfaces the same

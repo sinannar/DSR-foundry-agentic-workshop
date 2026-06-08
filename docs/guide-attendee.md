@@ -15,6 +15,13 @@ you start, you should have:
 With the default `foundry-user` role you can build agents and use the models your organizer
 pre-deployed. You do not deploy models yourself.
 
+## Clone the repository
+
+```bash
+git clone https://github.com/PlagueHO/foundry-agentic-workshop.git
+cd foundry-agentic-workshop
+```
+
 ## Install prerequisites
 
 1. Install [VS Code Insiders](https://code.visualstudio.com/insiders/).
@@ -72,7 +79,7 @@ it against the assignment your organizer shared.
 
 ## Start the labs
 
-Open the [available labs](./labs/) in the docs and begin with the first lab in the series. Each lab is independently runnable, so you can resume at any point if you fall behind.
+Open the [available labs](./labs/introduction-foundry-agent-service) in the docs and begin with the first lab in the series. Each lab is independently runnable, so you can resume at any point if you fall behind.
 
 ## Troubleshooting
 

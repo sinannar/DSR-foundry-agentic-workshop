@@ -6,6 +6,13 @@ issues.
 
 ## Before you teach
 
+1. Clone this repository to your machine.
+
+   ```bash
+   git clone https://github.com/PlagueHO/foundry-agentic-workshop.git
+   cd foundry-agentic-workshop
+   ```
+
 1. Confirm the organizer has provisioned the environment and shared attendee assignments
    (see the [Organizer Quickstart](./quickstart-organizer.md)).
 1. Run the labs end to end once on a `foundry-user` test identity so you hit the same

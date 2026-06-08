@@ -11,6 +11,13 @@ detailed setup and troubleshooting.
 1. [Python 3.11 or later](https://www.python.org/downloads/).
 1. Your assigned project information from your organizer.
 
+## Clone the repository
+
+```bash
+git clone https://github.com/PlagueHO/foundry-agentic-workshop.git
+cd foundry-agentic-workshop
+```
+
 ## Configure your environment file
 
 1. Copy `shared/.env.example` to `.env`.
@@ -36,4 +43,4 @@ python scripts/health-check.py
 
 ## Start the labs
 
-Open the [available labs](./labs/) in the docs and begin with the first lab in your assigned series. Each lab is independently runnable, so you can resume at any point.
+Open the [available labs](./labs/introduction-foundry-agent-service) in the docs and begin with the first lab in your assigned series. Each lab is independently runnable, so you can resume at any point.

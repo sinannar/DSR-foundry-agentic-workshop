@@ -17,7 +17,14 @@ This guide covers standing up and tearing down a shared Microsoft Foundry worksh
 
 This section walks through the most common scenario: a handful of standard attendees and one facilitator. The whole flow takes about five minutes. A single command - `azd provision` - deploys the Azure resources and assigns all roles; re-run it any time the roster changes.
 
-### 1. Sign in
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/PlagueHO/foundry-agentic-workshop.git
+cd foundry-agentic-workshop
+```
+
+### 2. Sign in
 
 Authenticate both CLIs against the subscription where you hold Owner or User Access
 Administrator rights.
@@ -27,7 +34,7 @@ az login
 azd auth login
 ```
 
-### 2. Create an environment
+### 3. Create an environment
 
 Create an isolated azd environment to hold your workshop configuration. This also sets the
 Azure region and resource group.
@@ -38,7 +45,7 @@ azd env set AZURE_LOCATION australiaeast
 azd env set AZURE_RESOURCE_GROUP rg-my-workshop
 ```
 
-### 3. Set your attendee list
+### 4. Set your attendee list
 
 `AZURE_ATTENDEE_LIST` is the single configuration variable that drives both project creation and role assignment. Set it to a single-line JSON array of attendees before provisioning.
 
@@ -54,7 +61,7 @@ The default role for entries without an explicit `role` is `foundry-user`, the l
 > [!TIP]
 > Store the formatted version in a local file for readability and paste the single-line form into `azd env set`. See [Scenario examples](#scenario-examples) for more roster patterns.
 
-### 4. Provision
+### 5. Provision
 
 ```bash
 azd provision
