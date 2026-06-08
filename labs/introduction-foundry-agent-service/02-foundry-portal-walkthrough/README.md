@@ -28,17 +28,11 @@
 
 ## Validation
 
-- You can name the three primary tabs (Home, Discover, Build) and what each is
-  for.
-- You located the deployed `chat` and `embedding` models for your project on
-  the Build tab.
+- You can name the three primary tabs (Home, Discover, Build) and what each is for.
+- You located the deployed `chat` and `embedding` models for your project on the Build tab.
 - You can find the Knowledge and Agents surfaces you will use in later steps.
 
 ## Troubleshooting
 
-- If you cannot see your project, confirm the active project selector matches
-  the project assigned to you in Module 00.
-- If models are missing from Build, confirm provisioning completed and that
-  `azd env get-values` shows the expected Foundry resource.
-- If a tab is empty, refresh the portal and confirm your role grants read
-  access to the project.
+- If you cannot see your project, confirm the active project selector matches the project assigned to you in Module 00.
+- If a tab is empty, refresh the portal and confirm your role grants read access to the project.

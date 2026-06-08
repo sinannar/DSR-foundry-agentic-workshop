@@ -26,6 +26,45 @@ attendees hit most often. For the condensed flow, see the
    least-privilege constraints attendees experience (for example, no model deployment).
 1. Confirm proctors have the attendee assignment list and the [Proctor Guide](./guide-proctor.md).
 
+## Configuring models
+
+The workshop deploys a fixed set of models defined in [`infra/model-deployments.json`](../infra/model-deployments.json). To add or change deployed models, edit that file before running `azd provision`.
+
+Each entry in the file follows this structure:
+
+```json
+{
+  "name": "chat",
+  "model": {
+    "format": "OpenAI",
+    "name": "gpt-4o",
+    "version": "2024-11-20"
+  },
+  "sku": {
+    "name": "GlobalStandard",
+    "capacity": 120
+  },
+  "raiPolicyName": "FoundryWorkshopContentPolicy"
+}
+```
+
+Two deployments are required for all lab sample code to work without modification:
+
+* A deployment named `chat` pointing to a ChatCompletions-compatible model (for example, `gpt-4o`).
+* A deployment named `embedding` pointing to an Embeddings-compatible model (for example, `text-embedding-3-small`).
+
+Additional models can be added alongside these two as long as they are available in your target region.
+
+To discover which models are available in your target region, run:
+
+```bash
+az cognitiveservices model list -l australiaeast --query '[?model.deprecation.deprecationStatus == `null`].{Name:model.name, Publisher:model.publisher, Kind:kind, SkuName:model.skus[0].name, MaxCapacity:model.skus[0].capacity.maximum}' --output table
+```
+
+Replace `australiaeast` with the region matching `AZURE_LOCATION` in your environment.
+The filter excludes models with no deprecation status set, which typically indicates
+preview or unlisted entries.
+
 ## Suggested pacing
 
 The full workshop runs 3–4 hours. Work through labs in sequence, time-boxing each module. Block on setup until every attendee passes `python scripts/health-check.py` before moving on; unresolved setup issues compound throughout the session.

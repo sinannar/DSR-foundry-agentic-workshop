@@ -253,11 +253,10 @@ def _emit_resolved_list(resolved: list[dict[str, object]]) -> None:
 
 def _write_resolution_audit(
     resolved: list[dict[str, object]],
+    audit_dir: Path,
     env_name: str,
 ) -> Path:
-    """Write a per-attendee resolution audit CSV to .azure/."""
-    audit_dir = Path('.azure')
-    audit_dir.mkdir(exist_ok=True)
+    """Write a per-attendee resolution audit CSV to audit_dir."""
     timestamp = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')
     audit_path = audit_dir / f'attendee-resolution-{env_name}-{timestamp}.csv'
     fieldnames = ['upn', 'object_id', 'project_name', 'role', 'individual_project', 'resolved', 'message']
@@ -340,7 +339,9 @@ def main() -> int:
     _emit_resolved_list(resolved)
     print('AZURE_ATTENDEE_LIST_RESOLVED written to azd environment.')
 
-    audit_path = _write_resolution_audit(resolved, env_name)
+    audit_dir = Path('.azure') / env_name
+    audit_dir.mkdir(parents=True, exist_ok=True)
+    audit_path = _write_resolution_audit(resolved, audit_dir, env_name)
     print(f'Resolution audit written to {audit_path}.')
 
     if unresolved_count:
