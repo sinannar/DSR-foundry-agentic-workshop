@@ -6,10 +6,9 @@ detailed setup and troubleshooting.
 
 ## Prerequisites
 
-1. [VS Code Insiders](https://code.visualstudio.com/insiders/) with the Foundry Toolkit for
-   VS Code.
+1. [VS Code Insiders](https://code.visualstudio.com/insiders/) with the [Foundry Toolkit for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-windows-ai-studio.windows-ai-studio).
 1. [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli).
-1. Python 3.11 or later.
+1. [Python 3.11 or later](https://www.python.org/downloads/).
 1. Your assigned project information from your organizer.
 
 ## Configure your environment file
@@ -35,7 +34,6 @@ az account set --subscription <your-subscription-id>
 python scripts/health-check.py
 ```
 
-## Start labs
+## Start the labs
 
-1. Begin with [Introduction to Foundry Agent Service](./labs/introduction-foundry-agent-service.md).
-1. Continue through labs 01-08 in order.
+Open the [available labs](./labs/) in the docs and begin with the first lab in your assigned series. Each lab is independently runnable, so you can resume at any point.

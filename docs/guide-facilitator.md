@@ -21,23 +21,15 @@ attendees hit most often. For the condensed flow, see the
 
 ## Suggested pacing
 
-The full workshop runs 3-4 hours. Adjust to your audience and the time available.
+The full workshop runs 3–4 hours. Work through labs in sequence, time-boxing each module. Block on setup until every attendee passes `python scripts/health-check.py` before moving on; unresolved setup issues compound throughout the session.
 
-| Module | Focus | Notes |
-|--------|-------|-------|
-| 00 Setup | Environment, sign-in, health check | Block until everyone passes `health-check.py`. |
-| 01-03 | Portal walkthrough, Toolkit, prompt-based agents | Fast, confidence-building modules. |
-| 04-05 | Agent tools, evaluations, MCP tools | Core content; protect this time. |
-| 06-07 | Foundry Toolboxes, Foundry IQ | Demand-driven; trim depth if behind. |
-| 08-09 | Agent Framework, hosted agents | Core content; protect this time. |
-| 10-11 | Agent ops, Agent ID, publishing | Demo only if attendees are on `foundry-user`. |
+Protect time for the core agent-building labs. Treat later optional labs as depth-adds and trim their scope when the session is running behind. If attendees are on the default `foundry-user` role, some labs may not be completable independently; treat those as live demonstrations.
 
-## Per-lab facilitation
+## Lab facilitation
 
 - Frame each lab with the problem it solves before attendees open the starter.
 - Let attendees attempt the starter; reveal the `solution/` only after a genuine attempt.
-- Call out that each lab is independently runnable, so a blocked attendee can move on and
-  return later.
+- Remind attendees that each lab is independently runnable, so a blocked attendee can move on and return later.
 
 ## Common issues
 
@@ -45,8 +37,8 @@ The full workshop runs 3-4 hours. Adjust to your audience and the time available
 |-------|-------|------------|
 | Health check fails at setup | Sign-in or `.env` value missing. | Re-run `az login`; confirm assignment values. |
 | Attendee cannot deploy a model | Expected on the `foundry-user` role. | Point them to the pre-deployed models. |
-| Lab 08 publishing blocked | Needs Foundry Project Manager. | Have the organizer raise the role, or demo it. |
-| Attendee fell behind | Long-running step or distraction. | Each lab is self-contained — resume at the current module. |
+| Attendee cannot perform an action in a lab | The lab may require an elevated Foundry role. | Have the organizer raise the role, or demonstrate it live. |
+| Attendee fell behind | Long-running step or distraction. | Each lab is self-contained; resume at the current module. |
 
 ## Fallback
 

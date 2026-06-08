@@ -25,4 +25,4 @@ guide and the attendee assignment list handy throughout the session.
 | Attendee cannot sign in | Re-run `az login` and `az account set --subscription <id>`. |
 | Attendee cannot find their project | Confirm their `FOUNDRY_PROJECT_NAME` against the assignment list. |
 | Attendee cannot deploy a model | Expected on `foundry-user`; point to the pre-deployed models. |
-| Lab 08 publishing blocked | Note it for the organizer to raise the role, or treat as a demo. |
+| Attendee cannot perform an action in a lab | The lab may require an elevated Foundry role; note it for the organizer to review. |

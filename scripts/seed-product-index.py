@@ -74,9 +74,10 @@ def _ensure_product_index(index_client: SearchIndexClient, index_name: str) -> N
             filterable=True,
             facetable=True,
         ),
-        SearchableField(
+        SearchField(
             name='tags',
             type=SearchFieldDataType.Collection(SearchFieldDataType.String),
+            searchable=True,
             filterable=True,
         ),
         SimpleField(name='price', type=SearchFieldDataType.Double, filterable=True, sortable=True),

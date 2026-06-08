@@ -18,19 +18,18 @@ pre-deployed. You do not deploy models yourself.
 ## Install prerequisites
 
 1. Install [VS Code Insiders](https://code.visualstudio.com/insiders/).
-1. Install the Foundry Toolkit for VS Code from the Extensions view.
+1. Install the [Foundry Toolkit for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-windows-ai-studio.windows-ai-studio) from the Extensions view.
+1. Install [Python 3.11 or later](https://www.python.org/downloads/).
 1. Install the [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli).
-1. Install Python 3.11 or later.
-1. Install the workshop Python dependencies.
+1. Install the workshop Python dependencies using [pip](https://pip.pypa.io/en/stable/).
 
    ```bash
    python -m pip install -r shared/requirements.txt
    ```
 
 > [!NOTE]
-> Screenshot placeholder — *the Foundry Toolkit extension in the VS Code Insiders Extensions
-> view.* Alt text: "VS Code Insiders Extensions view with the Foundry Toolkit extension
-> selected."
+> ![Foundry Toolkit for VS Code in the Visual Studio Marketplace, showing the Install button, extension description, and 1 million+ installs.](./assets/screenshots/foundry-toolkit-marketplace.png)
+> *Foundry Toolkit for VS Code on the Visual Studio Marketplace.*
 
 ## Configure your environment file
 
@@ -64,19 +63,16 @@ Resolve any reported issues before starting. If the check reports a missing valu
 it against the assignment your organizer shared.
 
 > [!NOTE]
-> Screenshot placeholder — *a successful `health-check.py` run.* Alt text: "Terminal showing
-> the health check passing for the configured Foundry project."
+> Screenshot placeholder — *a successful `health-check.py` run in the terminal.* Alt text: "Terminal showing the health check passing for the configured Foundry project."
 
 ## Open your project
 
 1. Sign in to the [Foundry portal](https://ai.azure.com).
 1. Select the project named in your `FOUNDRY_PROJECT_NAME`.
 
-## Run the labs
+## Start the labs
 
-1. Begin with [Introduction to Foundry Agent Service](./labs/introduction-foundry-agent-service.md).
-1. Continue through labs 01-08 in order. Each lab is independently runnable, so you can
-   resume at any point.
+Open the [available labs](./labs/) in the docs and begin with the first lab in the series. Each lab is independently runnable, so you can resume at any point if you fall behind.
 
 ## Troubleshooting
 
@@ -85,4 +81,4 @@ it against the assignment your organizer shared.
 | `health-check.py` reports authentication failure | Not signed in or wrong subscription. | Re-run `az login` and `az account set --subscription <id>`. |
 | Project not visible in the portal | Role not yet assigned, or wrong project name. | Confirm your `FOUNDRY_PROJECT_NAME` with your organizer or proctor. |
 | Cannot deploy a model | Expected with the `foundry-user` role. | Use the models your organizer pre-deployed. |
-| Cannot publish an agent (lab 08) | Publishing needs the Foundry Project Manager role. | Ask your organizer to raise your role for lab 08. |
+| Cannot perform an action in a lab | The lab may require an elevated Foundry role. | Ask your organizer to check and adjust your role assignment. |

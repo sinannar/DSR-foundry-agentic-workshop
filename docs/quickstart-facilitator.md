@@ -16,12 +16,12 @@ issues.
 ## During delivery
 
 1. Open with the [workshop overview](./index.md) and the architecture context.
-1. Have attendees complete the [Attendee Quickstart](./quickstart-attendee.md) setup and run
-   `python scripts/health-check.py` before lab 01.
-1. Work through labs 00-08 in order, time-boxing each module.
+1. Have attendees complete the [Attendee Quickstart](./quickstart-attendee.md) setup and run `python scripts/health-check.py` before the first lab.
+1. Work through labs in order, time-boxing each module. See the [Facilitator Guide](./guide-facilitator.md#suggested-pacing) for pacing guidance.
 1. Reveal solutions only after attendees attempt a lab.
 
 ## If you run short on time
 
-- Skip lab 07 when the session is under 3.5 hours.
-- Treat lab 08 (publishing) as a demo if attendees are on the default `foundry-user` role.
+- Trim depth on the optional labs first; the core agent-building labs take priority.
+- Use the `solution/` folder for live demonstrations when a lab cannot be completed independently.
+- If attendees are on the default `foundry-user` role, some labs may not be completable independently; demonstrate those live.

@@ -8,7 +8,7 @@
     },
     "sku": {
       "name": "GlobalStandard",
-      "capacity": 50
+      "capacity": 120
     },
     "raiPolicyName": "FoundryWorkshopContentPolicy"
   },

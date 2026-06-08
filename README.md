@@ -1,114 +1,96 @@
-# Microsoft Foundry Agentic Workshop (HOL)
+![Microsoft Foundry Agentic Workshop — Hands-on-labs](./docs/assets/banners/microsoft-foundry-agentic-workshop.png)
 
-This repository scaffolds a **3–4 hour, L200–L300 instructor-led workshop** for building agentic solutions on **Microsoft Foundry**.
+# Microsoft Foundry Agentic Workshop
 
-## Audience
+This repository contains **L200–L400 hands-on labs** for building agentic solutions on [Microsoft Foundry](https://learn.microsoft.com/azure/ai-foundry/what-is-foundry) using [Microsoft Foundry Agent Service](https://learn.microsoft.com/azure/ai-foundry/agents/overview), [Foundry IQ](https://learn.microsoft.com/azure/ai-foundry/foundry-iq/overview), and the [Microsoft Agent Framework](https://learn.microsoft.com/azure/ai-foundry/agents/agent-framework).
 
-- Software engineers and technical data scientists
-- Comfortable with Azure basics
-- Mostly new to Microsoft Foundry
+## Who is this for
 
-## Prerequisites
+- Software engineers, architects, and technical roles building or designing AI solutions in Azure
+- Comfortable with Azure basics; mostly new to Microsoft Foundry and agentic development
+- Delivered as an instructor-led session (3–4 hours) or completed independently
 
-- Azure subscription with quota to deploy lab resources
-- VS Code Insiders
-- Foundry Toolkit for VS Code
-- Python 3.11+
-- Azure CLI (`az`)
-- Azure Developer CLI (`azd`)
-- An AI coding agent (GitHub Copilot or Claude Code)
+## Roles
 
-## Agenda (3–4 hours)
-
-| Module | Topic | Duration (min) |
-|---|---|---:|
-| 00 | Setup and access validation | 20 |
-| 01 | Foundry portal walkthrough | 15 |
-| 02 | Foundry Toolkit for VS Code tasks | 20 |
-| 03 | Prompt-based agents | 30 |
-| 04 | Agent tools and evaluations | 30 |
-| 05 | MCP tools | 25 |
-| 06 | Foundry Toolboxes (optional) | 15 |
-| 07 | Foundry IQ retrieval across enterprise sources | 30 |
-| 08 | Microsoft Agent Framework (Python) | 30 |
-| 09 | Hosted agents | 30 |
-| 10 | Agent ops and Agent ID | 20 |
-| 11 | Publishing agents (optional) | 15 |
-
-## Build 2026 session mapping
-
-Use this mapping to align each lab with relevant Microsoft Build 2026 sessions.
-
-| Module | Recommended session(s) | Why it fits |
-|---|---|---|
-| 02 Foundry Toolkit for VS Code | [LTG461](https://build.microsoft.com/en-US/sessions/LTG461), [LTG424](https://build.microsoft.com/en-US/sessions/LTG424) | Practical VS Code toolkit workflows for building and hardening agents |
-| 03 Prompt-based agents | [BRK230](https://build.microsoft.com/en-US/sessions/BRK230) | Prompt-centric design in Foundry with model and cost trade-offs |
-| 04 Agent tools and evaluations | [DEM312](https://build.microsoft.com/en-US/sessions/DEM312), [BRK240](https://build.microsoft.com/en-US/sessions/BRK240) | Tool integration, orchestration, and context-aware decision flows |
-| 07 Foundry IQ | [BRK246](https://build.microsoft.com/en-US/sessions/BRK246), [LAB532](https://build.microsoft.com/en-US/sessions/LAB532) | Enterprise retrieval, grounding, and agent-ready knowledge workflows |
-| 06 Foundry Toolboxes | [LIVE163](https://build.microsoft.com/en-US/sessions/LIVE163) | Tool discovery, governance, and toolbox integration patterns |
-| 08 Agent Framework (Python) | [DEM361](https://build.microsoft.com/en-US/sessions/DEM361), [BRK250](https://build.microsoft.com/en-US/sessions/BRK250) | Agent Framework debugging, observability, and cross-framework control |
-| 09 Hosted agents | [BRK243](https://build.microsoft.com/en-US/sessions/BRK243), [BRK241](https://build.microsoft.com/en-US/sessions/BRK241) | Hosted agent architecture, runtime patterns, and production scale guidance |
-| 10 Agent ops and Agent ID | [DEM340](https://build.microsoft.com/en-US/sessions/DEM340), [LTG422](https://build.microsoft.com/en-US/sessions/LTG422) | Work-ready agent governance, identity, and publishing/monetization pathways |
-
-If sessions are repeated or updated during the event, keep the same session code links and adjust your facilitation schedule based on the latest time slot in the Build portal.
+| Role | Required | Responsible for |
+|------|----------|-----------------|
+| Organizer | Yes | Provisions the shared Azure environment, assigns project access, shares connection details, tears down after the workshop |
+| Attendee | Yes | Completes the labs using the shared environment the organizer provisions |
+| Facilitator | No | Delivers the session, owns pacing and the time-box per lab, coordinates with proctors |
+| Proctor | No | Provides 1:1 floor support during delivery so the facilitator can keep teaching |
 
 ## Quickstarts
 
-The [workshop docs](./docs/index.md) are the single source of truth for role-based setup and
-delivery. Start with the path that matches your role:
+Start with the path that matches your role.
 
-- Organizers: [Organizer Quickstart](./docs/quickstart-organizer.md) and [Organizer Guide](./docs/guide-organizer.md)
-- Attendees: [Attendee Quickstart](./docs/quickstart-attendee.md) and [Attendee Guide](./docs/guide-attendee.md)
-- Facilitators: [Facilitator Quickstart](./docs/quickstart-facilitator.md) and [Facilitator Guide](./docs/guide-facilitator.md)
-- Proctors: [Proctor Guide](./docs/guide-proctor.md)
+| Role | Start with | Then read |
+|------|------------|-----------|
+| Organizer | [Organizer Quickstart](./docs/quickstart-organizer.md) | [Organizer Guide](./docs/guide-organizer.md) |
+| Attendee | [Attendee Quickstart](./docs/quickstart-attendee.md) | [Attendee Guide](./docs/guide-attendee.md) |
+| Facilitator | [Facilitator Quickstart](./docs/quickstart-facilitator.md) | [Facilitator Guide](./docs/guide-facilitator.md) |
+| Proctor | [Proctor Guide](./docs/guide-proctor.md) | — |
 
-## Multi-environment model
+## Organizer: provision the lab environment
 
-- Shared environment model: one organizer deploys a shared Foundry account with multiple attendee projects.
-- Per-attendee environment model: each attendee runs `azd env new <name>` with `AZURE_ATTENDEE_COUNT=1`.
-- Environments are isolated by azd environment name and resource group naming.
+The organizer deploys a shared Foundry account in their Azure subscription and creates one dedicated project per attendee. Attendees receive their project name and shared connection values; no Azure work is required on their side.
 
-## Cost note
+### Prerequisites
 
-Plan for approximately **AUD 50/day** for a sandbox environment, depending on region, SKU, and usage.
+- Azure subscription with [Foundry model quota](https://learn.microsoft.com/azure/foundry/foundry-models/quotas-limits) in your target region
+- [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli)
+- [Azure Developer CLI](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd)
+- Python 3.11+
 
-## Reset between runs
+### Clone this repo
 
-Use `azd down --force --purge` to remove workshop resources between deliveries, then redeploy with updated attendee count.
+The first step is to clone this repository and navigate into it:
 
-## Why Bicep
+```bash
+git clone https://github.com/your-repo/foundry-agentic-workshop.git
+cd foundry-agentic-workshop
+```
 
-We chose Bicep because it is purpose-built for Azure, concise, readable, and first-class with Azure tooling. It gives us safer infrastructure changes with clear module composition, strong resource typing, and predictable deployment behavior in CI/CD.
+### Prepare
 
-This workshop also leans on Azure Verified Modules to keep infrastructure patterns consistent, maintainable, and production-aligned.
-
-## Infrastructure deployment (Bicep + azd)
-
-The infrastructure is defined in Bicep using Azure Verified Modules for Foundry account, Azure AI Search, Storage, and supporting services.
-
-### Quick start
+Using Azure Developer CLI and Azure CLI, create a new environment and set the required variables. `AZURE_ATTENDEE_LIST` can be set now or later; it's only read during provisioning.
 
 ```bash
 az login
 azd auth login
-azd env new hol
+azd env new my-workshop
 azd env set AZURE_LOCATION australiaeast
-azd env set AZURE_RESOURCE_GROUP rg-foundry-hol
-azd env set AZURE_ATTENDEE_COUNT 20
-azd provision
+azd env set AZURE_RESOURCE_GROUP rg-my-workshop
 ```
 
-### Optional attendee configuration
+### Assign attendees by UPN
 
-Set attendee-specific variables in the active azd environment before provisioning. See the
-[Organizer Guide](./docs/guide-organizer.md#per-attendee-rbac) for the full RBAC model.
+To assign attendees to the lab, set `AZURE_ATTENDEE_LIST` before provisioning. Each entry gets a dedicated Foundry project and the specified role. Configure the JSON array as a list of the attendees you want to grant access to, using their user principal names (UPNs). These must all be users in the Entra ID tenant associated with the subscription you're deploying to.
 
 ```bash
-azd env set AZURE_ATTENDEE_PROJECT_PREFIX attendee
-azd env set AZURE_ATTENDEE_DEFAULT_ROLE foundry-user
-azd env set AZURE_ATTENDEE_LIST '[{"upn":"ana@contoso.com"},{"upn":"ben@contoso.com","role":"foundry-project-manager"}]'
+azd env set AZURE_ATTENDEE_LIST '[{"upn":"alice@contoso.com"},{"upn":"bob@contoso.com"},{"upn":"facilitator@contoso.com","role":"facilitator"}]'
+```
+
+> [!NOTE]
+> During the provisioning process, the script `scripts/assign-roles.py` reads `AZURE_ATTENDEE_LIST`, and looks up each user in Entra ID and assigns them the specified role to the assigned project and Azure AI Search. The default role is `foundry-user`, which allows them to build agents and use pre-deployed models but not manage resources or access other attendees' projects.
+
+### Provision
+
+```bash
 azd provision
 ```
+
+For more details, see the [Organizer Guide](./docs/guide-organizer.md) for role options, team projects, and the full attendee list schema.
+
+### Share with attendees
+
+After provisioning, give each attendee:
+
+- Their `FOUNDRY_PROJECT_NAME` (for example `attendee-01`)
+- The shared values: `AZURE_SUBSCRIPTION_ID`, `AZURE_RESOURCE_GROUP`, `FOUNDRY_RESOURCE_NAME`, `AZURE_SEARCH_SERVICE_NAME`
+
+### Cost
+
+Plan for approximately **AUD 50/day** for a sandbox environment, depending on region, SKU, and usage.
 
 ### Teardown
 
@@ -116,11 +98,77 @@ azd provision
 azd down --force --purge
 ```
 
+Removes the resource group and purges soft-deleted Foundry and Key Vault resources so names are immediately reusable.
+
+## Attendee: set up your environment
+
+Your organizer provisions the Foundry environment before the workshop. You only need a local development environment and the connection values they share with you.
+
+### Option 1: Dev container (recommended)
+
+This repository includes a [dev container](https://containers.dev/) that installs all required tools and VS Code extensions automatically.
+
+1. Open the repository in [VS Code](https://code.visualstudio.com/insiders/) or [GitHub Codespaces](https://github.com/features/codespaces).
+1. When prompted, select **Reopen in Container** (VS Code) or wait for the Codespaces environment to build.
+1. The container installs Azure CLI, Azure Developer CLI, Python 3.13, Node.js, and all required VS Code extensions including the [Foundry Toolkit](https://marketplace.visualstudio.com/items?itemName=ms-windows-ai-studio.windows-ai-studio).
+
+### Option 2: GitHub Codespaces
+
+1. Click **Code → Codespaces → Create codespace on main** in the GitHub UI.
+1. The codespace builds from the dev container configuration — no local install required.
+1. Continue from step 3 of the [Attendee Quickstart](./docs/quickstart-attendee.md).
+
+### Option 3: Local machine
+
+Install the following tools manually:
+
+- [VS Code Insiders](https://code.visualstudio.com/insiders/) with the [Foundry Toolkit for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-windows-ai-studio.windows-ai-studio)
+- [Python 3.11 or later](https://www.python.org/downloads/)
+- [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli)
+- [Azure Developer CLI](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd)
+
+Then install the shared Python dependencies:
+
+```bash
+python -m pip install -r shared/requirements.txt
+```
+
+### Configure and validate
+
+1. Copy `shared/.env.example` to `.env` and populate the values your organizer shared.
+1. Sign in:
+
+   ```bash
+   az login
+   az account set --subscription <your-subscription-id>
+   ```
+
+1. Validate:
+
+   ```bash
+   python scripts/health-check.py
+   ```
+
+See the [Attendee Quickstart](./docs/quickstart-attendee.md) for the full flow.
+
+## Available labs
+
+| Lab series | Description |
+|------------|-------------|
+| [Introduction to Foundry Agent Service](./docs/labs/introduction-foundry-agent-service.md) | Build agents from first principles using Foundry Agent Service, MCP tools, Foundry IQ, the Python Agent Framework, and hosted agents |
+
+## Infrastructure
+
+The lab infrastructure is defined in [Bicep](https://learn.microsoft.com/azure/azure-resource-manager/bicep/overview) using [Azure Verified Modules](https://aka.ms/avm) for Foundry account, Azure AI Search, Storage, and supporting services. Deployments are driven by the [Azure Developer CLI](https://learn.microsoft.com/azure/developer/azure-developer-cli/) (`azd`).
+
 ## Repository layout
 
-- `.github/` Copilot guidance and issue/PR templates
-- `infra/` Bicep IaC (AVM modules) and parameter templates
-- `labs/introduction-foundry-agent-service/` numbered module content with `src/` starters and `solution/` placeholders
-- `shared/` reusable Python utilities, common dependencies, sample data
-- `docs/` role-based workshop guides and delivery assets
-- `scripts/` helper scripts for lab operations
+| Path | Purpose |
+|------|---------|
+| `.devcontainer/` | Dev container configuration for VS Code and GitHub Codespaces |
+| `.github/` | Copilot guidance, workflows, and issue/PR templates |
+| `docs/` | Role-based guides, quickstarts, and lab documentation |
+| `infra/` | Bicep IaC using Azure Verified Modules |
+| `labs/` | Lab series, each with numbered modules containing `src/` starters and `solution/` |
+| `scripts/` | Helper scripts for health checks, role assignment, and index seeding |
+| `shared/` | Reusable Python utilities, common dependencies, and sample data |

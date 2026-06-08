@@ -4,7 +4,7 @@ This guide covers standing up and tearing down a shared Microsoft Foundry worksh
 
 ## Prerequisites
 
-1. An Azure subscription to use to host the labaratory infrastructure where you have permission to create resources and assign roles.
+1. An Azure subscription to use to host the laboratory infrastructure where you have permission to create resources and assign roles.
    1. To create resources requires requires Owner or Contributor role on the subscription or resource group.
    1. To assign roles requires Owner or User Access Administrator on the subscription or resource group.
 1. [Azure Developer CLI](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd).
@@ -49,7 +49,7 @@ attendee gets a dedicated project named `attendee-01` through `attendee-05`; the
 azd env set AZURE_ATTENDEE_LIST '[{"upn":"alice@contoso.com"},{"upn":"bob@contoso.com"},{"upn":"carol@contoso.com"},{"upn":"david@contoso.com"},{"upn":"eve@contoso.com"},{"upn":"facilitator@contoso.com","role":"facilitator"}]'
 ```
 
-The default role for entries without an explicit `role` is `foundry-user`- least privilege, suitable for labs 00–07. The `facilitator` role grants full account-level access.
+The default role for entries without an explicit `role` is `foundry-user`, the least-privilege role for attendees. The `facilitator` role grants full account-level access.
 
 > [!TIP]
 > Store the formatted version in a local file for readability and paste the single-line form into `azd env set`. See [Scenario examples](#scenario-examples) for more roster patterns.
@@ -232,15 +232,15 @@ Role keys map to Foundry built-in roles. See [Role-based access control for Micr
 
 | Role key | Foundry role | Scope | Can | Cannot |
 |----------|--------------|-------|-----|--------|
-| `foundry-user` | Foundry User | Project | Build agents, create connections, use deployed models, Foundry IQ, toolboxes (labs 00–07). | Deploy models, publish agents. |
-| `foundry-project-manager` | Foundry Project Manager | Account | Everything above plus publish agents (lab 08). | Deploy models. |
+| `foundry-user` | Foundry User | Project | Build agents, create connections, use deployed models, Foundry IQ, and toolboxes. | Deploy models, publish agents. |
+| `foundry-project-manager` | Foundry Project Manager | Account | Everything above plus publish agents. | Deploy models. |
 | `foundry-account-owner` | Foundry Account Owner | Account | Everything above plus deploy models. |- |
 | `foundry-owner` | Foundry Owner | Account | Full build and manage. |- |
 | `facilitator` | Foundry Owner | Account | Full access under the facilitator project prefix. |- |
 | `proctor` | Foundry Owner | Account | Full access under the proctor project prefix. |- |
 | `organizer` | Foundry Owner | Account | Full access under the organizer project prefix. |- |
 
-`foundry-user` is the default and is least privilege. Because the organizer pre-deploys models during provisioning, attendees stay on `foundry-user` for labs 00–07. Elevate only when a lab requires it.
+`foundry-user` is the default and is least privilege. Because the organizer pre-deploys models during provisioning, attendees do not need to deploy models themselves. Elevate roles only when a specific lab requires it.
 
 ```bash
 # Elevate everyone to deploy models
