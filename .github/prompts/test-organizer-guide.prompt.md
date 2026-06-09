@@ -10,7 +10,7 @@ The list of UPNs to use are:
 [{"upn":"lab.attendee.1@MngEnvMCAP199525.onmicrosoft.com"},{"upn":"lab.attendee.2@MngEnvMCAP199525.onmicrosoft.com"},{"upn":"lab.attendee.3@MngEnvMCAP199525.onmicrosoft.com"},{"upn":"lab.facilitator.1@MngEnvMCAP199525.onmicrosoft.com","role":"facilitator"},{"upn":"lab.organizer.1@MngEnvMCAP199525.onmicrosoft.com","role":"organizer"},{"upn":"lab.proctor.1@MngEnvMCAP199525.onmicrosoft.com","role":"proctor"}]
 ```
 
-The Azure Location should be `AustraliaEast`. The default role should be `foundry-project-manager`. The resource group should be `rg-foundry-hol2`. The environment name should be `foundry-hol2`. I have already authenticated to az and azd. The provisioning will take some time.
+The Azure Location should be `AustraliaEast`. The default role should be `foundry-project-manager`. The resource group should be `rg-foundry-hol3`. The environment name should be `foundry-hol3`. I have already authenticated to az and azd. The provisioning will take some time.
 
 You must validate that:
 
