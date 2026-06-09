@@ -1,8 +1,21 @@
 # 02. Foundry portal walkthrough
 
+**Estimated time:** 10 minutes
+
 ![Microsoft Foundry product suite diagram showing the full suite of services and capabilities](../../../docs/assets/diagrams/microsoft-foundry-product-suite.png)
 
-**Estimated time:** 5 minutes
+Microsoft Foundry is a unified Azure platform-as-a-service for enterprise AI operations, model builders, and application development. It combines production-grade infrastructure with approachable interfaces, so you can focus on building applications instead of managing the underlying infrastructure.
+
+Foundry unifies agents, models, and tools under a single management grouping with built-in enterprise-readiness capabilities, including tracing, monitoring, evaluations, and customizable enterprise setup. It streamlines operations through unified role-based access control (RBAC), networking, and policies under one Azure resource provider namespace.
+
+The platform gives you access to over 1,900 models from Microsoft, OpenAI, Anthropic, Mistral, xAI, Meta, DeepSeek, Hugging Face, and more. It serves application developers building AI-powered products, ML engineers and data scientists who fine-tune and evaluate models, and IT administrators who govern AI resources across teams — all from the portal you explore in this module.
+
+Foundry brings together several core functions:
+
+- **Models** — Access, deploy, and manage 1,900+ models from Microsoft and leading providers from a single project endpoint.
+- **Agent Service** — Build context-aware, action-oriented agents with multi-agent orchestration, memory, and publishing to Microsoft 365, Teams, or containers.
+- **IQ** — Ground agent responses in enterprise and web content with citation-backed answers (Foundry IQ), including Fabric IQ and Work IQ connectors.
+- **Tools** — Connect over 1,400 pre-built tools and MCP servers through public and private catalogs.
 
 > [!TIP]
 > Tick the checkbox next to each step as you complete it to track your progress through this module.
