@@ -31,6 +31,7 @@ Install the following before continuing:
 1. [VS Code Insiders](https://code.visualstudio.com/insiders/) with the [Foundry Toolkit for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-windows-ai-studio.windows-ai-studio) extension.
 1. [Python 3.13 or later](https://www.python.org/downloads/).
 1. [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli).
+1. [Azure Developer CLI](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd).
 
 > [!NOTE]
 > GitHub Codespaces and local dev containers are fully supported and install all prerequisites automatically. See the [Attendee Guide](../../../docs/guide-attendee.md) for setup steps.

@@ -1,5 +1,7 @@
 # 04. Create and run a prompt-based agent
 
+![Diagram showing the Microsoft Foundry Agent Service architecture, with agents, tools, knowledge bases, and model deployments connected through a Foundry project.](../../../docs/assets/diagrams/foundry-agent-service.png)
+
 **Estimated time:** TBD
 
 > [!TIP]

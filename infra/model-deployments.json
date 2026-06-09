@@ -8,7 +8,7 @@
     },
     "sku": {
       "name": "GlobalStandard",
-      "capacity": 120
+      "capacity": 500
     },
     "raiPolicyName": "FoundryWorkshopContentPolicy"
   },
@@ -21,7 +21,59 @@
     },
     "sku": {
       "name": "GlobalStandard",
-      "capacity": 120
+      "capacity": 500
+    },
+    "raiPolicyName": "FoundryWorkshopContentPolicy"
+  },
+  {
+    "name": "gpt54",
+    "model": {
+      "format": "OpenAI",
+      "name": "gpt-5.4",
+      "version": "2026-03-05"
+    },
+    "sku": {
+      "name": "GlobalStandard",
+      "capacity": 500
+    },
+    "raiPolicyName": "FoundryWorkshopContentPolicy"
+  },
+  {
+    "name": "gpt54mini",
+    "model": {
+      "format": "OpenAI",
+      "name": "gpt-5.4-mini",
+      "version": "2026-03-17"
+    },
+    "sku": {
+      "name": "GlobalStandard",
+      "capacity": 500
+    },
+    "raiPolicyName": "FoundryWorkshopContentPolicy"
+  },
+  {
+    "name": "gpt54nano",
+    "model": {
+      "format": "OpenAI",
+      "name": "gpt-5.4-nano",
+      "version": "2026-03-17"
+    },
+    "sku": {
+      "name": "GlobalStandard",
+      "capacity": 500
+    },
+    "raiPolicyName": "FoundryWorkshopContentPolicy"
+  },
+  {
+    "name": "gpt53codex",
+    "model": {
+      "format": "OpenAI",
+      "name": "gpt-5.3-codex",
+      "version": "2026-02-24"
+    },
+    "sku": {
+      "name": "GlobalStandard",
+      "capacity": 500
     },
     "raiPolicyName": "FoundryWorkshopContentPolicy"
   }

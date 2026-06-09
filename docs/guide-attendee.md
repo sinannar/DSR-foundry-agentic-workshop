@@ -30,6 +30,7 @@ cd foundry-agentic-workshop
 1. Install the [Foundry Toolkit for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-windows-ai-studio.windows-ai-studio) from the Extensions view.
 1. Install [Python 3.13 or later](https://www.python.org/downloads/).
 1. Install the [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli).
+1. Install the [Azure Developer CLI](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd).
 1. Create a Python virtual environment in the repository root:
 
    ```bash
