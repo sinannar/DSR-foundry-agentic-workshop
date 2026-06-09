@@ -1,38 +1,118 @@
 # 02. Foundry portal walkthrough
 
+**Estimated time:** 5 minutes
+
+The Microsoft Foundry portal at [ai.azure.com](https://ai.azure.com) is the browser-based control plane for your project. This module gives you a quick orientation across the four main tabs — **Home**, **Discover**, **Build**, and **Operate** — so you know where everything lives before you write any code.
+
+> **Tip:** The portal is a great place to explore and experiment. Most developers prefer to work directly in their IDE once they're comfortable, so Module 03 covers the Foundry Toolkit extension for VS Code.
+
 ## Objectives
 
-- Orient yourself in the Microsoft Foundry portal layout.
-- Explore models on the Discover tab and compare candidates.
-- Understand the Build tab surfaces you will use in later steps.
+- Identify your project endpoint on the Home tab.
+- Browse the model catalog on the Discover tab.
+- Locate the key building surfaces on the Build tab.
+- Understand what the Operate tab provides for monitoring.
 
 ## Steps
 
-1. Open the Microsoft Foundry portal and sign in with your workshop account.
-1. Start on the **Home** tab and review the overall layout: the left
-   navigation, the active project selector, and recent activity.
-1. Open the **Discover** tab.
-   1. Browse the available models in the model catalog.
-   1. Open a model card to review its description, capabilities, and limits.
-   1. Use **Compare** to place two models side by side and review context
-      window, modality, and pricing differences.
-   1. Note where **Agents** and **Tools** appear in Discover. You will return
-      to these in later steps; no configuration is needed now.
-1. Open the **Build** tab and locate each surface you will use later:
-   1. **Models** and deployed models for this project.
-   1. **Tools** available to agents.
-   1. **Knowledge** sources, including Azure AI Search connections.
-   1. **Memory** for conversation and thread state.
-   1. **Guardrails** and content safety policies.
-   1. **Agents** overview, where prompt-based and hosted agents are listed.
+### 1. Open the portal and select your project
+
+1. Navigate to [ai.azure.com](https://ai.azure.com) and sign in with your workshop account.
+1. From the project list, click on your assigned project (for example, **lab-attendee-1**).
+
+### 2. Explore the Home tab
+
+You land on the **Home** tab for your project.
+
+![Microsoft Foundry portal Home tab showing the project endpoint and quick-start actions](../../../docs/assets/screenshots/02-home-tab.png)
+
+Look for the **Project endpoint** displayed prominently near the top of the page. This is the URL your code uses to talk to agents and models in this project.
+
+> **Note:** Your project endpoint is already saved in your `.env` file — you don't need to copy it now. It is shown here so you know where to find it if you ever need to verify or share it.
+
+The three quick-start cards below the endpoint let you jump straight to:
+
+| Card | What it does |
+|---|---|
+| **Create agents** | Opens the agent builder in the Build tab |
+| **Explore playgrounds** | Opens a live chat/completion playground |
+| **Find models** | Takes you to the model catalog |
+
+### 3. Explore the Discover tab
+
+Click **Discover** in the top navigation bar.
+
+![Microsoft Foundry Discover tab showing featured models and provider collections](../../../docs/assets/screenshots/02-discover-tab.png)
+
+The Discover tab is the starting point for finding models, tools, and solution templates. The left sidebar has four sections:
+
+| Section | What you'll find |
+|---|---|
+| **Overview** | Featured models, popular providers, and model collections |
+| **Models** | The full model catalog with filters and compare |
+| **Agents** | Pre-built agent templates you can use as a starting point |
+| **Tools** | MCP servers and built-in tools you can attach to agents |
+| **Solution templates** | End-to-end solution starters |
+
+#### Browse the model catalog
+
+1. Click **Models** in the left sidebar.
+
+   ![Model catalog showing 90 available models with filters for availability, source, and inference tasks](../../../docs/assets/screenshots/02-discover-models.png)
+
+1. Notice the **Availability** filter is set to **Available in my project** by default — this shows only the models already deployed and ready to use in your project.
+1. Click **All models** to see the full catalog of 90+ models across providers (OpenAI, Anthropic, Microsoft, Meta, Mistral, DeepSeek, and more).
+1. Click any model card to view its description, supported inference tasks, context window, and pricing.
+1. Click **Compare models** (top right) to place two models side by side and compare capabilities.
+
+> You do not need to deploy any models — your workshop environment already has `gpt-4o` and an embedding model ready to go.
+
+### 4. Explore the Build tab
+
+Click **Build** in the top navigation bar.
+
+![Microsoft Foundry Build tab showing the Agents section with the left-sidebar navigation](../../../docs/assets/screenshots/02-build-tab.png)
+
+The Build tab is where you create and configure agents and their dependencies. The left sidebar shows:
+
+| Section | What it does |
+|---|---|
+| **Agents** | Create and manage prompt-based and hosted agents |
+| **Models** | View deployed model endpoints for this project |
+| **Fine-tune** | Start fine-tuning jobs on supported base models |
+| **Tools** | Add MCP servers or built-in tools to your project |
+| **Knowledge** | Connect Azure AI Search indexes as grounding sources |
+| **Memory** | Configure conversation thread and memory state |
+| **Data** | Manage datasets for fine-tuning and evaluation |
+| **Evaluations** | Run and review agent and model evaluations |
+| **Guardrails** | Configure content safety and policy controls |
+
+You will use **Agents**, **Tools**, **Knowledge**, and **Evaluations** in later modules. No action is needed here now — just note the layout.
+
+### 5. Explore the Operate tab
+
+Click **Operate** in the top navigation bar.
+
+![Microsoft Foundry Operate tab showing the Overview dashboard with running agents, cost, success rate, and token usage](../../../docs/assets/screenshots/02-operate-tab.png)
+
+The Operate tab provides observability across your projects. The **Overview** dashboard shows:
+
+- **Running agents** — agents currently active
+- **Estimated cost** — token and compute spend over the selected period
+- **Agent success rate** — how often agents complete without errors
+- **Token usage** — consumption across models and projects
+
+The sidebar also has **Assets**, **Compliance**, **Quota**, and **Admin** for governance and capacity management. You'll return here in Module 11 (Agent Ops and Agent Identity).
 
 ## Validation
 
-- You can name the three primary tabs (Home, Discover, Build) and what each is for.
-- You located the deployed `chat` and `embedding` models for your project on the Build tab.
-- You can find the Knowledge and Agents surfaces you will use in later steps.
+- You can locate the **Project endpoint** on the Home tab and know that it's already in your `.env` file.
+- You can navigate to **Discover > Models**, filter by **Available in my project**, and identify the deployed models.
+- You can find the **Agents**, **Knowledge**, and **Evaluations** sections on the Build tab.
+- You understand that the Operate tab is where you monitor agent health and cost.
 
 ## Troubleshooting
 
-- If you cannot see your project, confirm the active project selector matches the project assigned to you in Module 00.
-- If a tab is empty, refresh the portal and confirm your role grants read access to the project.
+- **Can't see your project?** Confirm the project name shown in the top breadcrumb matches the one assigned to you in Module 01. Use the breadcrumb dropdown to switch projects.
+- **A tab is empty or shows an error?** Refresh the page and confirm your account has the Contributor role on the project. Ask your proctor if the role assignment is missing.
+- **Project endpoint not visible on Home?** Make sure the **New Foundry** toggle (top right) is switched **on** — the classic view does not show the endpoint card.
