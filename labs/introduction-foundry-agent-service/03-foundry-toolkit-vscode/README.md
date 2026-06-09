@@ -48,9 +48,6 @@ With the Azure identity confirmed, link the Foundry Toolkit to your assigned pro
 - [ ] Click the **Foundry Toolkit** icon in the Activity Bar.
 - [ ] In the **My Resources** section, expand **Microsoft Foundry Resources** and click **Set Default Project**.
 - [ ] A quick-pick dropdown lists all Foundry projects in your subscription.
-
-  ![VS Code quick-pick showing available Foundry projects including lab-attendee-1 through lab-proctor-1 in australiaeast](../../../docs/assets/screenshots/03-foundry-toolkit-set-default-project.png)
-
 - [ ] Select the project assigned to you (for example, **lab-attendee-1**).
 
   Your project name is shown in the `FOUNDRY_PROJECT_NAME` value. You can verify it by running:
