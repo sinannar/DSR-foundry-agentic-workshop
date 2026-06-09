@@ -1,5 +1,5 @@
 ---
-description: "Test the organizer guide end-to-end: provision, RBAC, AI Search, and output validation for the foundry-hol2 environment"
+description: "Test the organizer guide end-to-end: provision, RBAC, AI Search, and output validation for the foundry-hol3 environment"
 ---
 
 You must test the steps in the #file:docs/guide-organizer.md.
