@@ -12,7 +12,7 @@
 
 ## Steps
 
-- [ ] Open the `retail-assistant` agent in the portal.
+- [ ] Open the `acl-remedy-advisor` agent in the portal.
 - [ ] Review the agent's overview, including its name, identifier, and the project
    it belongs to.
 - [ ] Review the operational metadata:

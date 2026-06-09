@@ -1,4 +1,4 @@
-"""Starter code for Lab 04 — chat with the acl-remedy-advisor Prompt Agent."""
+"""Solution for Lab 04 — chat with the acl-remedy-advisor Prompt Agent."""
 
 import os
 

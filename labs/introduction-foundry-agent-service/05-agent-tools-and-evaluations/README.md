@@ -12,7 +12,7 @@
 
 ## Steps
 
-- [ ] Open the `retail-assistant` agent in the Foundry Toolkit.
+- [ ] Open the `acl-remedy-advisor` agent in the Foundry Toolkit.
 - [ ] Add built-in tools to the agent:
   - [ ] Select **Tools** and enable tools appropriate for a retail assistant,
       such as file search or code interpreter.

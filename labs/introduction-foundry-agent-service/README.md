@@ -18,7 +18,7 @@ The module pages are generated automatically during docs build and preview from 
 1. [Setup](./01-setup/README.md)
 1. [Foundry Portal Walkthrough](./02-foundry-portal-walkthrough/README.md)
 1. [Foundry Toolkit for VS Code](./03-foundry-toolkit-vscode/README.md)
-1. [Prompt-based Agents](./04-prompt-based-agents/README.md)
+1. [Prompt Agents](./04-prompt-based-agents/README.md)
 1. [Agent Tools and Evaluations](./05-agent-tools-and-evaluations/README.md)
 1. [MCP Tools](./06-mcp-tools/README.md)
 1. [Foundry Toolboxes (optional)](./07-foundry-toolboxes/README.md)

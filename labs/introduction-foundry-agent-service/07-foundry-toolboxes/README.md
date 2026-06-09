@@ -12,7 +12,7 @@
 
 ## Steps
 
-- [ ] Open the `retail-assistant` agent.
+- [ ] Open the `acl-remedy-advisor` agent.
 - [ ] Review the available Foundry Toolboxes and what each bundles together.
 - [ ] Attach a toolbox to the agent.
 - [ ] Update the agent instructions to describe when to use the toolbox.

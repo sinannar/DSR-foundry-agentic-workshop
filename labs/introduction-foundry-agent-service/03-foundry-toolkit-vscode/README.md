@@ -9,7 +9,7 @@ The **Foundry Toolkit for VS Code** extension brings Microsoft Foundry directly 
 
 > **Reference:** [Work with the Microsoft Foundry Toolkit for Visual Studio Code extension](https://learn.microsoft.com/en-us/azure/foundry/how-to/develop/get-started-projects-vs-code)
 >
-> **Tip:** In Module 04 you will create your first prompt-based agent using the Agent Builder experience directly inside this extension. This module focuses on getting the extension set up and oriented.
+> **Tip:** In Module 04 you will create your first Prompt Agent using the Agent Builder experience directly inside this extension. This module focuses on getting the extension set up and oriented.
 
 ## Objectives
 

@@ -12,7 +12,7 @@
 
 ## Steps
 
-- [ ] Open the `retail-assistant` agent.
+- [ ] Open the `acl-remedy-advisor` agent.
 - [ ] Add an MCP tool source to the agent:
   - [ ] Select **Tools** and add an MCP tool connection.
   - [ ] Confirm the tool's available functions are discovered and listed.

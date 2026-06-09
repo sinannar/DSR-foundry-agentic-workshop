@@ -11,11 +11,11 @@
 ## Objectives
 
 - Understand when and why agents are published.
-- Publish the `retail-assistant` agent and confirm its published state.
+- Publish the `acl-remedy-advisor` agent and confirm its published state.
 
 ## Steps
 
-- [ ] Open the `retail-assistant` agent in the portal.
+- [ ] Open the `acl-remedy-advisor` agent in the portal.
 - [ ] Review the publishing options and what publishing makes available to
    consumers.
 - [ ] Publish the agent:

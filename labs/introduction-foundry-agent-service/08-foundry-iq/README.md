@@ -26,7 +26,7 @@
 - [ ] Add the second knowledge source:
   - [ ] Connect the retail policies index.
   - [ ] Confirm fields map correctly, including the vector field.
-- [ ] Attach the knowledge base to the `retail-assistant` agent.
+- [ ] Attach the knowledge base to the `acl-remedy-advisor` agent.
 - [ ] Update the agent instructions to prefer knowledge for product and policy
    questions.
 - [ ] Run grounded queries, for example:

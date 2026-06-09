@@ -1,6 +1,6 @@
-# 04. Create and run a prompt-based agent
+# 04. Create and chat with a Prompt Agent
 
-**Estimated time:** TBD
+**Estimated time:** 20 minutes
 
 ![Diagram showing the Microsoft Foundry Agent Service architecture, with agents, tools, knowledge bases, and model deployments connected through a Foundry project.](../../../docs/assets/diagrams/foundry-agent-service.png)
 
@@ -9,37 +9,175 @@
 
 ## Objectives
 
-- Create a prompt-based agent with the Foundry Toolkit.
-- Configure the agent to use a deployed model.
-- Run the agent in VS Code and validate behavior with test prompts.
+- Understand what a Prompt Agent is and how the Agent Loop works.
+- Create a Prompt Agent using the **Agent Builder** in the Foundry Toolkit for VS Code.
+- Chat with the agent from Python code using `AIProjectClient`.
+
+## Concepts
+
+### What is a Prompt Agent?
+
+A **Prompt Agent** is a fully managed agent you configure with three things: a model, a set of instructions, and optional tools. There is no code to write or maintain — Foundry Agent Service handles the runtime for you.
+
+### The Agent Loop
+
+Every agent runs a loop: it receives your message, reasons about it, optionally calls tools to gather information, then generates a response. This cycle repeats for each turn of the conversation.
+
+You can implement this loop yourself — write code that calls a model, parses any tool-call requests from the response, runs the tools, and feeds the results back to the model. That gives you full control but requires code to maintain.
+
+With a **Prompt Agent**, Foundry Agent Service hosts the loop for you. You send a message and receive a finished response. The service handles tool calls, context management, and retries on your behalf.
+
+> **Module 09** introduces the **Microsoft Agent Framework**, which gives you the control of a code-implemented loop while providing structured patterns for complex, multi-agent workflows. For now, you'll use `AIProjectClient` — the simplest path for interacting with a Prompt Agent from code.
+
+### Agent Builder vs code creation
+
+There are two ways to create a Prompt Agent:
+
+| Approach | When to use |
+|---|---|
+| **Agent Builder** (this module) | Quick creation, visual configuration, playground testing — no code required |
+| **SDK (`PromptAgentDefinition`)** | Programmatic creation, CI/CD pipelines, version-controlled agent definitions |
+
+Both produce the same agent. This module uses Agent Builder so you can see the configuration visually before writing any code.
 
 ## Steps
 
-- [ ] In the Foundry Toolkit, create a new **prompt-based agent**.
-- [ ] Give the agent a clear name, for example `retail-assistant`.
-- [ ] Configure the agent:
-  - [ ] Select the deployed `chat` model.
-  - [ ] Provide instructions that describe a helpful retail assistant for an
-      online store.
-  - [ ] Keep tools and knowledge empty for now; you add them in later steps.
-- [ ] Save the agent and confirm it appears in the Agents list.
-- [ ] Run the agent from the toolkit chat surface.
-- [ ] Execute a few simple test prompts, for example:
-  - [ ] "What can you help me with?"
-  - [ ] "Suggest a gift under 50 dollars for a coffee lover."
-  - [ ] "Summarize your role in one sentence."
-- [ ] Review the responses and confirm the agent follows its instructions.
+### Part 1 — Create the Prompt Agent in Agent Builder
+
+#### 1. Open Agent Builder
+
+- [ ] Click the **Foundry Toolkit** icon in the Activity Bar.
+- [ ] In the **Developer Tools** section, click **Create Agent**.
+
+  ![Foundry Toolkit Developer Tools section showing the Create Agent option leading to Agent Builder](../../../docs/assets/screenshots/04-agent-builder-new.png)
+
+- [ ] On the Create Agent screen, click **Open Agent Builder** under *Design an agent without code*.
+
+#### 2. Configure the agent
+
+- [ ] In the **Agent name** field, enter `acl-remedy-advisor`.
+- [ ] In the **Model** dropdown, select `chat (via Microsoft Foundry)`.
+- [ ] In the **Instructions** field, paste the following:
+
+  ```text
+  You are an Australian Consumer Law (ACL) Remedy Advisor for retail staff.
+  When a customer reports a problem with a product, help staff determine the
+  correct remedy under the ACL consumer guarantees.
+
+  Distinguish between a **major failure** (the customer may choose a refund,
+  replacement, or repair) and a **minor failure** (the business may choose to
+  repair the product within a reasonable time, or offer a replacement or
+  refund).
+
+  When assessing a situation consider:
+  - The type of product and its expected lifespan
+  - The price paid
+  - How long the customer has had the product
+  - What a reasonable consumer would expect
+
+  Use web search to ground your guidance in current ACCC guidance at
+  accc.gov.au and always cite your sources with links.
+
+  Always state clearly that you provide general guidance, not legal advice,
+  and that "no refund" signs are unlawful under the ACL.
+
+  Be concise and practical — retail staff need fast, clear answers in a
+  busy store environment.
+  ```
+
+  ![Agent Builder showing acl-remedy-advisor configured with the chat model and instructions filled in](../../../docs/assets/screenshots/04-agent-builder-config.png)
+
+#### 3. Add the Web Search tool
+
+- [ ] Scroll down to the **TOOL** section and click **Add Tool**.
+- [ ] In the dialog that opens, click the **Configured** tab.
+- [ ] Select **Web search** (Built-in · Microsoft Foundry).
+- [ ] Click **Add Tools (1)**.
+
+  ![Agent Builder Configured tools dialog showing Web search selected with a checkmark](../../../docs/assets/screenshots/04-agent-builder-web-search.png)
+
+- [ ] Confirm **Web search** appears in the TOOL section of the Agent Builder.
+
+#### 4. Save and test in the playground
+
+- [ ] Click **Save to Foundry**.
+- [ ] Once saved, type a test message in the playground at the bottom of the Agent Builder:
+
+  > A customer wants to return a $1,200 TV that stopped working after 18 months. What are their rights under Australian Consumer Law?
+
+- [ ] Send the message and review the response. Confirm the agent:
+  - Identifies whether the failure is major or minor.
+  - Cites ACCC guidance (accc.gov.au) or a state consumer affairs site.
+  - States that its answer is general guidance, not legal advice.
+
+  ![Agent Builder playground showing the acl-remedy-advisor agent responding with ACCC citations and major/minor failure analysis](../../../docs/assets/screenshots/04-agent-playground-test.png)
+
+- [ ] Ask a follow-up question to confirm conversation context is preserved:
+
+  > The customer says they just want a refund and don't want a repair. Can the store insist on repairing it first?
+
+### Part 2 — Chat with the agent from code
+
+#### 5. Set up your environment
+
+- [ ] Copy `shared/.env.example` to `.env` in the repository root (if you have not already done so in Module 01).
+- [ ] Open `.env` and confirm or set these two values:
+
+  ```env
+  FOUNDRY_PROJECT_ENDPOINT=<your value from the onboarding file>
+  AGENT_NAME=acl-remedy-advisor
+  ```
+
+- [ ] Install dependencies if needed:
+
+  ```bash
+  pip install -r shared/requirements.txt
+  ```
+
+#### 6. Run the starter script
+
+- [ ] Open a terminal and run:
+
+  ```bash
+  python labs/introduction-foundry-agent-service/04-prompt-based-agents/src/starter.py
+  ```
+
+- [ ] When prompted, type the same question you used in the playground:
+
+  > A customer wants to return a $1,200 TV that stopped working after 18 months. What are their rights under Australian Consumer Law?
+
+- [ ] Review the response in the terminal. You should see a `[web search]` indicator before the answer, followed by the advisor's response with citations.
+
+- [ ] Ask the follow-up question to confirm the conversation remembers the first turn:
+
+  > The customer says they just want a refund and don't want a repair. Can the store insist on repairing it first?
+
+- [ ] Type `exit` to quit.
+
+#### 7. Review the code
+
+Open `src/starter.py` and note these key patterns:
+
+| Code | What it does |
+|---|---|
+| `AIProjectClient(endpoint, DefaultAzureCredential())` | Connects to your Foundry project using your Azure identity |
+| `client.get_openai_client()` | Returns an OpenAI-compatible client scoped to the project |
+| `openai.conversations.create()` | Creates a conversation thread — all turns share this context |
+| `openai.responses.create(conversation=..., extra_body={"agent_reference": ...})` | Sends a message to the agent and receives a response |
+| `response.output_text` | The agent's final text response |
+| `response.output` items of type `web_search_call` | Tool calls the agent made during this turn |
 
 ## Validation
 
-- The agent appears in the Agents list with the deployed `chat` model.
-- The agent responds to test prompts and stays in character.
-- You can re-run the agent and get consistent, on-topic responses.
+- `acl-remedy-advisor` appears under **Prompt Agents** in the Foundry Toolkit **My Resources** panel.
+- The playground response for the TV question cites at least one link from `accc.gov.au` or a state consumer affairs site.
+- Running `src/starter.py` prints a conversation ID, shows a `[web search]` indicator, and returns a cited response.
+- The follow-up question receives an answer that references the TV from the first question, confirming conversation memory is working.
 
 ## Troubleshooting
 
-- If the model is unavailable, confirm the `chat` deployment exists on the
-  Build tab and that your role grants access.
-- If responses are empty, check the agent instructions are saved and not blank.
-- If requests fail, confirm your session is authenticated and the project is
-  the one assigned in Module 00.
+- **Save to Foundry fails** — confirm your Default Project is set correctly via the Foundry Toolkit **Set Default Project** action in My Resources. If the Codespace cannot reach the endpoint, create the agent from code using `PromptAgentDefinition` — see the solution folder for an example.
+- **Web search does not fire** — rephrase your prompt to explicitly request current information, for example: *Search accc.gov.au for the current rules on major failures.*
+- **`AIProjectClient` raises an auth error** — run `az login` in the terminal and confirm `FOUNDRY_PROJECT_ENDPOINT` is set in your `.env` file.
+- **Agent not found** — confirm `AGENT_NAME` in `.env` matches exactly (`acl-remedy-advisor` is case-sensitive).
+- **Model unavailable** — confirm the `chat` deployment exists in the **Models** section of your project in the Foundry Toolkit.
