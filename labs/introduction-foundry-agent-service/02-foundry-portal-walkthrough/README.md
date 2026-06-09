@@ -1,5 +1,7 @@
 # 02. Foundry portal walkthrough
 
+![Microsoft Foundry product suite diagram showing the full suite of services and capabilities](../../../docs/assets/diagrams/microsoft-foundry-product-suite.png)
+
 **Estimated time:** 5 minutes
 
 The Microsoft Foundry portal at [ai.azure.com](https://ai.azure.com) is the browser-based control plane for your project. This module gives you a quick orientation across the four main tabs — **Home**, **Discover**, **Build**, and **Operate** — so you know where everything lives before you write any code.
