@@ -237,38 +237,64 @@ def _check_endpoints(
 ) -> None:
     _section('Service endpoints')
 
-    cs_token = _get_token('https://cognitiveservices.azure.com')
+    # The new Foundry v1 endpoints require the ai.azure.com audience, not cognitiveservices.
+    foundry_token = _get_token('https://ai.azure.com')
 
-    # Foundry project endpoint
-    if cs_token and endpoint:
+    # Foundry project endpoint — probe GET {endpoint}/connections (lists project connections;
+    # confirms data-plane reachability via the azure-ai-projects REST API).
+    if foundry_token and endpoint:
+        probe_url = endpoint.rstrip('/') + '/connections?api-version=2025-05-15-preview'
         try:
             resp = requests.get(
-                endpoint, headers={'Authorization': f'Bearer {cs_token}'}, timeout=10
+                probe_url, headers={'Authorization': f'Bearer {foundry_token}'}, timeout=10
             )
-            # Any response below 500 confirms the service is up and token is accepted.
-            check('Foundry project endpoint reachable', resp.status_code < 500, f'HTTP {resp.status_code}')
-        except requests.RequestException as exc:
-            check('Foundry project endpoint reachable', False, _net_err(exc))
-    else:
-        check('Foundry project endpoint reachable', False, 'missing token or endpoint')
-
-    # Azure OpenAI endpoint — list deployments as a lightweight probe
-    if cs_token and openai_endpoint:
-        base = openai_endpoint.split('/openai/v1')[0] if '/openai/v1' in openai_endpoint else openai_endpoint
-        url = f'{base.rstrip("/")}/openai/deployments?api-version=2024-10-21'
-        try:
-            resp = requests.get(
-                url, headers={'Authorization': f'Bearer {cs_token}'}, timeout=10
-            )
-            if resp.status_code == 200:
-                count = len(resp.json().get('data', []))
-                check('Azure OpenAI endpoint reachable', True, f'{count} deployment(s) visible')
+            if resp.ok:
+                connections = resp.json().get('value', [])
+                count = len(connections)
+                check(
+                    'Foundry project endpoint reachable',
+                    True,
+                    f'URL {probe_url} | {count} connection(s) visible',
+                )
             else:
-                check('Azure OpenAI endpoint reachable', resp.status_code < 500, f'HTTP {resp.status_code}')
+                check(
+                    'Foundry project endpoint reachable',
+                    False,
+                    f'URL {probe_url} | HTTP {resp.status_code}',
+                )
         except requests.RequestException as exc:
-            check('Azure OpenAI endpoint reachable', False, _net_err(exc))
+            check('Foundry project endpoint reachable', False, f'URL {probe_url} | {_net_err(exc)}')
     else:
-        check('Azure OpenAI endpoint reachable', False, 'missing token or endpoint')
+        probe_url = (endpoint.rstrip('/') + '/connections?api-version=2025-05-15-preview') if endpoint else '<missing>'
+        check('Foundry project endpoint reachable', False, f'URL {probe_url} | missing token or endpoint')
+
+    # Azure OpenAI endpoint — probe GET {endpoint}/models (lists accessible models via v1 API).
+    if foundry_token and openai_endpoint:
+        probe_url = openai_endpoint.rstrip('/') + '/models'
+        try:
+            resp = requests.get(
+                probe_url, headers={'Authorization': f'Bearer {foundry_token}'}, timeout=10
+            )
+            if resp.ok:
+                models = resp.json().get('data', [])
+                count = len(models)
+                names = ', '.join(m.get('id', '') for m in models[:6])
+                check(
+                    'Azure OpenAI endpoint reachable',
+                    True,
+                    f'URL {probe_url} | {count} model(s): {names}' if count else f'URL {probe_url} | 0 models',
+                )
+            else:
+                check(
+                    'Azure OpenAI endpoint reachable',
+                    False,
+                    f'URL {probe_url} | HTTP {resp.status_code}',
+                )
+        except requests.RequestException as exc:
+            check('Azure OpenAI endpoint reachable', False, f'URL {probe_url} | {_net_err(exc)}')
+    else:
+        probe_url = (openai_endpoint.rstrip('/') + '/models') if openai_endpoint else '<missing>'
+        check('Azure OpenAI endpoint reachable', False, f'URL {probe_url} | missing token or endpoint')
 
     # AI Search service
     if search_name:

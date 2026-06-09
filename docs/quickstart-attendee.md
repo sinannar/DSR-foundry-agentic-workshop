@@ -11,15 +11,26 @@ detailed setup and troubleshooting.
 1. [Python 3.13 or later](https://www.python.org/downloads/).
 1. Your assigned project information from your organizer.
 
-```bash
-python -m pip install -r shared/requirements.txt
-```
-
 ## Clone the repository
 
 ```bash
 git clone https://github.com/PlagueHO/foundry-agentic-workshop.git
 cd foundry-agentic-workshop
+```
+
+## Install dependencies
+
+```bash
+python -m venv .venv
+```
+
+Activate the virtual environment:
+
+- **Windows:** `.venv\Scripts\activate`
+- **macOS / Linux:** `source .venv/bin/activate`
+
+```bash
+python -m pip install -r shared/requirements.txt
 ```
 
 ## Configure your environment file

@@ -21,10 +21,19 @@ Apply these instructions to generated code, Markdown edits, and PRs.
 
 ## Workshop Content Rules
 
-- Preserve numbered lab progression from 00 through 08.
+- Preserve numbered lab progression 01–12 within `labs/introduction-foundry-agent-service/`.
 - Keep each lab independently understandable and runnable.
 - Align content language with Microsoft Foundry terminology and workflows.
 - Prefer small, reviewable changes scoped to one lab or concern.
+
+## Lab Content Rules
+
+- Each lab README must follow the section order: **Objectives → Steps → Validation → Troubleshooting**.
+- Write Steps as numbered, concrete instructions an attendee can follow without ambiguity.
+- Write Validation as observable outcomes the attendee can verify (commands, UI states, printed output).
+- **Verify technical accuracy against Microsoft Learn (`learn.microsoft.com/azure/ai-foundry/`) before adding or changing steps.**
+- Keep tone encouraging and approachable; attendees range from beginner to expert.
+- Use real, working example prompts in lab steps; avoid placeholder text such as "enter some text here".
 
 ## Python Authoring Rules
 
@@ -45,16 +54,9 @@ Apply these instructions to generated code, Markdown edits, and PRs.
 
 - Keep instructional writing concise, direct, and step-oriented.
 - Use stable headings that work with sequential workshop delivery.
-- Keep setup, validation, and troubleshooting sections clearly separated in lab docs.
 - Avoid adding session-specific dates or temporary event details outside date-scoped sections.
 
-## Avoid Patterns
-
-- Avoid broad refactors that touch multiple labs without a clear need.
-- Avoid introducing framework or language changes that break Python-first workshop flow.
-- Avoid introducing conflicting terms for the same Foundry concept across docs.
-
-## Markdown linting
+## Markdown Linting
 
 All `.md` files are linted with [markdownlint-cli2](https://github.com/DavidAnson/markdownlint-cli2).
 
@@ -62,10 +64,10 @@ All `.md` files are linted with [markdownlint-cli2](https://github.com/DavidAnso
 
 ```bash
 # Check for issues
-npm run lint:md
+pnpm run lint:md
 
 # Auto-fix issues
-npm run lint:md:fix
+pnpm run lint:md:fix
 ```
 
 ### VS Code integration
@@ -76,12 +78,18 @@ Install the [markdownlint extension](https://marketplace.visualstudio.com/items?
 
 Configuration lives in `.markdownlint.json` and `.markdownlint-cli2.jsonc`. Notable settings:
 
-- **MD013** (line length): disabled - no line length limit.
-- **MD024** (duplicate headings): siblings only - duplicate headings allowed if not siblings.
-- **MD029** (ordered list style): `one` - all list items use `1.`.
+- **MD013** (line length): disabled — no line length limit.
+- **MD024** (duplicate headings): siblings only — duplicate headings allowed if not siblings.
+- **MD029** (ordered list style): `one` — all list items use `1.`.
 - **MD033** (inline HTML): only `br` and `kbd` are permitted.
-- **MD041** (first line heading): disabled - files need not start with a heading.
+- **MD041** (first line heading): disabled — files need not start with a heading.
 
 ### CI
 
 The `lint-markdown` workflow runs automatically on push and pull requests that touch `.md` files. Fix all issues before merging.
+
+## Avoid Patterns
+
+- Avoid broad refactors that touch multiple labs without a clear need.
+- Avoid introducing framework or language changes that break Python-first workshop flow.
+- Avoid introducing conflicting terms for the same Foundry concept across docs.

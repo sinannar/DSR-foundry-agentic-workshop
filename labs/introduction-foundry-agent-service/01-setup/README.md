@@ -2,7 +2,7 @@
 
 ## Objectives
 
-- Understand what your organizer has provisioned and what you have been provided with.
+- Understand what Azure services you have been provisioned with for this lab.
 - Install prerequisites and configure your local environment.
 - Sign in to Azure and confirm access to your assigned Foundry project.
 - Verify the pre-provisioned environment so you can focus on building agents.
@@ -39,6 +39,15 @@ Install the following before continuing:
    cd foundry-agentic-workshop
    code-insiders .
    ```
+
+1. Create a Python virtual environment in the repository root and activate it:
+
+   ```bash
+   python -m venv .venv
+   ```
+
+   - **Windows:** `.venv\Scripts\activate`
+   - **macOS / Linux:** `source .venv/bin/activate`
 
 1. Install the shared Python dependencies:
 
@@ -94,6 +103,7 @@ Install the following before continuing:
 
 | Symptom | Likely cause | Fix |
 |---------|--------------|-----|
+| `pip install` fails with `externally-managed-environment` | Python 3.13 on Linux/macOS enforces PEP 668. | Create and activate the `.venv` virtual environment first (see step 2). |
 | `health-check.py` reports authentication failure | Not signed in or wrong subscription. | Re-run `az login` and `az account set --subscription <id>`. |
 | Project not visible in the portal | Role not yet assigned, or wrong project name. | Confirm your `FOUNDRY_PROJECT_NAME` with your organizer or proctor. |
 | Cannot deploy a model | Expected with the `foundry-user` role. | Use the models your organizer pre-deployed or request your organizer provides you with the necessary permissions. |
