@@ -57,7 +57,12 @@ Both produce the same agent. This module uses Agent Builder so you can see the c
 - [ ] Click the **Foundry Toolkit** icon in the Activity Bar.
 - [ ] In the **Developer Tools** section, click **Create Agent**.
 
+  <details>
+  <summary>📸 Screenshot: Agent Builder — Create Agent</summary>
+
   ![Foundry Toolkit Developer Tools section showing the Create Agent option leading to Agent Builder](../../../docs/assets/screenshots/04-agent-builder-new.png)
+
+  </details>
 
 - [ ] On the Create Agent screen, click **Open Agent Builder** under *Design an agent without code*.
 
@@ -93,7 +98,12 @@ Both produce the same agent. This module uses Agent Builder so you can see the c
   busy store environment.
   ```
 
+  <details>
+  <summary>📸 Screenshot: Agent Builder — configured instructions</summary>
+
   ![Agent Builder showing acl-remedy-advisor configured with the chat model and instructions filled in](../../../docs/assets/screenshots/04-agent-builder-config.png)
+
+  </details>
 
 #### 3. Add the Web Search tool
 
@@ -102,7 +112,12 @@ Both produce the same agent. This module uses Agent Builder so you can see the c
 - [ ] Select **Web search** (Built-in · Microsoft Foundry).
 - [ ] Click **Add Tools (1)**.
 
+  <details>
+  <summary>📸 Screenshot: Agent Builder — Web search tool added</summary>
+
   ![Agent Builder Configured tools dialog showing Web search selected with a checkmark](../../../docs/assets/screenshots/04-agent-builder-web-search.png)
+
+  </details>
 
 - [ ] Confirm **Web search** appears in the TOOL section of the Agent Builder.
 
@@ -120,7 +135,12 @@ Both produce the same agent. This module uses Agent Builder so you can see the c
   - Cites ACCC guidance (accc.gov.au) or a state consumer affairs site.
   - States that its answer is general guidance, not legal advice.
 
+  <details>
+  <summary>📸 Screenshot: Agent Builder — playground response</summary>
+
   ![Agent Builder playground showing the acl-remedy-advisor agent responding with ACCC citations and major/minor failure analysis](../../../docs/assets/screenshots/04-agent-playground-test.png)
+
+  </details>
 
 - [ ] Ask a follow-up question to confirm conversation context is preserved:
 
@@ -231,7 +251,12 @@ Every conversation your code creates is recorded by Foundry Agent Service and vi
 - [ ] Click the **Conversations** tab in the Agent Builder header.
 - [ ] Confirm your conversation appears in the list with a **Completed** status and token counts.
 
+  <details>
+  <summary>📸 Screenshot: Agent Builder — Conversations tab</summary>
+
   ![Agent Builder Conversations tab showing a list of completed conversations with token counts and timestamps](../../../docs/assets/screenshots/04-agent-conversations-list.png)
+
+  </details>
 
 - [ ] Click the top conversation ID to open the detail view.
 - [ ] In the detail panel, observe the full agentic loop recorded by the service:
@@ -241,7 +266,12 @@ Every conversation your code creates is recorded by Foundry Agent Service and vi
 
   > The entire loop — reasoning, tool dispatch, result processing, and response generation — ran inside Foundry Agent Service. Your Python code only sent the user message and received the finished response; it never saw the intermediate steps.
 
+  <details>
+  <summary>📸 Screenshot: Agent Builder — conversation detail</summary>
+
   ![Agent Builder conversation detail showing the agentic loop: user message, web_search_call tool step, and final message response](../../../docs/assets/screenshots/04-agent-conversation-detail.png)
+
+  </details>
 
 ## Validation
 

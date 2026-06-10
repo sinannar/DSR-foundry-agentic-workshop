@@ -52,6 +52,7 @@ export default defineConfig({
     config: taskListPlugin,
   },
   themeConfig: {
+    lightbox: true,
     nav: [
       { text: 'Home', link: '/' },
       { text: 'Organizer Quickstart', link: '/quickstart-organizer' },

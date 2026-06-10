@@ -44,7 +44,12 @@ The Microsoft Foundry portal at [ai.azure.com](https://ai.azure.com) is the brow
 
 You land on the **Home** tab for your project.
 
+<details>
+<summary>📸 Screenshot: Microsoft Foundry portal Home tab</summary>
+
 ![Microsoft Foundry portal Home tab showing the project endpoint and quick-start actions](../../../docs/assets/screenshots/02-home-tab.png)
+
+</details>
 
 Look for the **Project endpoint** displayed prominently near the top of the page. This is the URL your code uses to talk to agents and models in this project.
 
@@ -62,7 +67,12 @@ The three quick-start cards below the endpoint let you jump straight to:
 
 Click **Discover** in the top navigation bar.
 
+<details>
+<summary>📸 Screenshot: Microsoft Foundry Discover tab</summary>
+
 ![Microsoft Foundry Discover tab showing featured models and provider collections](../../../docs/assets/screenshots/02-discover-tab.png)
+
+</details>
 
 The Discover tab is the starting point for finding models, tools, and solution templates. The left sidebar has four sections:
 
@@ -78,7 +88,12 @@ The Discover tab is the starting point for finding models, tools, and solution t
 
 - [ ] Click **Models** in the left sidebar.
 
-   ![Model catalog showing 90 available models with filters for availability, source, and inference tasks](../../../docs/assets/screenshots/02-discover-models.png)
+  <details>
+  <summary>📸 Screenshot: Model catalog</summary>
+
+  ![Model catalog showing 90 available models with filters for availability, source, and inference tasks](../../../docs/assets/screenshots/02-discover-models.png)
+
+  </details>
 
 - [ ] Notice the **Availability** filter is set to **Available in my project** by default — this shows only the models already deployed and ready to use in your project.
 - [ ] Click **All models** to see the full catalog of 90+ models across providers (OpenAI, Anthropic, Microsoft, Meta, Mistral, DeepSeek, and more).
@@ -91,7 +106,12 @@ The Discover tab is the starting point for finding models, tools, and solution t
 
 Click **Build** in the top navigation bar.
 
+<details>
+<summary>📸 Screenshot: Microsoft Foundry Build tab</summary>
+
 ![Microsoft Foundry Build tab showing the Agents section with the left-sidebar navigation](../../../docs/assets/screenshots/02-build-tab.png)
+
+</details>
 
 The Build tab is where you create and configure agents and their dependencies. The left sidebar shows:
 
@@ -113,7 +133,12 @@ You will use **Agents**, **Tools**, **Knowledge**, and **Evaluations** in later 
 
 Click **Operate** in the top navigation bar.
 
+<details>
+<summary>📸 Screenshot: Microsoft Foundry Operate tab</summary>
+
 ![Microsoft Foundry Operate tab showing the Overview dashboard with running agents, cost, success rate, and token usage](../../../docs/assets/screenshots/02-operate-tab.png)
+
+</details>
 
 The Operate tab provides observability across your projects. The **Overview** dashboard shows:
 

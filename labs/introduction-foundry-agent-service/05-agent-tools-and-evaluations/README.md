@@ -84,7 +84,12 @@ The built-in evaluators relevant to an agent with tools are:
 - [ ] Click the **+** button next to **TOOL** to open the *Select a tool* dialog.
 - [ ] Confirm the **Configured** tab is selected. This tab shows tools that are pre-authorised for your Foundry project.
 
+  <details>
+  <summary>📸 Screenshot: Select a tool dialog</summary>
+
   ![Select a tool dialog showing the Configured tab with Foundry Tools including Web search (already added), Code Interpreter, File Search, Grounding with Bing Search, and Azure AI Search](../../../docs/assets/screenshots/05-add-tool-dialog.png)
+
+  </details>
 
   The dialog shows five Foundry Tools. **Web search** already shows an **Added** badge — you configured it in Module 04. **Code Interpreter** and **File Search** are available but not yet added.
 
@@ -94,7 +99,12 @@ The built-in evaluators relevant to an agent with tools are:
 - [ ] Click **Add Tools (1)** at the bottom right of the dialog.
 - [ ] Confirm **Code Interpreter** now appears in the **TOOL** section below **Web search**.
 
+  <details>
+  <summary>📸 Screenshot: Agent Builder — two tools configured</summary>
+
   ![Agent Builder TOOL section showing both Web search and Code Interpreter listed as configured tools](../../../docs/assets/screenshots/05-agent-tools-added.png)
+
+  </details>
 
   Both tools are now active. The agent's reasoning loop will have access to both during every conversation turn.
 
@@ -127,7 +137,12 @@ With two tools available, the agent needs guidance on *when* to use each one. Wi
 - [ ] Confirm the Agent Builder header now shows `acl-remedy-advisor | Microsoft Foundry | v2`.
 - [ ] Check the **MY RESOURCES** panel — **v2** should appear below `acl-remedy-advisor`, alongside **v1**.
 
+  <details>
+  <summary>📸 Screenshot: Agent Builder — agent saved as v2</summary>
+
   ![Agent Builder header and sidebar showing acl-remedy-advisor saved as v2, with v1 and v2 visible in the sidebar](../../../docs/assets/screenshots/05-agent-saved-v2.png)
+
+  </details>
 
   Foundry Agent Service stores an immutable snapshot of the agent configuration as **v2**. Your Module 04 code still works unchanged — it references the agent by name and will automatically use the latest version (v2) from this point forward.
 
@@ -143,7 +158,12 @@ With two tools available, the agent needs guidance on *when* to use each one. Wi
   - Explains the remedy options available to the customer.
   - Uses Web search to cite current ACCC guidance.
 
+  <details>
+  <summary>📸 Screenshot: Agent Builder — playground response (v2)</summary>
+
   ![Agent Builder playground showing the acl-remedy-advisor v2 agent responding with ACL classification, remedy options, and ACCC citations](../../../docs/assets/screenshots/05-playground-response.png)
+
+  </details>
 
   > **Note:** The test prompt is designed to trigger Web search (for ACL guidance) but may not always trigger Code Interpreter for the refund calculation — the model exercises judgement. In a real scenario you would iterate on both the prompt and the instructions until Code Interpreter fires reliably for calculation requests.
 
@@ -158,7 +178,12 @@ The Foundry Toolkit can generate the evaluation scaffolding for you so you can g
 - [ ] Click the **Evaluation** tab in the Agent Builder header (next to Playground and Conversations).
 - [ ] The **Evaluation Setup** screen appears with two options:
 
+  <details>
+  <summary>📸 Screenshot: Evaluation Setup screen</summary>
+
   ![Agent Builder Evaluation tab showing the Evaluation Setup screen with a Scaffold Evaluation Code button and a link to continue in Foundry](../../../docs/assets/screenshots/05-evaluation-setup.png)
+
+  </details>
 
   - **Scaffold Evaluation Code** — generates a `pytest-agent-evals` test suite in your local workspace. Use this to run evaluations locally or in CI/CD.
   - **Go to Foundry** — opens the Foundry portal where you can run evaluations directly in the cloud without any local setup.
@@ -170,7 +195,12 @@ The Foundry Toolkit can generate the evaluation scaffolding for you so you can g
 - [ ] Click **Scaffold Evaluation Code**.
 - [ ] The **Select Evaluator(s)** dialog opens, listing all available evaluators grouped by category.
 
+  <details>
+  <summary>📸 Screenshot: Select Evaluator(s) dialog</summary>
+
   ![Select Evaluator(s) dialog showing evaluators including Custom Prompt Evaluator, Custom Code Evaluator, Intent Resolution, Tool Call Accuracy, Task Adherence, and Relevance](../../../docs/assets/screenshots/05-evaluator-selection.png)
+
+  </details>
 
 - [ ] In the **Agents** category, check **Tool Call Accuracy**.
 
@@ -180,7 +210,12 @@ The Foundry Toolkit can generate the evaluation scaffolding for you so you can g
 
   > **Task Adherence** evaluates whether the agent's final response actually satisfies what the user asked for. A response can invoke a tool correctly but still fail to give the user a useful answer — Task Adherence catches that.
 
+  <details>
+  <summary>📸 Screenshot: Evaluators selected</summary>
+
   ![Select Evaluator(s) dialog showing Tool Call Accuracy and Task Adherence checked with 2 Selected counter in the header](../../../docs/assets/screenshots/05-evaluators-selected.png)
+
+  </details>
 
 - [ ] Click **OK**.
 
@@ -241,7 +276,12 @@ The local scaffold from Part 4 runs evaluations on your machine. The Foundry por
 - [ ] Click the **Evaluation** tab at the top of the agent detail page.
 - [ ] Confirm the **Automatic Evaluation** sub-tab is selected and shows *No evaluations found*.
 
+  <details>
+  <summary>📸 Screenshot: Foundry portal — Evaluation tab</summary>
+
   ![Foundry portal showing the Evaluation tab for acl-remedy-advisor agent with Automatic Evaluation, Human Evaluation, and Red team sub-tabs. No evaluations are listed.](../../../docs/assets/screenshots/05-portal-evaluation-tab.png)
+
+  </details>
 
 - [ ] Click **Create** (top-right of the evaluations list).
 
@@ -250,7 +290,12 @@ The local scaffold from Part 4 runs evaluations on your machine. The Foundry por
 - [ ] The **Create new evaluation** wizard opens at **Step 1: Target**.
 - [ ] Confirm **Agent** is already selected. `acl-remedy-advisor v2` is pre-checked in the agent list on the right.
 
+  <details>
+  <summary>📸 Screenshot: Create new evaluation — Step 1 Target</summary>
+
   ![Foundry portal Create new evaluation wizard showing Step 1 with Agent selected and acl-remedy-advisor v2 pre-checked in the agent list](../../../docs/assets/screenshots/05-portal-eval-step1-target.png)
+
+  </details>
 
 - [ ] Click **Next**.
 
@@ -260,7 +305,12 @@ The local scaffold from Part 4 runs evaluations on your machine. The Foundry por
   - **Individual turns** — evaluates single query–response pairs. Best for testing tool selection and per-turn response quality.
   - **Full conversations** (preview) — evaluates complete multi-turn conversations end-to-end.
 
+  <details>
+  <summary>📸 Screenshot: Create new evaluation — Step 2 Scope</summary>
+
   ![Foundry portal Step 2 Scope showing Individual turns selected with explanatory text about best use cases on the right panel](../../../docs/assets/screenshots/05-portal-eval-step2-scope.png)
+
+  </details>
 
 - [ ] Keep **Individual turns** selected — it gives you per-turn tool accuracy scores which align with the evaluators you selected in Part 4.
 - [ ] Click **Next**.
@@ -273,7 +323,12 @@ The local scaffold from Part 4 runs evaluations on your machine. The Foundry por
   - **Benchmarks** — industry-standard benchmarks with built-in evaluators.
   - **Existing traces** — evaluate real conversations already logged by the agent.
 
+  <details>
+  <summary>📸 Screenshot: Create new evaluation — Step 3 Data</summary>
+
   ![Foundry portal Step 3 Data showing Synthetic generation selected with Generate button and other options below it](../../../docs/assets/screenshots/05-portal-eval-step3-data.png)
+
+  </details>
 
 - [ ] Keep **Synthetic generation** selected — this is the zero-effort path; the portal generates relevant test questions automatically.
 - [ ] Click **Generate** to open the dataset configuration dialog.
@@ -290,11 +345,21 @@ The local scaffold from Part 4 runs evaluations on your machine. The Foundry por
     at least one question requiring a refund calculation.
     ```
 
+  <details>
+  <summary>📸 Screenshot: Generate synthetic dataset dialog</summary>
+
   ![Generate synthetic dataset dialog showing dataset name, Model set to chat, Number of rows set to 5, and the ACL scenario prompt filled in](../../../docs/assets/screenshots/05-portal-eval-synthetic-configured.png)
+
+  </details>
 
 - [ ] Click **Confirm**. The dataset card appears under Synthetic generation showing the name and *Version 1.0*.
 
+  <details>
+  <summary>📸 Screenshot: Synthetic dataset configured</summary>
+
   ![Foundry portal Step 3 Data showing the configured synthetic dataset card with name, Version 1.0, and a Synthetic generation badge](../../../docs/assets/screenshots/05-portal-eval-data-confirmed.png)
+
+  </details>
 
 - [ ] Click **Next**.
 
@@ -305,7 +370,12 @@ The local scaffold from Part 4 runs evaluations on your machine. The Foundry por
   - **Quality (4)**: Groundedness, Fluency, Coherence, Relevance
   - **Safety (6)**: Violence, SelfHarm, IndirectAttack, Sexual, HateAndUnfairness, CodeVulnerability
 
+  <details>
+  <summary>📸 Screenshot: Create new evaluation — Step 4 Criteria</summary>
+
   ![Foundry portal Step 4 Criteria showing 19 auto-suggested evaluators grouped into Agents (9), Quality (4), and Safety (6) categories with a mapped fields summary on the right panel](../../../docs/assets/screenshots/05-portal-eval-criteria-full.png)
+
+  </details>
 
   > The portal automatically maps your dataset fields to the evaluator inputs and shows the field bindings in the right panel (<code v-pre>query: {{item.query}}</code>, <code v-pre>response: {{sample.output_text}}</code>, etc.). You do not need to configure field mapping manually for synthetic data.
 
@@ -321,7 +391,12 @@ The local scaffold from Part 4 runs evaluations on your machine. The Foundry por
   acl-remedy-advisor-tools-eval
   ```
 
+  <details>
+  <summary>📸 Screenshot: Create new evaluation — Step 5 Review</summary>
+
   ![Foundry portal Step 5 Review showing the evaluation name field set to acl-remedy-advisor-tools-eval with a Summary panel on the right listing Target, Scope, Dataset, and Evaluators](../../../docs/assets/screenshots/05-portal-eval-review-named.png)
+
+  </details>
 
 - [ ] Click **Submit**.
 
@@ -330,12 +405,22 @@ The local scaffold from Part 4 runs evaluations on your machine. The Foundry por
 - [ ] After submitting, the portal navigates to the **acl-remedy-advisor-tools-eval** evaluation detail page.
 - [ ] Under **Evaluation runs**, you will see a row for your run. Wait for the **Status** to change to **Completed** (typically a few minutes for 5 rows).
 
+  <details>
+  <summary>📸 Screenshot: Evaluation run submitted</summary>
+
   ![Foundry portal acl-remedy-advisor-tools-eval detail page showing the evaluation run with Completed status and the list of Evaluators below](../../../docs/assets/screenshots/05-portal-eval-submitted.png)
+
+  </details>
 
 - [ ] Click the run name to open the detailed results view.
 - [ ] In the results view, observe the per-evaluator scores for each test row.
 
+  <details>
+  <summary>📸 Screenshot: Evaluation results</summary>
+
   ![Foundry portal evaluation run results page showing Status Completed with per-evaluator score columns including Groundedness, Violence, SelfHarm, and IndirectAttack](../../../docs/assets/screenshots/05-portal-eval-results.png)
+
+  </details>
 
 - [ ] Look for:
   - **ToolCallAccuracy** and **TaskAdherence** — are the scores consistently above 3 out of 5?

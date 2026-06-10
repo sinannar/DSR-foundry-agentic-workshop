@@ -91,13 +91,23 @@ Install the following before continuing:
 
 - [ ] Enable the **New Foundry** toggle in the top navigation bar if it is not already on.
 
-   ![New Foundry toggle in the top navigation bar](../../../docs/assets/screenshots/foundry-new-foundry-toggle.png)
+  <details>
+  <summary>📸 Screenshot: New Foundry toggle in the top navigation bar</summary>
+
+  ![New Foundry toggle in the top navigation bar](../../../docs/assets/screenshots/foundry-new-foundry-toggle.png)
+
+  </details>
 
 - [ ] When prompted, select the project named in your `FOUNDRY_PROJECT_NAME` from the dropdown and select **Let's go**.
 
    You should see the New Foundry project home page:
 
-   ![New Foundry project home page](../../../docs/assets/screenshots/new-foundry-project-home.png)
+  <details>
+  <summary>📸 Screenshot: New Foundry project home page</summary>
+
+  ![New Foundry project home page](../../../docs/assets/screenshots/new-foundry-project-home.png)
+
+  </details>
 
 ## Validation
 

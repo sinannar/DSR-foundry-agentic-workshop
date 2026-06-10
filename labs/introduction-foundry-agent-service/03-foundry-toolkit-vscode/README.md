@@ -28,7 +28,12 @@ The Foundry Toolkit extension (`ms-windows-ai-studio.windows-ai-studio`) is pre-
 - [ ] Open the **Extensions** view (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>X</kbd>).
 - [ ] Search for **Foundry Toolkit** and confirm the extension published by **Microsoft** is installed and enabled.
 
+  <details>
+  <summary>📸 Screenshot: Foundry Toolkit on the Visual Studio Marketplace</summary>
+
   ![Foundry Toolkit for VS Code on the Visual Studio Marketplace showing 1.1M installs and the Install button](../../../docs/assets/screenshots/foundry-toolkit-marketplace.png)
+
+  </details>
 
   > **Note:** The extension was previously called **AI Toolkit**. If you see that name, update to the latest version.
 
@@ -61,7 +66,12 @@ With the Azure identity confirmed, link the Foundry Toolkit to your assigned pro
 
 - [ ] Confirm the toolkit now shows your project name under **My Resources**, with sub-sections for **Models**, **Prompt Agents**, **Hosted Agents (Preview)**, **Tools**, **Knowledge**, and **Evaluations**.
 
+  <details>
+  <summary>📸 Screenshot: Foundry Toolkit My Resources panel</summary>
+
   ![Foundry Toolkit My Resources panel showing lab-attendee-1 project expanded with chat and embedding models visible](../../../docs/assets/screenshots/03-foundry-toolkit-my-resources.png)
+
+  </details>
 
   > **Tip:** Right-click on your project name to access the **Project Endpoint** and **API Key** — both are already saved in your `.env` file.
 
@@ -69,7 +79,12 @@ With the Azure identity confirmed, link the Foundry Toolkit to your assigned pro
 
 The Foundry Toolkit sidebar has three collapsible sections.
 
+<details>
+<summary>📸 Screenshot: Foundry Toolkit sidebar sections</summary>
+
 ![Microsoft Foundry Toolkit for VS Code extension interface showing My Resources with lab-attendee-1 project expanded and Developer Tools sections](../../../docs/assets/screenshots/03-foundry-toolkit-my-resources.png)
+
+</details>
 
 | Section | What it contains |
 |---|---|
@@ -83,7 +98,12 @@ The Foundry Toolkit sidebar has three collapsible sections.
 
   > **Tip:** Press <kbd>F1</kbd> and type **Foundry Toolkit** to see all available commands from the command palette.
 
+  <details>
+  <summary>📸 Screenshot: VS Code command palette with Foundry Toolkit commands</summary>
+
   ![VS Code command palette showing available Foundry Toolkit commands such as Open Model Catalog and Open Playground](../../../docs/assets/screenshots/03-foundry-toolkit-command-palette.png)
+
+  </details>
 
 ### 5. Explore My Resources — deployed models
 
@@ -103,7 +123,12 @@ The Model Catalog lets you browse all models available across providers, not jus
 - [ ] Under **Developer Tools**, expand **Discover** and double-click **Model Catalog**.
 - [ ] The Model Catalog page opens in the editor area.
 
+  <details>
+  <summary>📸 Screenshot: Foundry Toolkit model catalog</summary>
+
   ![Foundry Toolkit model catalog inside VS Code showing model cards with filters for publisher and model type](../../../docs/assets/screenshots/03-foundry-toolkit-models-view.png)
+
+  </details>
 
 - [ ] Use the filter dropdowns to explore:
   - **Hosted by**: Microsoft Foundry, GitHub, Foundry Local, OpenAI, Anthropic, and more.
@@ -146,7 +171,12 @@ Test a deployed model directly in VS Code without writing any code.
 
 - [ ] Review the model's response — it should answer in the role of a Contoso Outdoors retail assistant.
 
+  <details>
+  <summary>📸 Screenshot: Model Playground response</summary>
+
   ![Model Playground showing the chat model responding as a Contoso Outdoors retail assistant with return policy and waterproof boot options](../../../docs/assets/screenshots/03-foundry-toolkit-playground-response.png)
+
+  </details>
 
 - [ ] Select **View Code** (top right of the playground) to see the SDK code that reproduces this call.
 
@@ -163,7 +193,12 @@ Foundry Toolkit can generate a ready-to-run Python (or TypeScript) file that cal
   - **Authentication**: DefaultAzureCredential
 - [ ] A new file opens in the editor with a working code sample.
 
+  <details>
+  <summary>📸 Screenshot: Generated Python sample code</summary>
+
   ![Generated Python sample code file showing a synchronous API call in VS Code](../../../docs/assets/screenshots/03-foundry-toolkit-sample-code.png)
+
+  </details>
 
 - [ ] Read through the generated code and note:
   - The project endpoint is pulled from your environment variable.
