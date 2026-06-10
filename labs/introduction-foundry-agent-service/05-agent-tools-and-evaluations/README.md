@@ -226,6 +226,121 @@ The Foundry Toolkit generates the following files in `src/`:
 
   > The evaluation code uses your `AZURE_OPENAI_ENDPOINT` and `AZURE_OPENAI_DEPLOYMENT_NAME` environment variables as the **judge model** — a separate model instance that scores the responses produced by your agent. A stronger judge model generally produces more reliable scores.
 
+### Part 5 — Run an automatic evaluation in the Foundry portal
+
+The local scaffold from Part 4 runs evaluations on your machine. The Foundry portal provides a no-code alternative: it generates test data, runs your agent, and scores responses — all in the cloud, with no Python required.
+
+#### 11. Open the Evaluation tab in the portal
+
+- [ ] Open the [Microsoft Foundry portal](https://ai.azure.com) and navigate to your project.
+- [ ] In the left navigation, click **Agents**.
+- [ ] Click **acl-remedy-advisor** to open the agent detail view.
+- [ ] Click the **Evaluation** tab at the top of the agent detail page.
+- [ ] Confirm the **Automatic Evaluation** sub-tab is selected and shows *No evaluations found*.
+
+  ![Foundry portal showing the Evaluation tab for acl-remedy-advisor agent with Automatic Evaluation, Human Evaluation, and Red team sub-tabs. No evaluations are listed.](../../../docs/assets/screenshots/05-portal-evaluation-tab.png)
+
+- [ ] Click **Create** (top-right of the evaluations list).
+
+#### 12. Step 1 — Select the evaluation target
+
+- [ ] The **Create new evaluation** wizard opens at **Step 1: Target**.
+- [ ] Confirm **Agent** is already selected. `acl-remedy-advisor v2` is pre-checked in the agent list on the right.
+
+  ![Foundry portal Create new evaluation wizard showing Step 1 with Agent selected and acl-remedy-advisor v2 pre-checked in the agent list](../../../docs/assets/screenshots/05-portal-eval-step1-target.png)
+
+- [ ] Click **Next**.
+
+#### 13. Step 2 — Select the evaluation scope
+
+- [ ] **Step 2: Scope** offers two options:
+  - **Individual turns** — evaluates single query–response pairs. Best for testing tool selection and per-turn response quality.
+  - **Full conversations** (preview) — evaluates complete multi-turn conversations end-to-end.
+
+  ![Foundry portal Step 2 Scope showing Individual turns selected with explanatory text about best use cases on the right panel](../../../docs/assets/screenshots/05-portal-eval-step2-scope.png)
+
+- [ ] Keep **Individual turns** selected — it gives you per-turn tool accuracy scores which align with the evaluators you selected in Part 4.
+- [ ] Click **Next**.
+
+#### 14. Step 3 — Choose a data source
+
+- [ ] **Step 3: Data** offers four sources:
+  - **Synthetic generation** — the portal auto-generates test questions using a model and a prompt you provide.
+  - **Existing dataset** — upload your own JSONL or CSV file.
+  - **Benchmarks** — industry-standard benchmarks with built-in evaluators.
+  - **Existing traces** — evaluate real conversations already logged by the agent.
+
+  ![Foundry portal Step 3 Data showing Synthetic generation selected with Generate button and other options below it](../../../docs/assets/screenshots/05-portal-eval-step3-data.png)
+
+- [ ] Keep **Synthetic generation** selected — this is the zero-effort path; the portal generates relevant test questions automatically.
+- [ ] Click **Generate** to open the dataset configuration dialog.
+- [ ] In the **Generate synthetic dataset** dialog:
+  - Leave the dataset name as generated.
+  - Confirm **Model** is set to `chat` (or your project's chat deployment).
+  - Change **Number of rows** to **5** — enough to demonstrate the evaluation without consuming significant quota.
+  - In the **Prompt** field, describe what test questions to generate:
+
+    ```text
+    Generate questions a retail staff member might ask about Australian
+    Consumer Law remedies for common product faults: faulty electronics,
+    broken appliances, defective clothing, and expired warranties. Include
+    at least one question requiring a refund calculation.
+    ```
+
+  ![Generate synthetic dataset dialog showing dataset name, Model set to chat, Number of rows set to 5, and the ACL scenario prompt filled in](../../../docs/assets/screenshots/05-portal-eval-synthetic-configured.png)
+
+- [ ] Click **Confirm**. The dataset card appears under Synthetic generation showing the name and *Version 1.0*.
+
+  ![Foundry portal Step 3 Data showing the configured synthetic dataset card with name, Version 1.0, and a Synthetic generation badge](../../../docs/assets/screenshots/05-portal-eval-data-confirmed.png)
+
+- [ ] Click **Next**.
+
+#### 15. Step 4 — Review the auto-suggested criteria
+
+- [ ] **Step 4: Criteria** automatically pre-selects evaluators based on your target and scope. For an Agent evaluated at Individual turns scope, the portal suggests:
+  - **Agents (9)**: ToolSelection, ToolOutputUtilization, ToolInputAccuracy, ToolCallSuccessEvaluator, TaskCompletion, TaskAdherence, IntentResolution, CustomerSatisfaction, ToolCallAccuracy
+  - **Quality (4)**: Groundedness, Fluency, Coherence, Relevance
+  - **Safety (6)**: Violence, SelfHarm, IndirectAttack, Sexual, HateAndUnfairness, CodeVulnerability
+
+  ![Foundry portal Step 4 Criteria showing 19 auto-suggested evaluators grouped into Agents (9), Quality (4), and Safety (6) categories with a mapped fields summary on the right panel](../../../docs/assets/screenshots/05-portal-eval-criteria-full.png)
+
+  > The portal automatically maps your dataset fields to the evaluator inputs and shows the field bindings in the right panel (`query: {{item.query}}`, `response: {{sample.output_text}}`, etc.). You do not need to configure field mapping manually for synthetic data.
+
+- [ ] Leave all 19 evaluators selected — the breadth shows how the portal covers quality, tool usage, and safety in a single run.
+- [ ] Click **Next**.
+
+#### 16. Step 5 — Name and submit the evaluation
+
+- [ ] **Step 5: Review** shows a full summary on the right: Target, Scope, Dataset, and all selected Evaluators.
+- [ ] Replace the auto-generated evaluation name with something descriptive, for example:
+
+  ```text
+  acl-remedy-advisor-tools-eval
+  ```
+
+  ![Foundry portal Step 5 Review showing the evaluation name field set to acl-remedy-advisor-tools-eval with a Summary panel on the right listing Target, Scope, Dataset, and Evaluators](../../../docs/assets/screenshots/05-portal-eval-review-named.png)
+
+- [ ] Click **Submit**.
+
+#### 17. Monitor the evaluation run
+
+- [ ] After submitting, the portal navigates to the **acl-remedy-advisor-tools-eval** evaluation detail page.
+- [ ] Under **Evaluation runs**, you will see a row for your run. Wait for the **Status** to change to **Completed** (typically a few minutes for 5 rows).
+
+  ![Foundry portal acl-remedy-advisor-tools-eval detail page showing the evaluation run with Completed status and the list of Evaluators below](../../../docs/assets/screenshots/05-portal-eval-submitted.png)
+
+- [ ] Click the run name to open the detailed results view.
+- [ ] In the results view, observe the per-evaluator scores for each test row.
+
+  ![Foundry portal evaluation run results page showing Status Completed with per-evaluator score columns including Groundedness, Violence, SelfHarm, and IndirectAttack](../../../docs/assets/screenshots/05-portal-eval-results.png)
+
+- [ ] Look for:
+  - **ToolCallAccuracy** and **TaskAdherence** — are the scores consistently above 3 out of 5?
+  - Any **Safety** evaluators flagging content?
+  - Any rows where **Groundedness** is low — indicating the response is not grounded in web-sourced facts?
+
+  > Evaluation results give you a quantitative baseline you can compare across agent versions. After improving the instructions or adding tools, run the same evaluation again and compare the scores — a higher ToolCallAccuracy score means the agent is following your tool-usage instructions more reliably.
+
 ## Validation
 
 - The Agent Builder header shows `acl-remedy-advisor | Microsoft Foundry | v2` after saving.
@@ -233,6 +348,7 @@ The Foundry Toolkit generates the following files in `src/`:
 - **v2** appears under `acl-remedy-advisor` in the **MY RESOURCES** panel.
 - The playground response for the laptop battery prompt classifies the failure under ACL and provides remedy options.
 - The evaluation scaffold generates these files in `src/`: `test_acl_remedy_advisor.py`, `data.jsonl`, `evaluators.py`, `requirements.txt`, `pytest.ini`, `README.md`.
+- The Foundry portal shows an `acl-remedy-advisor-tools-eval` evaluation with a **Completed** status and per-evaluator scores.
 
 ## Troubleshooting
 
@@ -241,3 +357,5 @@ The Foundry Toolkit generates the following files in `src/`:
 - **Scaffold Evaluation Code generates no files** — confirm you selected a folder that exists and that VS Code has write permission to it. If the dialog closes without generating files, check the VS Code **Output** panel (select **Foundry Toolkit** in the dropdown) for error details.
 - **Code Interpreter does not fire in the playground** — the model exercises judgement about when to use tools. Rephrase your prompt to make the calculation need explicit, for example: *Calculate the pro-rata refund for a $899 laptop used for 14 out of 36 expected months.* You can also strengthen the Code Interpreter instruction to be more specific about the trigger conditions.
 - **Web search does not fire** — rephrase your prompt to explicitly request current information, for example: *Search accc.gov.au for the current rules on battery degradation under ACL consumer guarantees.*
+- **Evaluation stays In progress** — the synthetic data generation and agent runs consume model quota. If the evaluation does not complete within 10 minutes, check the Azure portal for quota alerts on your chat deployment. Reduce the number of rows or switch to a faster model as the judge.
+- **Low ToolCallAccuracy scores** — review the agent's instructions for Code Interpreter. Add specificity: name the exact types of calculation (refund amounts, depreciation, pro-rata values) and ensure the instruction ends with "show your working" to encourage Code Interpreter usage.
