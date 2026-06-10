@@ -4,6 +4,9 @@
 
 ![Diagram showing the Microsoft Foundry Agent Service architecture, with agents, tools, knowledge bases, and model deployments connected through a Foundry project.](../../../docs/assets/diagrams/foundry-agent-service.png)
 
+> [!IMPORTANT]
+> This module builds on [Module 04 — Create and chat with a Prompt Agent](../04-prompt-based-agents/README.md). Complete Module 04 before starting here. The `acl-remedy-advisor` agent must already exist in your Foundry project.
+
 > [!TIP]
 > Tick the checkbox next to each step as you complete it to track your progress through this module.
 

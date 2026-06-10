@@ -4,6 +4,8 @@
 
 ![Diagram showing the Microsoft Foundry Agent Service architecture, with agents, tools, knowledge bases, and model deployments connected through a Foundry project.](../../../docs/assets/diagrams/foundry-agent-service.png)
 
+Foundry Agent Service supports two agent types. **Prompt agents** are fully configuration-driven: you specify a model, instructions, and tools, then Foundry runs the agent loop with no application code or container to maintain. **Hosted agents** (preview) are code-based: you write the agent logic with Agent Framework, LangGraph, the OpenAI Agents SDK, or your own code, package it as a container, and Foundry provides a managed endpoint, automatic scaling, and a dedicated Microsoft Entra identity. Prompt agents suit fast starts and production workloads that do not need custom orchestration logic; Hosted agents give you full control over agent logic when you need it. This module covers Prompt agents. [Module 10](../10-hosted-agents/README.md) introduces Hosted agents.
+
 > [!TIP]
 > Tick the checkbox next to each step as you complete it to track your progress through this module.
 
@@ -213,7 +215,7 @@ print(f'\nAdvisor: {response.output_text}\n')
 
   > A customer wants to return a $1,200 TV that stopped working after 18 months. What are their rights under Australian Consumer Law?
 
-- [ ] Confirm you see a `[web search]` indicator before the answer, followed by the advisor's response with ACCC citations.
+- [ ] Confirm the advisor's response cites at least one ACCC or state consumer affairs URL. A `[web search]` indicator should appear before the answer — if it does not, see the **Web search does not fire** troubleshooting note below.
 
 - [ ] Ask the follow-up question to confirm the conversation remembers the first turn:
 
@@ -246,12 +248,17 @@ Every conversation your code creates is recorded by Foundry Agent Service and vi
 - `acl-remedy-advisor` appears under **Prompt Agents** in the Foundry Toolkit **My Resources** panel.
 - The Agent Builder header shows `acl-remedy-advisor | Microsoft Foundry | v1` after saving.
 - The playground response for the TV question cites at least one link from `accc.gov.au` or a state consumer affairs site.
-- Running `src/starter.py` prints a conversation ID, shows a `[web search]` indicator, and returns a cited response.
+- Running `src/starter.py` prints a conversation ID and returns a cited response with at least one ACCC or state consumer affairs URL. A `[web search]` indicator should appear — it may be absent if the agent answers from its training data rather than searching.
 - The follow-up question receives an answer that references the TV from the first question, confirming conversation memory is working.
 
 ## Troubleshooting
 
-- **Save to Foundry fails** — confirm your Default Project is set correctly via the Foundry Toolkit **Set Default Project** action in My Resources. If the Codespace cannot reach the endpoint, create the agent from code using `PromptAgentDefinition` — see the solution folder for an example.
+- **Save to Foundry fails** — confirm your Default Project is set correctly via the Foundry Toolkit **Set Default Project** action in My Resources. If the Codespace cannot reach the endpoint, create the agent from code using `PromptAgentDefinition` by running `solution/create_agent.py`:
+
+  ```bash
+  python labs/introduction-foundry-agent-service/04-prompt-based-agents/solution/create_agent.py
+  ```
+
 - **Web search does not fire** — rephrase your prompt to explicitly request current information, for example: *Search accc.gov.au for the current rules on major failures.*
 - **`AIProjectClient` raises an auth error** — run `az login` in the terminal and confirm `FOUNDRY_PROJECT_ENDPOINT` is set in your `.env` file.
 - **Agent not found** — confirm `AGENT_NAME` in `.env` matches exactly (`acl-remedy-advisor` is case-sensitive).
