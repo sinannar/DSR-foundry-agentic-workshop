@@ -304,7 +304,7 @@ The local scaffold from Part 4 runs evaluations on your machine. The Foundry por
 
   ![Foundry portal Step 4 Criteria showing 19 auto-suggested evaluators grouped into Agents (9), Quality (4), and Safety (6) categories with a mapped fields summary on the right panel](../../../docs/assets/screenshots/05-portal-eval-criteria-full.png)
 
-  > The portal automatically maps your dataset fields to the evaluator inputs and shows the field bindings in the right panel (`query: {{item.query}}`, `response: {{sample.output_text}}`, etc.). You do not need to configure field mapping manually for synthetic data.
+  > The portal automatically maps your dataset fields to the evaluator inputs and shows the field bindings in the right panel (<code v-pre>query: {{item.query}}</code>, <code v-pre>response: {{sample.output_text}}</code>, etc.). You do not need to configure field mapping manually for synthetic data.
 
 - [ ] Leave all 19 evaluators selected — the breadth shows how the portal covers quality, tool usage, and safety in a single run.
 - [ ] Click **Next**.
