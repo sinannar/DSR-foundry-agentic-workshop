@@ -4,8 +4,8 @@ description: "Test lab module 05 (Agent tools and evaluations) end-to-end by ope
 
 ## Inputs
 
-* ${input:attendeeUpn}: (Required) The UPN of the attendee to test with (e.g. `lab.attendee.1@MngEnvMCAP199525.onmicrosoft.com`).
-* ${input:envName}: (Required) The azd environment name the lab was provisioned into (e.g. `foundry-hol2`).
+- ${input:attendeeUpn}: (Required) The UPN of the attendee to test with (e.g. `lab.attendee.1@MngEnvMCAP199525.onmicrosoft.com`).
+- ${input:envName}: (Required) The azd environment name the lab was provisioned into (e.g. `foundry-hol2`).
 
 ---
 
@@ -337,10 +337,10 @@ Work through each item in the lab's Validation section and confirm the outcome:
 
 Report the outcome of every step above. For each step state whether it **passed**, **failed**, or was **skipped**. For any failure, include:
 
-* The exact step number and description.
-* The observed behaviour.
-* The expected behaviour.
-* Any error messages, unexpected output, or unexpected UI state encountered.
-* The screenshot filename or description if a screenshot was taken.
+- The exact step number and description.
+- The observed behaviour.
+- The expected behaviour.
+- Any error messages, unexpected output, or unexpected UI state encountered.
+- The screenshot filename or description if a screenshot was taken.
 
 If all steps pass, confirm that lab module 05 end-to-end validation is complete.
