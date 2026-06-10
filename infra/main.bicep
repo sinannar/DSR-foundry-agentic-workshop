@@ -174,7 +174,7 @@ var keyVaultName = take(toLower(replace('${abbrs.keyVaultVaults}${environmentNam
 var cosmosDbAccountName = toLower(replace('${abbrs.cosmosDBAccounts}${environmentName}', '-', ''))
 var aiSearchName = '${abbrs.aiSearchSearchServices}${environmentName}'
 var aiFoundryName = '${abbrs.aiFoundryAccounts}${environmentName}'
-var aiFoundryCustomSubDomainName = toLower(replace(aiFoundryName, '-', ''))
+var aiFoundryCustomSubDomainName = aiFoundryName // toLower(replace(aiFoundryName, '-', ''))
 
 // Build per-attendee and per-role Foundry projects. Role assignments are created here
 // in Bicep using the Entra object IDs resolved by the preprovision hook
