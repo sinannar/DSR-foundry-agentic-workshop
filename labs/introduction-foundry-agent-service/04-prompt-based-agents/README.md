@@ -179,6 +179,9 @@ openai = client.get_openai_client()
 
 `AIProjectClient` connects to your Foundry project using your Azure identity. `get_openai_client()` returns an OpenAI-compatible client that is already scoped to the project, so every call is automatically routed to your Foundry endpoint.
 
+> [!NOTE]
+> `DefaultAzureCredential` authenticates using the Azure CLI session established by `az login`. If authentication fails when you run the script, open a terminal and run `az login` to sign in, then retry.
+
 ##### TODO 2 — Start a conversation thread
 
 Replace `# TODO 2` with:
@@ -290,6 +293,6 @@ Every conversation your code creates is recorded by Foundry Agent Service and vi
   ```
 
 - **Web search does not fire** — rephrase your prompt to explicitly request current information, for example: *Search accc.gov.au for the current rules on major failures.*
-- **`AIProjectClient` raises an auth error** — run `az login` in the terminal and confirm `FOUNDRY_PROJECT_ENDPOINT` is set in your `.env` file.
+- **`AIProjectClient` raises an auth error** — `DefaultAzureCredential` uses your Azure CLI session. Run `az login` in the terminal to re-authenticate, then confirm `FOUNDRY_PROJECT_ENDPOINT` is set correctly in your `.env` file.
 - **Agent not found** — confirm `AGENT_NAME` in `.env` matches exactly (`acl-remedy-advisor` is case-sensitive).
 - **Model unavailable** — confirm the `chat` deployment exists in the **Models** section of your project in the Foundry Toolkit.

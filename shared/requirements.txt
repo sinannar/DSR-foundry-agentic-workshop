@@ -2,5 +2,6 @@ agent-framework
 azure-ai-projects>=2.0.0
 azure-identity
 azure-search-documents
+mcp
 python-dotenv
 requests

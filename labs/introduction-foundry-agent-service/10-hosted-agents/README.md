@@ -22,6 +22,9 @@
 - [ ] Open `src/starter.py` and set the hosted agent target.
 - [ ] Run the starter and confirm it invokes the hosted agent and returns a
    response.
+
+  > [!NOTE]
+  > The script authenticates using `DefaultAzureCredential`, which relies on your Azure CLI session. If you see an authentication error, run `az login` in the terminal and retry.
 - [ ] Send a follow-up prompt to confirm the hosted agent maintains context.
 
 ## Validation
@@ -32,6 +35,7 @@
 
 ## Troubleshooting
 
+- **Authentication fails** — the script uses `DefaultAzureCredential`, which relies on your Azure CLI session. Run `az login` in the terminal to re-authenticate, then retry.
 - If the hosted agent is not found, confirm the agent name and that it is saved
   and available in your project.
 - If invocation fails, confirm your role grants access to invoke agents in the

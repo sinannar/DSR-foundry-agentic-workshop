@@ -31,6 +31,9 @@
 - [ ] Open `src/starter.py` and review the Agent Framework client setup.
 - [ ] Run the starter and confirm it connects to your project and returns a
    response from the agent.
+
+  > [!NOTE]
+  > The script authenticates using `DefaultAzureCredential`, which relies on your Azure CLI session. If you see an authentication error, run `az login` in the terminal and retry.
 - [ ] Modify the prompt and rerun to observe different responses.
 
 ## Validation
@@ -41,7 +44,7 @@
 
 ## Troubleshooting
 
-- If authentication fails, run `az login` and confirm the active subscription.
+- **Authentication fails** — the script uses `DefaultAzureCredential`, which relies on your Azure CLI session. Run `az login` in the terminal to re-authenticate, then confirm the active subscription with `az account show`.
 - If the endpoint is missing, confirm `AZURE_AI_FOUNDRY_ENDPOINT` and the
   project name with `azd env get-values`.
 - If the package is missing, reinstall `shared/requirements.txt` in your active
