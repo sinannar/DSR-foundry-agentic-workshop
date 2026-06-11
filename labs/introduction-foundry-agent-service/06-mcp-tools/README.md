@@ -117,7 +117,8 @@ The agent runs in the cloud and cannot reach `localhost`. You must expose port 8
 
 #### 6. Open the agent in Agent Builder
 
-- [ ] In the Foundry Toolkit panel (**MY RESOURCES** → **Prompt Agents**), expand `acl-remedy-advisor` and open the latest version.
+- [ ] Make sure **VS Code Insiders** is open with the **Foundry Toolkit** extension loaded. Click the **Foundry Toolkit** icon in the Activity Bar to show the **MY RESOURCES** panel.
+- [ ] In the **MY RESOURCES** panel, expand **Prompt Agents** → `acl-remedy-advisor` and open the latest version.
 - [ ] Confirm the Agent Builder header shows `acl-remedy-advisor`.
 
 #### 7. Add the MCP tool

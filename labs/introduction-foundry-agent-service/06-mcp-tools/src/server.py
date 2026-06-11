@@ -30,7 +30,7 @@ _INVENTORY: dict = _DATA['inventory']
 
 _PORT = int(os.environ.get('MCP_SERVER_PORT', '8080'))
 
-mcp = FastMCP('Retail Remedy Operations')
+mcp = FastMCP('Retail Remedy Operations', host='0.0.0.0', port=_PORT)
 
 
 @mcp.tool()
@@ -145,7 +145,7 @@ def create_remedy_case(
 
 def main() -> None:
     print(f'Starting Retail Remedy Operations MCP server on http://0.0.0.0:{_PORT}/mcp')
-    mcp.run(transport='streamable-http', host='0.0.0.0', port=_PORT)
+    mcp.run(transport='streamable-http')
 
 
 if __name__ == '__main__':

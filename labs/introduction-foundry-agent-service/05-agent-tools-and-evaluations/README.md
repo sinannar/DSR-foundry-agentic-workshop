@@ -76,6 +76,9 @@ The built-in evaluators relevant to an agent with tools are:
 | **Relevance** | RAG | How relevant the response is to the query |
 | **Coherence** | General | Whether the response is logically coherent and well-structured |
 
+> [!TIP]
+> The evaluators listed above are a small subset of what is available. Foundry provides many more built-in evaluators covering safety, RAG quality, code generation, and more — and you can define your own using custom prompts or custom code. Review the full list and guidance on creating custom evaluators in the [Microsoft Learn documentation for Azure AI Foundry evaluations](https://learn.microsoft.com/azure/ai-foundry/concepts/evaluation-metrics-built-in).
+
 ## Steps
 
 ### Part 1 — Add Code Interpreter to the agent
