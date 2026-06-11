@@ -311,11 +311,28 @@ var attendeeResourceGroupReaderRoleAssignments = map(resolvedAttendeesWithIds, a
 
 // ---------- CAPABILITY HOSTS CONFIGURATION ----------
 var aiSearchConnectionName = replace(aiSearchName, '-', '')
+var appInsightsConnectionName = replace(applicationInsightsName, '-', '')
 var storageConnectionName = replace(storageAccounName, '-', '')
 var cosmosDbConnectionName = replace(cosmosDbAccountName, '-', '')
 
 var foundryServiceConnections = concat(
-  azureAiSearchCapabilityHost ? [
+  [
+    {
+      category: 'AppInsights'
+      connectionProperties: {
+        authType: 'ApiKey'
+        credentials: {
+          key: applicationInsights.outputs.instrumentationKey
+        }
+      }
+      name: appInsightsConnectionName
+      target: applicationInsights.outputs.resourceId
+      isSharedToAll: true
+      metadata: {
+        ApiType: 'Azure'
+        ResourceId: applicationInsights.outputs.resourceId
+      }
+    }
     {
       category: 'CognitiveSearch'
       connectionProperties: {
@@ -324,8 +341,16 @@ var foundryServiceConnections = concat(
       name: aiSearchConnectionName
       target: 'https://${aiSearchName}.search.windows.net'
       isSharedToAll: true
+      metadata: {
+        displayName: aiSearchName
+        type: 'azure_ai_search'
+        ApiType: 'Azure'
+        ResourceId: aiSearchService.outputs.resourceId
+        ApiVersion: '2024-05-01-preview'
+        DeploymentApiVersion: '2023-11-01'
+      }
     }
-  ] : [],
+  ],
   cosmosDbCapabilityHost ? [
     {
       category: 'CosmosDb'

@@ -2,6 +2,8 @@
 
 **Estimated time:** 30 minutes
 
+![Diagram showing the Microsoft Foundry evaluators. The three build-in evaluators, Quality, Risk & Safety, Agentic and the three custom evaluators, prompt-based, code-based and rubric-based.](../../../docs/assets/diagrams/foundry-evaluators.png)
+
 > [!IMPORTANT]
 > This module builds on [Module 04 — Create and chat with a Prompt Agent](../04-prompt-based-agents/README.md). Complete Module 04 before starting here. The `acl-remedy-advisor` agent must already exist in your Foundry project.
 

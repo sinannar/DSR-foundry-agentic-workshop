@@ -98,6 +98,7 @@ type categoryType =
   | 'AmazonRedshift'
   | 'AmazonS3Compatible'
   | 'ApiKey'
+  | 'AppInsights'
   | 'AzureBlob'
   | 'AzureDataExplorer'
   | 'AzureDatabricksDeltaLake'

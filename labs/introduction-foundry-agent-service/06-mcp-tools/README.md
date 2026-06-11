@@ -122,8 +122,13 @@ The agent runs in the cloud and cannot reach `localhost`. You must expose port 8
 - [ ] Confirm the Agent Builder header shows `acl-remedy-advisor`.
 
   > You can also view your agents in the [Microsoft Foundry portal](https://ai.azure.com) under **Build → Agents**.
-  >
-  > ![Microsoft Foundry portal — Agents list showing acl-remedy-advisor at version 3](../../../docs/assets/screenshots/lab-06/01-agents-list.png)
+
+  <details>
+  <summary>📸 Screenshot: Foundry portal — Agents list</summary>
+
+  ![Foundry portal Agents list showing acl-remedy-advisor at version 3](../../../docs/assets/screenshots/lab-06/01-agents-list.png)
+
+  </details>
 
 #### 7. Add the MCP tool
 
@@ -142,7 +147,12 @@ The agent runs in the cloud and cannot reach `localhost`. You must expose port 8
 
   After saving, the Foundry portal Playground view shows all three tool groups — Code Interpreter, Web Search, and the MCP server — connected to the agent:
 
+  <details>
+  <summary>📸 Screenshot: Agent playground with all tool groups connected</summary>
+
   ![Agent playground showing Code Interpreter, Web Search, and retail_remedy_ops MCP tool connected to acl-remedy-advisor v3](../../../docs/assets/screenshots/lab-06/02-agent-playground.png)
+
+  </details>
 
 > [!TIP]
 > **Code fallback:** If the Agent Builder UI cannot add the MCP tool, run the code fallback script which creates a new agent version directly via the API:
@@ -195,7 +205,12 @@ The agent needs guidance on when to call the MCP tools. Without it the model may
   pro-rata refund.
   ```
 
+  <details>
+  <summary>📸 Screenshot: Portal playground with battery-failure prompt</summary>
+
   ![Portal playground with the battery-failure prompt ready to send](../../../docs/assets/screenshots/lab-06/05-playground-prompt.png)
+
+  </details>
 
 - [ ] Watch the run trace. Confirm the agent calls the MCP tools in sequence before producing its answer.
 
@@ -219,13 +234,23 @@ The **Traces** tab in the Foundry portal shows each agent conversation as a stru
 - [ ] In the left navigation, click **Build** → **Agents**.
 - [ ] Click **acl-remedy-advisor** to open the agent.
 
+  <details>
+  <summary>📸 Screenshot: Foundry portal — Agents list</summary>
+
   ![Foundry portal Agents list showing acl-remedy-advisor at version 3](../../../docs/assets/screenshots/lab-06/01-agents-list.png)
+
+  </details>
 
 #### 14. Open the Traces tab
 
 - [ ] In the agent view, click the **Traces** tab.
 
+  <details>
+  <summary>📸 Screenshot: Traces tab for acl-remedy-advisor</summary>
+
   ![Traces tab for acl-remedy-advisor — shows Conversations and Responses sub-tabs](../../../docs/assets/screenshots/lab-06/04-traces-tab.png)
+
+  </details>
 
   > [!NOTE]
   > Trace data requires **Application Insights** to be connected to your Foundry project. If the Traces tab shows a "Connect" banner, click it to link an Application Insights resource. Once connected, future conversations will appear as traces automatically.
