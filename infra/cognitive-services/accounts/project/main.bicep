@@ -217,6 +217,7 @@ resource parentAccount 'Microsoft.CognitiveServices/accounts@2025-10-01-preview'
   name: accountName
 }
 
+@onlyIfNotExists()
 resource project 'Microsoft.CognitiveServices/accounts/projects@2025-10-01-preview' = {
   parent: parentAccount
   name: name

@@ -333,6 +333,8 @@ var foundryServiceConnections = concat(
         ResourceId: applicationInsights.outputs.resourceId
       }
     }
+  ],
+  azureAiSearchCapabilityHost ? [
     {
       category: 'CognitiveSearch'
       connectionProperties: {
@@ -350,7 +352,7 @@ var foundryServiceConnections = concat(
         DeploymentApiVersion: '2023-11-01'
       }
     }
-  ],
+  ] : [],
   cosmosDbCapabilityHost ? [
     {
       category: 'CosmosDb'
@@ -585,7 +587,6 @@ module aiFoundryAccount './cognitive-services/accounts/main.bicep' = {
     connections: foundryServiceConnections
     capabilityHosts: effectiveCapabilityHosts
     projects: attendeeProjects
-    defaultProject: !empty(effectiveStandardProjectNames) ? defaultAttendeeProjectName : null
     raiPolicies: [
       {
         name: 'FoundryWorkshopContentPolicy'

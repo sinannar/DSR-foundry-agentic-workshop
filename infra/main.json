@@ -5,8 +5,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.43.8.12551",
-      "templateHash": "6710067117230150046"
+      "version": "0.44.1.10279",
+      "templateHash": "6894091967733495303"
     }
   },
   "definitions": {
@@ -25225,7 +25225,7 @@
             "value": true
           },
           "connections": {
-            "value": "[concat(createArray(createObject('category', 'AppInsights', 'connectionProperties', createObject('authType', 'ApiKey', 'credentials', createObject('key', reference('applicationInsights').outputs.instrumentationKey.value)), 'name', variables('appInsightsConnectionName'), 'target', reference('applicationInsights').outputs.resourceId.value, 'isSharedToAll', true(), 'metadata', createObject('ApiType', 'Azure', 'ResourceId', reference('applicationInsights').outputs.resourceId.value)), createObject('category', 'CognitiveSearch', 'connectionProperties', createObject('authType', 'AAD'), 'name', variables('aiSearchConnectionName'), 'target', format('https://{0}.search.windows.net', variables('aiSearchName')), 'isSharedToAll', true(), 'metadata', createObject('displayName', variables('aiSearchName'), 'type', 'azure_ai_search', 'ApiType', 'Azure', 'ResourceId', reference('aiSearchService').outputs.resourceId.value, 'ApiVersion', '2024-05-01-preview', 'DeploymentApiVersion', '2023-11-01'))), if(parameters('cosmosDbCapabilityHost'), createArray(createObject('category', 'CosmosDb', 'connectionProperties', createObject('authType', 'AAD'), 'name', variables('cosmosDbConnectionName'), 'target', format('https://{0}.documents.azure.com:443/', variables('cosmosDbAccountName')), 'isSharedToAll', true())), createArray()), if(parameters('azureStorageAccountCapabilityHost'), createArray(createObject('category', 'AzureBlob', 'connectionProperties', createObject('authType', 'AAD'), 'name', variables('storageConnectionName'), 'target', format('https://{0}.blob.{1}/', variables('storageAccounName'), environment().suffixes.storage), 'isSharedToAll', true())), createArray()))]"
+            "value": "[concat(createArray(createObject('category', 'AppInsights', 'connectionProperties', createObject('authType', 'ApiKey', 'credentials', createObject('key', reference('applicationInsights').outputs.instrumentationKey.value)), 'name', variables('appInsightsConnectionName'), 'target', reference('applicationInsights').outputs.resourceId.value, 'isSharedToAll', true(), 'metadata', createObject('ApiType', 'Azure', 'ResourceId', reference('applicationInsights').outputs.resourceId.value))), if(parameters('azureAiSearchCapabilityHost'), createArray(createObject('category', 'CognitiveSearch', 'connectionProperties', createObject('authType', 'AAD'), 'name', variables('aiSearchConnectionName'), 'target', format('https://{0}.search.windows.net', variables('aiSearchName')), 'isSharedToAll', true(), 'metadata', createObject('displayName', variables('aiSearchName'), 'type', 'azure_ai_search', 'ApiType', 'Azure', 'ResourceId', reference('aiSearchService').outputs.resourceId.value, 'ApiVersion', '2024-05-01-preview', 'DeploymentApiVersion', '2023-11-01'))), createArray()), if(parameters('cosmosDbCapabilityHost'), createArray(createObject('category', 'CosmosDb', 'connectionProperties', createObject('authType', 'AAD'), 'name', variables('cosmosDbConnectionName'), 'target', format('https://{0}.documents.azure.com:443/', variables('cosmosDbAccountName')), 'isSharedToAll', true())), createArray()), if(parameters('azureStorageAccountCapabilityHost'), createArray(createObject('category', 'AzureBlob', 'connectionProperties', createObject('authType', 'AAD'), 'name', variables('storageConnectionName'), 'target', format('https://{0}.blob.{1}/', variables('storageAccounName'), environment().suffixes.storage), 'isSharedToAll', true())), createArray()))]"
           },
           "capabilityHosts": {
             "value": "[variables('effectiveCapabilityHosts')]"
@@ -25233,7 +25233,6 @@
           "projects": {
             "value": "[variables('attendeeProjects')]"
           },
-          "defaultProject": "[if(not(empty(variables('effectiveStandardProjectNames'))), createObject('value', variables('defaultAttendeeProjectName')), createObject('value', null()))]",
           "raiPolicies": {
             "value": [
               {
@@ -25312,8 +25311,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.43.8.12551",
-              "templateHash": "18247241682382151331"
+              "version": "0.44.1.10279",
+              "templateHash": "2030841944633933513"
             },
             "name": "Cognitive Services",
             "description": "This module deploys a Cognitive Service account.\nThis is a temporary module for deploying Azure Foundry Cognitive Services accounts.\nIt is intended to be replaced by the Azure Verified Module (AVM) for Microsoft.CognitiveServices accounts\nonce it supports Foundry V2 (projects, connections etc)\nhttps://github.com/Azure/bicep-registry-modules/issues/5390\n"
@@ -28400,24 +28399,7 @@
               "sku": {
                 "name": "[parameters('sku')]"
               },
-              "properties": {
-                "allowProjectManagement": "[parameters('allowProjectManagement')]",
-                "customSubDomainName": "[parameters('customSubDomainName')]",
-                "networkAcls": "[if(not(empty(coalesce(parameters('networkAcls'), createObject()))), createObject('defaultAction', tryGet(parameters('networkAcls'), 'defaultAction'), 'virtualNetworkRules', coalesce(tryGet(parameters('networkAcls'), 'virtualNetworkRules'), createArray()), 'ipRules', coalesce(tryGet(parameters('networkAcls'), 'ipRules'), createArray())), null())]",
-                "networkInjections": "[if(not(empty(parameters('networkInjections'))), createArray(createObject('scenario', tryGet(parameters('networkInjections'), 'scenario'), 'subnetArmId', tryGet(parameters('networkInjections'), 'subnetResourceId'), 'useMicrosoftManagedNetwork', coalesce(tryGet(parameters('networkInjections'), 'useMicrosoftManagedNetwork'), false()))), null())]",
-                "publicNetworkAccess": "[if(not(equals(parameters('publicNetworkAccess'), null())), parameters('publicNetworkAccess'), if(not(empty(parameters('networkAcls'))), 'Enabled', 'Disabled'))]",
-                "allowedFqdnList": "[parameters('allowedFqdnList')]",
-                "apiProperties": "[parameters('apiProperties')]",
-                "disableLocalAuth": "[parameters('disableLocalAuth')]",
-                "encryption": "[if(not(empty(parameters('customerManagedKey'))), createObject('keySource', 'Microsoft.KeyVault', 'keyVaultProperties', createObject('identityClientId', if(not(empty(coalesce(tryGet(parameters('customerManagedKey'), 'userAssignedIdentityResourceId'), ''))), tryGet(if(not(empty(tryGet(parameters('customerManagedKey'), 'userAssignedIdentityResourceId'))), reference('cMKUserAssignedIdentity', '2025-01-31-preview', 'full'), null()), 'properties', 'clientId'), null()), 'keyVaultUri', if(not(variables('isHSMManagedCMK')), tryGet(if(and(not(empty(tryGet(parameters('customerManagedKey'), 'keyVaultResourceId'))), not(variables('isHSMManagedCMK'))), reference('cMKKeyVault', '2025-05-01', 'full'), null()), 'properties', 'vaultUri'), format('https://{0}.managedhsm.azure.net/', last(split(parameters('customerManagedKey').keyVaultResourceId, '/')))), 'keyName', parameters('customerManagedKey').keyName, 'keyVersion', if(not(empty(coalesce(tryGet(parameters('customerManagedKey'), 'keyVersion'), ''))), tryGet(parameters('customerManagedKey'), 'keyVersion'), if(not(variables('isHSMManagedCMK')), last(split(tryGet(if(and(and(not(empty(tryGet(parameters('customerManagedKey'), 'keyVaultResourceId'))), not(variables('isHSMManagedCMK'))), and(and(not(empty(tryGet(parameters('customerManagedKey'), 'keyVaultResourceId'))), not(empty(tryGet(parameters('customerManagedKey'), 'keyName')))), not(variables('isHSMManagedCMK')))), reference('cMKKeyVault::cMKKey', '2025-05-01', 'full'), null()), 'properties', 'keyUriWithVersion'), '/')), fail('Managed HSM CMK encryption requires specifying the ''keyVersion''.'))))), null())]",
-                "migrationToken": "[parameters('migrationToken')]",
-                "restore": "[parameters('restore')]",
-                "restrictOutboundNetworkAccess": "[parameters('restrictOutboundNetworkAccess')]",
-                "userOwnedStorage": "[if(not(empty(parameters('userOwnedStorage'))), parameters('userOwnedStorage'), null())]",
-                "dynamicThrottlingEnabled": "[parameters('dynamicThrottlingEnabled')]",
-                "storedCompletionsDisabled": "[parameters('storedCompletionsDisabled')]",
-                "defaultProject": "[parameters('defaultProject')]"
-              },
+              "properties": "[union(createObject('allowProjectManagement', parameters('allowProjectManagement'), 'customSubDomainName', parameters('customSubDomainName'), 'networkAcls', if(not(empty(coalesce(parameters('networkAcls'), createObject()))), createObject('defaultAction', tryGet(parameters('networkAcls'), 'defaultAction'), 'virtualNetworkRules', coalesce(tryGet(parameters('networkAcls'), 'virtualNetworkRules'), createArray()), 'ipRules', coalesce(tryGet(parameters('networkAcls'), 'ipRules'), createArray())), null()), 'networkInjections', if(not(empty(parameters('networkInjections'))), createArray(createObject('scenario', tryGet(parameters('networkInjections'), 'scenario'), 'subnetArmId', tryGet(parameters('networkInjections'), 'subnetResourceId'), 'useMicrosoftManagedNetwork', coalesce(tryGet(parameters('networkInjections'), 'useMicrosoftManagedNetwork'), false()))), null()), 'publicNetworkAccess', if(not(equals(parameters('publicNetworkAccess'), null())), parameters('publicNetworkAccess'), if(not(empty(parameters('networkAcls'))), 'Enabled', 'Disabled')), 'allowedFqdnList', parameters('allowedFqdnList'), 'apiProperties', parameters('apiProperties'), 'disableLocalAuth', parameters('disableLocalAuth'), 'encryption', if(not(empty(parameters('customerManagedKey'))), createObject('keySource', 'Microsoft.KeyVault', 'keyVaultProperties', createObject('identityClientId', if(not(empty(coalesce(tryGet(parameters('customerManagedKey'), 'userAssignedIdentityResourceId'), ''))), tryGet(if(not(empty(tryGet(parameters('customerManagedKey'), 'userAssignedIdentityResourceId'))), reference('cMKUserAssignedIdentity', '2025-01-31-preview', 'full'), null()), 'properties', 'clientId'), null()), 'keyVaultUri', if(not(variables('isHSMManagedCMK')), tryGet(if(and(not(empty(tryGet(parameters('customerManagedKey'), 'keyVaultResourceId'))), not(variables('isHSMManagedCMK'))), reference('cMKKeyVault', '2025-05-01', 'full'), null()), 'properties', 'vaultUri'), format('https://{0}.managedhsm.azure.net/', last(split(parameters('customerManagedKey').keyVaultResourceId, '/')))), 'keyName', parameters('customerManagedKey').keyName, 'keyVersion', if(not(empty(coalesce(tryGet(parameters('customerManagedKey'), 'keyVersion'), ''))), tryGet(parameters('customerManagedKey'), 'keyVersion'), if(not(variables('isHSMManagedCMK')), last(split(tryGet(if(and(and(not(empty(tryGet(parameters('customerManagedKey'), 'keyVaultResourceId'))), not(variables('isHSMManagedCMK'))), and(and(not(empty(tryGet(parameters('customerManagedKey'), 'keyVaultResourceId'))), not(empty(tryGet(parameters('customerManagedKey'), 'keyName')))), not(variables('isHSMManagedCMK')))), reference('cMKKeyVault::cMKKey', '2025-05-01', 'full'), null()), 'properties', 'keyUriWithVersion'), '/')), fail('Managed HSM CMK encryption requires specifying the ''keyVersion''.'))))), null()), 'migrationToken', parameters('migrationToken'), 'restore', parameters('restore'), 'restrictOutboundNetworkAccess', parameters('restrictOutboundNetworkAccess'), 'userOwnedStorage', if(not(empty(parameters('userOwnedStorage'))), parameters('userOwnedStorage'), null()), 'dynamicThrottlingEnabled', parameters('dynamicThrottlingEnabled'), 'storedCompletionsDisabled', parameters('storedCompletionsDisabled')), if(not(empty(coalesce(parameters('defaultProject'), ''))), createObject('defaultProject', parameters('defaultProject')), createObject()))]",
               "dependsOn": [
                 "cMKKeyVault",
                 "cMKKeyVault::cMKKey",
@@ -29216,6 +29198,934 @@
                 "cognitiveService"
               ]
             },
+            "cognitiveServices_connections": {
+              "copy": {
+                "name": "cognitiveServices_connections",
+                "count": "[length(parameters('connections'))]",
+                "mode": "serial",
+                "batchSize": 1
+              },
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2025-04-01",
+              "name": "[format('{0}-con', take(format('{0}-{1}', parameters('name'), parameters('connections')[copyIndex()].name), 60))]",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "accountName": {
+                    "value": "[parameters('name')]"
+                  },
+                  "name": {
+                    "value": "[parameters('connections')[copyIndex()].name]"
+                  },
+                  "category": {
+                    "value": "[parameters('connections')[copyIndex()].category]"
+                  },
+                  "expiryTime": {
+                    "value": "[tryGet(parameters('connections')[copyIndex()], 'expiryTime')]"
+                  },
+                  "isSharedToAll": {
+                    "value": "[tryGet(parameters('connections')[copyIndex()], 'isSharedToAll')]"
+                  },
+                  "metadata": {
+                    "value": "[tryGet(parameters('connections')[copyIndex()], 'metadata')]"
+                  },
+                  "sharedUserList": {
+                    "value": "[tryGet(parameters('connections')[copyIndex()], 'sharedUserList')]"
+                  },
+                  "target": {
+                    "value": "[parameters('connections')[copyIndex()].target]"
+                  },
+                  "value": {
+                    "value": "[tryGet(parameters('connections')[copyIndex()], 'value')]"
+                  },
+                  "connectionProperties": {
+                    "value": "[parameters('connections')[copyIndex()].connectionProperties]"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "languageVersion": "2.0",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.44.1.10279",
+                      "templateHash": "13701333965637833465"
+                    },
+                    "name": "Machine Learning Services Workspaces Connections",
+                    "description": "This module creates a connection in a Machine Learning Services workspace."
+                  },
+                  "definitions": {
+                    "metadataType": {
+                      "type": "object",
+                      "properties": {},
+                      "additionalProperties": {
+                        "type": "string",
+                        "metadata": {
+                          "description": "Required. The metadata key-value pairs."
+                        }
+                      },
+                      "metadata": {
+                        "description": "The tpe for the metadata."
+                      }
+                    },
+                    "categoryType": {
+                      "type": "string",
+                      "allowedValues": [
+                        "ADLSGen2",
+                        "AIServices",
+                        "AmazonMws",
+                        "AmazonRdsForOracle",
+                        "AmazonRdsForSqlServer",
+                        "AmazonRedshift",
+                        "AmazonS3Compatible",
+                        "ApiKey",
+                        "AppInsights",
+                        "AzureBlob",
+                        "AzureDataExplorer",
+                        "AzureDatabricksDeltaLake",
+                        "AzureMariaDb",
+                        "AzureMySqlDb",
+                        "AzureOneLake",
+                        "AzureOpenAI",
+                        "AzurePostgresDb",
+                        "AzureSqlDb",
+                        "AzureSqlMi",
+                        "AzureSynapseAnalytics",
+                        "AzureTableStorage",
+                        "BingLLMSearch",
+                        "Cassandra",
+                        "CognitiveSearch",
+                        "CognitiveService",
+                        "Concur",
+                        "ContainerRegistry",
+                        "CosmosDb",
+                        "CosmosDbMongoDbApi",
+                        "Couchbase",
+                        "CustomKeys",
+                        "Db2",
+                        "Drill",
+                        "Dynamics",
+                        "DynamicsAx",
+                        "DynamicsCrm",
+                        "Elasticsearch",
+                        "Eloqua",
+                        "FileServer",
+                        "FtpServer",
+                        "GenericContainerRegistry",
+                        "GenericHttp",
+                        "GenericRest",
+                        "Git",
+                        "GoogleAdWords",
+                        "GoogleBigQuery",
+                        "GoogleCloudStorage",
+                        "Greenplum",
+                        "Hbase",
+                        "Hdfs",
+                        "Hive",
+                        "Hubspot",
+                        "Impala",
+                        "Informix",
+                        "Jira",
+                        "Magento",
+                        "ManagedOnlineEndpoint",
+                        "MariaDb",
+                        "Marketo",
+                        "MicrosoftAccess",
+                        "MongoDbAtlas",
+                        "MongoDbV2",
+                        "MySql",
+                        "Netezza",
+                        "ODataRest",
+                        "Odbc",
+                        "Office365",
+                        "OpenAI",
+                        "Oracle",
+                        "OracleCloudStorage",
+                        "OracleServiceCloud",
+                        "PayPal",
+                        "Phoenix",
+                        "Pinecone",
+                        "PostgreSql",
+                        "Presto",
+                        "PythonFeed",
+                        "QuickBooks",
+                        "Redis",
+                        "Responsys",
+                        "S3",
+                        "Salesforce",
+                        "SalesforceMarketingCloud",
+                        "SalesforceServiceCloud",
+                        "SapBw",
+                        "SapCloudForCustomer",
+                        "SapEcc",
+                        "SapHana",
+                        "SapOpenHub",
+                        "SapTable",
+                        "Serp",
+                        "Serverless",
+                        "ServiceNow",
+                        "Sftp",
+                        "SharePointOnlineList",
+                        "Shopify",
+                        "Snowflake",
+                        "Spark",
+                        "SqlServer",
+                        "Square",
+                        "Sybase",
+                        "Teradata",
+                        "Vertica",
+                        "WebTable",
+                        "Xero",
+                        "Zoho"
+                      ],
+                      "metadata": {
+                        "__bicep_export!": true,
+                        "description": "The type of the connection category."
+                      }
+                    },
+                    "aadAuthTypeWorkspaceConnectionPropertyType": {
+                      "type": "object",
+                      "properties": {
+                        "authType": {
+                          "type": "string",
+                          "allowedValues": [
+                            "AAD"
+                          ],
+                          "metadata": {
+                            "description": "Required. The authentication type of the connection target."
+                          }
+                        }
+                      },
+                      "metadata": {
+                        "description": "The connection properties when the auth type is AAD."
+                      }
+                    },
+                    "accessKeyAuthTypeWorkspaceConnectionPropertyType": {
+                      "type": "object",
+                      "properties": {
+                        "authType": {
+                          "type": "string",
+                          "allowedValues": [
+                            "AccessKey"
+                          ],
+                          "metadata": {
+                            "description": "Required. The authentication type of the connection target."
+                          }
+                        },
+                        "credentials": {
+                          "$ref": "#/definitions/workspaceConnectionAccessKeyType",
+                          "metadata": {
+                            "description": "Required. The credentials for the connection."
+                          }
+                        }
+                      },
+                      "metadata": {
+                        "description": "The connection properties when the auth type is AccessKey."
+                      }
+                    },
+                    "accountKeyAuthTypeWorkspaceConnectionPropertyType": {
+                      "type": "object",
+                      "properties": {
+                        "authType": {
+                          "type": "string",
+                          "allowedValues": [
+                            "AccountKey"
+                          ],
+                          "metadata": {
+                            "description": "Required. The authentication type of the connection target."
+                          }
+                        },
+                        "credentials": {
+                          "$ref": "#/definitions/workspaceConnectionAccountKeyType",
+                          "metadata": {
+                            "description": "Required. The credentials for the connection."
+                          }
+                        }
+                      },
+                      "metadata": {
+                        "description": "The connection properties when the auth type is AccountKey."
+                      }
+                    },
+                    "apiKeyAuthWorkspaceConnectionPropertyType": {
+                      "type": "object",
+                      "properties": {
+                        "authType": {
+                          "type": "string",
+                          "allowedValues": [
+                            "ApiKey"
+                          ],
+                          "metadata": {
+                            "description": "Required. The authentication type of the connection target."
+                          }
+                        },
+                        "credentials": {
+                          "$ref": "#/definitions/workspaceConnectionApiKeyType",
+                          "metadata": {
+                            "description": "Required. The credentials for the connection."
+                          }
+                        }
+                      },
+                      "metadata": {
+                        "description": "The connection properties when the auth type is ApiKey."
+                      }
+                    },
+                    "customKeysWorkspaceConnectionPropertyType": {
+                      "type": "object",
+                      "properties": {
+                        "authType": {
+                          "type": "string",
+                          "allowedValues": [
+                            "CustomKeys"
+                          ],
+                          "metadata": {
+                            "description": "Required. The authentication type of the connection target."
+                          }
+                        },
+                        "credentials": {
+                          "$ref": "#/definitions/customKeysType",
+                          "metadata": {
+                            "description": "Required. The credentials for the connection."
+                          }
+                        }
+                      },
+                      "metadata": {
+                        "description": "The connection properties when the auth type are CustomKeys."
+                      }
+                    },
+                    "managedIdentityAuthTypeWorkspaceConnectionPropertyType": {
+                      "type": "object",
+                      "properties": {
+                        "authType": {
+                          "type": "string",
+                          "allowedValues": [
+                            "ManagedIdentity"
+                          ],
+                          "metadata": {
+                            "description": "Required. The authentication type of the connection target."
+                          }
+                        },
+                        "credentials": {
+                          "$ref": "#/definitions/workspaceConnectionManagedIdentityType",
+                          "metadata": {
+                            "description": "Required. The credentials for the connection."
+                          }
+                        }
+                      },
+                      "metadata": {
+                        "description": "The connection properties when the auth type is ManagedIdentity."
+                      }
+                    },
+                    "noneAuthTypeWorkspaceConnectionPropertyType": {
+                      "type": "object",
+                      "properties": {
+                        "authType": {
+                          "type": "string",
+                          "allowedValues": [
+                            "None"
+                          ],
+                          "metadata": {
+                            "description": "Required. The authentication type of the connection target."
+                          }
+                        }
+                      },
+                      "metadata": {
+                        "description": "The connection properties when the auth type is None."
+                      }
+                    },
+                    "oauth2AuthTypeWorkspaceConnectionPropertyType": {
+                      "type": "object",
+                      "properties": {
+                        "authType": {
+                          "type": "string",
+                          "allowedValues": [
+                            "OAuth2"
+                          ],
+                          "metadata": {
+                            "description": "Required. The authentication type of the connection target."
+                          }
+                        },
+                        "credentials": {
+                          "$ref": "#/definitions/workspaceConnectionOAuth2Type",
+                          "metadata": {
+                            "description": "Required. The credentials for the connection."
+                          }
+                        }
+                      },
+                      "metadata": {
+                        "description": "The connection properties when the auth type is OAuth2."
+                      }
+                    },
+                    "patAuthTypeWorkspaceConnectionPropertyType": {
+                      "type": "object",
+                      "properties": {
+                        "authType": {
+                          "type": "string",
+                          "allowedValues": [
+                            "PAT"
+                          ],
+                          "metadata": {
+                            "description": "Required. The authentication type of the connection target."
+                          }
+                        },
+                        "credentials": {
+                          "$ref": "#/definitions/workspaceConnectionPersonalAccessTokenType",
+                          "metadata": {
+                            "description": "Required. The credentials for the connection."
+                          }
+                        }
+                      },
+                      "metadata": {
+                        "description": "The connection properties when the auth type is PAT."
+                      }
+                    },
+                    "sasAuthTypeWorkspaceConnectionPropertyType": {
+                      "type": "object",
+                      "properties": {
+                        "authType": {
+                          "type": "string",
+                          "allowedValues": [
+                            "SAS"
+                          ],
+                          "metadata": {
+                            "description": "Required. The authentication type of the connection target."
+                          }
+                        },
+                        "credentials": {
+                          "$ref": "#/definitions/workspaceConnectionSharedAccessSignatureType",
+                          "metadata": {
+                            "description": "Required. The credentials for the connection."
+                          }
+                        }
+                      },
+                      "metadata": {
+                        "description": "The connection properties when the auth type is SAS."
+                      }
+                    },
+                    "servicePrincipalAuthTypeWorkspaceConnectionPropertyType": {
+                      "type": "object",
+                      "properties": {
+                        "authType": {
+                          "type": "string",
+                          "allowedValues": [
+                            "ServicePrincipal"
+                          ],
+                          "metadata": {
+                            "description": "Required. The authentication type of the connection target."
+                          }
+                        },
+                        "credentials": {
+                          "$ref": "#/definitions/workspaceConnectionServicePrincipalType",
+                          "metadata": {
+                            "description": "Required. The credentials for the connection."
+                          }
+                        }
+                      },
+                      "metadata": {
+                        "description": "The connection properties when the auth type is ServicePrincipal."
+                      }
+                    },
+                    "usernamePasswordAuthTypeWorkspaceConnectionPropertyType": {
+                      "type": "object",
+                      "properties": {
+                        "authType": {
+                          "type": "string",
+                          "allowedValues": [
+                            "UsernamePassword"
+                          ],
+                          "metadata": {
+                            "description": "Required. The authentication type of the connection target."
+                          }
+                        },
+                        "credentials": {
+                          "$ref": "#/definitions/workspaceConnectionUsernamePasswordType",
+                          "metadata": {
+                            "description": "Required. The credentials for the connection."
+                          }
+                        }
+                      },
+                      "metadata": {
+                        "description": "The connection properties when the auth type is UsernamePassword."
+                      }
+                    },
+                    "customKeysType": {
+                      "type": "object",
+                      "properties": {
+                        "keys": {
+                          "type": "object",
+                          "properties": {},
+                          "additionalProperties": {
+                            "type": "string",
+                            "metadata": {
+                              "description": "Required. Key-value pairs for the custom keys."
+                            }
+                          },
+                          "metadata": {
+                            "description": "Required. The custom keys for the connection."
+                          }
+                        }
+                      },
+                      "metadata": {
+                        "description": "The type fot the custom keys."
+                      }
+                    },
+                    "workspaceConnectionAccessKeyType": {
+                      "type": "object",
+                      "properties": {
+                        "accessKeyId": {
+                          "type": "string",
+                          "metadata": {
+                            "description": "Required. The connection access key ID."
+                          }
+                        },
+                        "secretAccessKey": {
+                          "type": "string",
+                          "metadata": {
+                            "description": "Required. The connection secret access key."
+                          }
+                        }
+                      },
+                      "metadata": {
+                        "description": "The type for the workspace connection access key."
+                      }
+                    },
+                    "workspaceConnectionAccountKeyType": {
+                      "type": "object",
+                      "properties": {
+                        "key": {
+                          "type": "string",
+                          "metadata": {
+                            "description": "Required. The connection key."
+                          }
+                        }
+                      },
+                      "metadata": {
+                        "description": "The type for the workspace connection account key."
+                      }
+                    },
+                    "workspaceConnectionApiKeyType": {
+                      "type": "object",
+                      "properties": {
+                        "key": {
+                          "type": "string",
+                          "metadata": {
+                            "description": "Required. The connection API key."
+                          }
+                        }
+                      },
+                      "metadata": {
+                        "description": "The type for the workspace connection API key."
+                      }
+                    },
+                    "workspaceConnectionManagedIdentityType": {
+                      "type": "object",
+                      "properties": {
+                        "clientId": {
+                          "type": "string",
+                          "metadata": {
+                            "description": "Required. The connection managed identity ID."
+                          }
+                        },
+                        "resourceId": {
+                          "type": "string",
+                          "metadata": {
+                            "description": "Required. The connection managed identity resource ID."
+                          }
+                        }
+                      },
+                      "metadata": {
+                        "description": "The type for the workspace connection managed identity."
+                      }
+                    },
+                    "workspaceConnectionOAuth2Type": {
+                      "type": "object",
+                      "properties": {
+                        "authUrl": {
+                          "type": "string",
+                          "nullable": true,
+                          "metadata": {
+                            "description": "Conditional. The connection auth URL. Required if connection category is Concur."
+                          }
+                        },
+                        "clientId": {
+                          "type": "string",
+                          "minLength": 36,
+                          "maxLength": 36,
+                          "metadata": {
+                            "description": "Required. The connection client ID in the format of UUID."
+                          }
+                        },
+                        "clientSecret": {
+                          "type": "string",
+                          "metadata": {
+                            "description": "Required. The connection client secret."
+                          }
+                        },
+                        "developerToken": {
+                          "type": "string",
+                          "nullable": true,
+                          "metadata": {
+                            "description": "Conditional. The connection developer token. Required if connection category is GoogleAdWords."
+                          }
+                        },
+                        "password": {
+                          "type": "string",
+                          "nullable": true,
+                          "metadata": {
+                            "description": "Conditional. The connection password. Required if connection category is Concur or ServiceNow where AccessToken grant type is 'Password'."
+                          }
+                        },
+                        "refreshToken": {
+                          "type": "string",
+                          "nullable": true,
+                          "metadata": {
+                            "description": "Conditional. The connection refresh token. Required if connection category is GoogleBigQuery, GoogleAdWords, Hubspot, QuickBooks, Square, Xero or Zoho."
+                          }
+                        },
+                        "tenantId": {
+                          "type": "string",
+                          "nullable": true,
+                          "metadata": {
+                            "description": "Conditional. The connection tenant ID. Required if connection category is QuickBooks or Xero."
+                          }
+                        },
+                        "username": {
+                          "type": "string",
+                          "nullable": true,
+                          "metadata": {
+                            "description": "Conditional. The connection username. Required if connection category is Concur or ServiceNow where AccessToken grant type is 'Password'."
+                          }
+                        }
+                      }
+                    },
+                    "workspaceConnectionPersonalAccessTokenType": {
+                      "type": "object",
+                      "properties": {
+                        "pat": {
+                          "type": "string",
+                          "metadata": {
+                            "description": "Required. The connection personal access token."
+                          }
+                        }
+                      },
+                      "metadata": {
+                        "description": "The type for the workspace connection personal access token."
+                      }
+                    },
+                    "workspaceConnectionSharedAccessSignatureType": {
+                      "type": "object",
+                      "properties": {
+                        "sas": {
+                          "type": "string",
+                          "metadata": {
+                            "description": "Required. The connection SAS token."
+                          }
+                        }
+                      },
+                      "metadata": {
+                        "description": "The type for the workspace connection shared access signature."
+                      }
+                    },
+                    "workspaceConnectionServicePrincipalType": {
+                      "type": "object",
+                      "properties": {
+                        "clientId": {
+                          "type": "string",
+                          "metadata": {
+                            "description": "Required. The connection client ID."
+                          }
+                        },
+                        "clientSecret": {
+                          "type": "string",
+                          "metadata": {
+                            "description": "Required. The connection client secret."
+                          }
+                        },
+                        "tenantId": {
+                          "type": "string",
+                          "metadata": {
+                            "description": "Required. The connection tenant ID."
+                          }
+                        }
+                      },
+                      "metadata": {
+                        "description": "The type for the workspace connection service principal."
+                      }
+                    },
+                    "workspaceConnectionUsernamePasswordType": {
+                      "type": "object",
+                      "properties": {
+                        "password": {
+                          "type": "string",
+                          "metadata": {
+                            "description": "Required. The connection password."
+                          }
+                        },
+                        "securityToken": {
+                          "type": "string",
+                          "nullable": true,
+                          "metadata": {
+                            "description": "Conditional. The connection security token. Required if connection is like SalesForce for extra security in addition to 'UsernamePassword'."
+                          }
+                        },
+                        "username": {
+                          "type": "string",
+                          "metadata": {
+                            "description": "Required. The connection username."
+                          }
+                        }
+                      },
+                      "metadata": {
+                        "description": "The type for the workspace connection username and password."
+                      }
+                    },
+                    "connectionPropertyType": {
+                      "type": "secureObject",
+                      "discriminator": {
+                        "propertyName": "authType",
+                        "mapping": {
+                          "AAD": {
+                            "$ref": "#/definitions/aadAuthTypeWorkspaceConnectionPropertyType"
+                          },
+                          "AccessKey": {
+                            "$ref": "#/definitions/accessKeyAuthTypeWorkspaceConnectionPropertyType"
+                          },
+                          "AccountKey": {
+                            "$ref": "#/definitions/accountKeyAuthTypeWorkspaceConnectionPropertyType"
+                          },
+                          "ApiKey": {
+                            "$ref": "#/definitions/apiKeyAuthWorkspaceConnectionPropertyType"
+                          },
+                          "CustomKeys": {
+                            "$ref": "#/definitions/customKeysWorkspaceConnectionPropertyType"
+                          },
+                          "ManagedIdentity": {
+                            "$ref": "#/definitions/managedIdentityAuthTypeWorkspaceConnectionPropertyType"
+                          },
+                          "None": {
+                            "$ref": "#/definitions/noneAuthTypeWorkspaceConnectionPropertyType"
+                          },
+                          "OAuth2": {
+                            "$ref": "#/definitions/oauth2AuthTypeWorkspaceConnectionPropertyType"
+                          },
+                          "PAT": {
+                            "$ref": "#/definitions/patAuthTypeWorkspaceConnectionPropertyType"
+                          },
+                          "SAS": {
+                            "$ref": "#/definitions/sasAuthTypeWorkspaceConnectionPropertyType"
+                          },
+                          "ServicePrincipal": {
+                            "$ref": "#/definitions/servicePrincipalAuthTypeWorkspaceConnectionPropertyType"
+                          },
+                          "UsernamePassword": {
+                            "$ref": "#/definitions/usernamePasswordAuthTypeWorkspaceConnectionPropertyType"
+                          }
+                        }
+                      },
+                      "metadata": {
+                        "__bicep_export!": true,
+                        "description": "The type of the connection properties."
+                      }
+                    },
+                    "connectionType": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "metadata": {
+                            "description": "Required. Name of the connection to create."
+                          }
+                        },
+                        "category": {
+                          "$ref": "#/definitions/categoryType",
+                          "metadata": {
+                            "description": "Required. Category of the connection."
+                          }
+                        },
+                        "expiryTime": {
+                          "type": "string",
+                          "nullable": true,
+                          "metadata": {
+                            "description": "Optional. The expiry time of the connection."
+                          }
+                        },
+                        "isSharedToAll": {
+                          "type": "bool",
+                          "nullable": true,
+                          "metadata": {
+                            "description": "Optional. Indicates whether the connection is shared to all users in the workspace."
+                          }
+                        },
+                        "metadata": {
+                          "type": "object",
+                          "properties": {},
+                          "additionalProperties": {
+                            "type": "string",
+                            "metadata": {
+                              "description": "Required. The metadata key-value pairs."
+                            }
+                          },
+                          "nullable": true,
+                          "metadata": {
+                            "description": "Optional. User metadata for the connection."
+                          }
+                        },
+                        "sharedUserList": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "nullable": true,
+                          "metadata": {
+                            "description": "Optional. The shared user list of the connection."
+                          }
+                        },
+                        "target": {
+                          "type": "string",
+                          "metadata": {
+                            "description": "Required. The target of the connection."
+                          }
+                        },
+                        "value": {
+                          "type": "string",
+                          "nullable": true,
+                          "metadata": {
+                            "description": "Optional. Value details of the workspace connection."
+                          }
+                        },
+                        "connectionProperties": {
+                          "$ref": "#/definitions/connectionPropertyType",
+                          "metadata": {
+                            "description": "Required. The properties of the connection, specific to the auth type."
+                          }
+                        }
+                      },
+                      "metadata": {
+                        "__bicep_export!": true,
+                        "description": "The type for the workspace connection."
+                      }
+                    }
+                  },
+                  "parameters": {
+                    "name": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "Required. Name of the connection to create."
+                      }
+                    },
+                    "accountName": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "Required. The name of the parent Cognitive Services account. Required if the template is used in a standalone deployment."
+                      }
+                    },
+                    "category": {
+                      "$ref": "#/definitions/categoryType",
+                      "metadata": {
+                        "description": "Required. Category of the connection."
+                      }
+                    },
+                    "expiryTime": {
+                      "type": "string",
+                      "nullable": true,
+                      "metadata": {
+                        "description": "Optional. The expiry time of the connection."
+                      }
+                    },
+                    "isSharedToAll": {
+                      "type": "bool",
+                      "nullable": true,
+                      "metadata": {
+                        "description": "Optional. Indicates whether the connection is shared to all users in the workspace."
+                      }
+                    },
+                    "metadata": {
+                      "$ref": "#/definitions/metadataType",
+                      "defaultValue": {},
+                      "metadata": {
+                        "description": "Optional. User metadata for the connection."
+                      }
+                    },
+                    "sharedUserList": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "nullable": true,
+                      "metadata": {
+                        "description": "Optional. The shared user list of the connection."
+                      }
+                    },
+                    "target": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "Required. The target of the connection."
+                      }
+                    },
+                    "value": {
+                      "type": "string",
+                      "nullable": true,
+                      "metadata": {
+                        "description": "Optional. Value details of the workspace connection."
+                      }
+                    },
+                    "connectionProperties": {
+                      "$ref": "#/definitions/connectionPropertyType",
+                      "metadata": {
+                        "description": "Required. The properties of the connection, specific to the auth type."
+                      }
+                    }
+                  },
+                  "resources": {
+                    "cognitiveServicesAccount": {
+                      "existing": true,
+                      "type": "Microsoft.CognitiveServices/accounts",
+                      "apiVersion": "2025-10-01-preview",
+                      "name": "[parameters('accountName')]"
+                    },
+                    "connection": {
+                      "@options": {
+                        "onlyIfNotExists": []
+                      },
+                      "type": "Microsoft.CognitiveServices/accounts/connections",
+                      "apiVersion": "2025-10-01-preview",
+                      "name": "[format('{0}/{1}', parameters('accountName'), parameters('name'))]",
+                      "properties": "[union(createObject('category', parameters('category'), 'expiryTime', parameters('expiryTime'), 'isSharedToAll', parameters('isSharedToAll'), 'metadata', parameters('metadata'), 'sharedUserList', parameters('sharedUserList'), 'target', parameters('target'), 'value', parameters('value')), parameters('connectionProperties'))]"
+                    }
+                  },
+                  "outputs": {
+                    "resourceId": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "The resource ID of the connection."
+                      },
+                      "value": "[resourceId('Microsoft.CognitiveServices/accounts/connections', parameters('accountName'), parameters('name'))]"
+                    },
+                    "name": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "The name of the connection."
+                      },
+                      "value": "[parameters('name')]"
+                    },
+                    "resourceGroupName": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "The name of the resource group the connection was created in."
+                      },
+                      "value": "[resourceGroup().name]"
+                    }
+                  }
+                }
+              },
+              "dependsOn": [
+                "cognitiveService",
+                "cognitiveService_deployments"
+              ]
+            },
             "cognitiveService_projects": {
               "copy": {
                 "name": "cognitiveService_projects",
@@ -29272,8 +30182,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.43.8.12551",
-                      "templateHash": "17759554646713274335"
+                      "version": "0.44.1.10279",
+                      "templateHash": "8546434695707449027"
                     },
                     "name": "Cognitive Services Project",
                     "description": "This module deploys a Project within a Cognitive Services account.\nIt allows for the creation of a Foundry Project with optional managed identities and role assignments.\n"
@@ -31015,6 +31925,9 @@
                       "name": "[parameters('accountName')]"
                     },
                     "project": {
+                      "@options": {
+                        "onlyIfNotExists": []
+                      },
                       "type": "Microsoft.CognitiveServices/accounts/projects",
                       "apiVersion": "2025-10-01-preview",
                       "name": "[format('{0}/{1}', parameters('accountName'), parameters('name'))]",
@@ -31139,8 +32052,8 @@
                           "metadata": {
                             "_generator": {
                               "name": "bicep",
-                              "version": "0.43.8.12551",
-                              "templateHash": "3297884855853428227"
+                              "version": "0.44.1.10279",
+                              "templateHash": "847360724783805621"
                             },
                             "name": "Cognitive Services Project Capability Host",
                             "description": "This module creates a capability host in a Cognitive Services project.\nProject-level capability hosts configure per-project storage backends for threads, vectors, and files,\nallowing different projects to use different storage connections.\nSee: https://learn.microsoft.com/en-us/azure/templates/microsoft.cognitiveservices/accounts/projects/capabilityhosts\n"
@@ -31401,8 +32314,8 @@
                           "metadata": {
                             "_generator": {
                               "name": "bicep",
-                              "version": "0.43.8.12551",
-                              "templateHash": "14737880377875745139"
+                              "version": "0.44.1.10279",
+                              "templateHash": "14998039396843864102"
                             },
                             "name": "Cognitive Services Application",
                             "description": "This module creates an application within a Cognitive Services project.\nApplications are agentic application instances that can contain agent deployments.\nSee: https://learn.microsoft.com/en-us/azure/templates/microsoft.cognitiveservices/accounts/projects/applications\n"
@@ -32065,933 +32978,8 @@
               },
               "dependsOn": [
                 "cognitiveService",
-                "cognitiveService_deployments"
-              ]
-            },
-            "cognitiveServices_connections": {
-              "copy": {
-                "name": "cognitiveServices_connections",
-                "count": "[length(parameters('connections'))]",
-                "mode": "serial",
-                "batchSize": 1
-              },
-              "type": "Microsoft.Resources/deployments",
-              "apiVersion": "2025-04-01",
-              "name": "[format('{0}-con', take(format('{0}-{1}', parameters('name'), parameters('connections')[copyIndex()].name), 60))]",
-              "properties": {
-                "expressionEvaluationOptions": {
-                  "scope": "inner"
-                },
-                "mode": "Incremental",
-                "parameters": {
-                  "accountName": {
-                    "value": "[parameters('name')]"
-                  },
-                  "name": {
-                    "value": "[parameters('connections')[copyIndex()].name]"
-                  },
-                  "category": {
-                    "value": "[parameters('connections')[copyIndex()].category]"
-                  },
-                  "expiryTime": {
-                    "value": "[tryGet(parameters('connections')[copyIndex()], 'expiryTime')]"
-                  },
-                  "isSharedToAll": {
-                    "value": "[tryGet(parameters('connections')[copyIndex()], 'isSharedToAll')]"
-                  },
-                  "metadata": {
-                    "value": "[tryGet(parameters('connections')[copyIndex()], 'metadata')]"
-                  },
-                  "sharedUserList": {
-                    "value": "[tryGet(parameters('connections')[copyIndex()], 'sharedUserList')]"
-                  },
-                  "target": {
-                    "value": "[parameters('connections')[copyIndex()].target]"
-                  },
-                  "value": {
-                    "value": "[tryGet(parameters('connections')[copyIndex()], 'value')]"
-                  },
-                  "connectionProperties": {
-                    "value": "[parameters('connections')[copyIndex()].connectionProperties]"
-                  }
-                },
-                "template": {
-                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-                  "languageVersion": "2.0",
-                  "contentVersion": "1.0.0.0",
-                  "metadata": {
-                    "_generator": {
-                      "name": "bicep",
-                      "version": "0.43.8.12551",
-                      "templateHash": "6011933344195788902"
-                    },
-                    "name": "Machine Learning Services Workspaces Connections",
-                    "description": "This module creates a connection in a Machine Learning Services workspace."
-                  },
-                  "definitions": {
-                    "metadataType": {
-                      "type": "object",
-                      "properties": {},
-                      "additionalProperties": {
-                        "type": "string",
-                        "metadata": {
-                          "description": "Required. The metadata key-value pairs."
-                        }
-                      },
-                      "metadata": {
-                        "description": "The tpe for the metadata."
-                      }
-                    },
-                    "categoryType": {
-                      "type": "string",
-                      "allowedValues": [
-                        "ADLSGen2",
-                        "AIServices",
-                        "AmazonMws",
-                        "AmazonRdsForOracle",
-                        "AmazonRdsForSqlServer",
-                        "AmazonRedshift",
-                        "AmazonS3Compatible",
-                        "ApiKey",
-                        "AppInsights",
-                        "AzureBlob",
-                        "AzureDataExplorer",
-                        "AzureDatabricksDeltaLake",
-                        "AzureMariaDb",
-                        "AzureMySqlDb",
-                        "AzureOneLake",
-                        "AzureOpenAI",
-                        "AzurePostgresDb",
-                        "AzureSqlDb",
-                        "AzureSqlMi",
-                        "AzureSynapseAnalytics",
-                        "AzureTableStorage",
-                        "BingLLMSearch",
-                        "Cassandra",
-                        "CognitiveSearch",
-                        "CognitiveService",
-                        "Concur",
-                        "ContainerRegistry",
-                        "CosmosDb",
-                        "CosmosDbMongoDbApi",
-                        "Couchbase",
-                        "CustomKeys",
-                        "Db2",
-                        "Drill",
-                        "Dynamics",
-                        "DynamicsAx",
-                        "DynamicsCrm",
-                        "Elasticsearch",
-                        "Eloqua",
-                        "FileServer",
-                        "FtpServer",
-                        "GenericContainerRegistry",
-                        "GenericHttp",
-                        "GenericRest",
-                        "Git",
-                        "GoogleAdWords",
-                        "GoogleBigQuery",
-                        "GoogleCloudStorage",
-                        "Greenplum",
-                        "Hbase",
-                        "Hdfs",
-                        "Hive",
-                        "Hubspot",
-                        "Impala",
-                        "Informix",
-                        "Jira",
-                        "Magento",
-                        "ManagedOnlineEndpoint",
-                        "MariaDb",
-                        "Marketo",
-                        "MicrosoftAccess",
-                        "MongoDbAtlas",
-                        "MongoDbV2",
-                        "MySql",
-                        "Netezza",
-                        "ODataRest",
-                        "Odbc",
-                        "Office365",
-                        "OpenAI",
-                        "Oracle",
-                        "OracleCloudStorage",
-                        "OracleServiceCloud",
-                        "PayPal",
-                        "Phoenix",
-                        "Pinecone",
-                        "PostgreSql",
-                        "Presto",
-                        "PythonFeed",
-                        "QuickBooks",
-                        "Redis",
-                        "Responsys",
-                        "S3",
-                        "Salesforce",
-                        "SalesforceMarketingCloud",
-                        "SalesforceServiceCloud",
-                        "SapBw",
-                        "SapCloudForCustomer",
-                        "SapEcc",
-                        "SapHana",
-                        "SapOpenHub",
-                        "SapTable",
-                        "Serp",
-                        "Serverless",
-                        "ServiceNow",
-                        "Sftp",
-                        "SharePointOnlineList",
-                        "Shopify",
-                        "Snowflake",
-                        "Spark",
-                        "SqlServer",
-                        "Square",
-                        "Sybase",
-                        "Teradata",
-                        "Vertica",
-                        "WebTable",
-                        "Xero",
-                        "Zoho"
-                      ],
-                      "metadata": {
-                        "__bicep_export!": true,
-                        "description": "The type of the connection category."
-                      }
-                    },
-                    "aadAuthTypeWorkspaceConnectionPropertyType": {
-                      "type": "object",
-                      "properties": {
-                        "authType": {
-                          "type": "string",
-                          "allowedValues": [
-                            "AAD"
-                          ],
-                          "metadata": {
-                            "description": "Required. The authentication type of the connection target."
-                          }
-                        }
-                      },
-                      "metadata": {
-                        "description": "The connection properties when the auth type is AAD."
-                      }
-                    },
-                    "accessKeyAuthTypeWorkspaceConnectionPropertyType": {
-                      "type": "object",
-                      "properties": {
-                        "authType": {
-                          "type": "string",
-                          "allowedValues": [
-                            "AccessKey"
-                          ],
-                          "metadata": {
-                            "description": "Required. The authentication type of the connection target."
-                          }
-                        },
-                        "credentials": {
-                          "$ref": "#/definitions/workspaceConnectionAccessKeyType",
-                          "metadata": {
-                            "description": "Required. The credentials for the connection."
-                          }
-                        }
-                      },
-                      "metadata": {
-                        "description": "The connection properties when the auth type is AccessKey."
-                      }
-                    },
-                    "accountKeyAuthTypeWorkspaceConnectionPropertyType": {
-                      "type": "object",
-                      "properties": {
-                        "authType": {
-                          "type": "string",
-                          "allowedValues": [
-                            "AccountKey"
-                          ],
-                          "metadata": {
-                            "description": "Required. The authentication type of the connection target."
-                          }
-                        },
-                        "credentials": {
-                          "$ref": "#/definitions/workspaceConnectionAccountKeyType",
-                          "metadata": {
-                            "description": "Required. The credentials for the connection."
-                          }
-                        }
-                      },
-                      "metadata": {
-                        "description": "The connection properties when the auth type is AccountKey."
-                      }
-                    },
-                    "apiKeyAuthWorkspaceConnectionPropertyType": {
-                      "type": "object",
-                      "properties": {
-                        "authType": {
-                          "type": "string",
-                          "allowedValues": [
-                            "ApiKey"
-                          ],
-                          "metadata": {
-                            "description": "Required. The authentication type of the connection target."
-                          }
-                        },
-                        "credentials": {
-                          "$ref": "#/definitions/workspaceConnectionApiKeyType",
-                          "metadata": {
-                            "description": "Required. The credentials for the connection."
-                          }
-                        }
-                      },
-                      "metadata": {
-                        "description": "The connection properties when the auth type is ApiKey."
-                      }
-                    },
-                    "customKeysWorkspaceConnectionPropertyType": {
-                      "type": "object",
-                      "properties": {
-                        "authType": {
-                          "type": "string",
-                          "allowedValues": [
-                            "CustomKeys"
-                          ],
-                          "metadata": {
-                            "description": "Required. The authentication type of the connection target."
-                          }
-                        },
-                        "credentials": {
-                          "$ref": "#/definitions/customKeysType",
-                          "metadata": {
-                            "description": "Required. The credentials for the connection."
-                          }
-                        }
-                      },
-                      "metadata": {
-                        "description": "The connection properties when the auth type are CustomKeys."
-                      }
-                    },
-                    "managedIdentityAuthTypeWorkspaceConnectionPropertyType": {
-                      "type": "object",
-                      "properties": {
-                        "authType": {
-                          "type": "string",
-                          "allowedValues": [
-                            "ManagedIdentity"
-                          ],
-                          "metadata": {
-                            "description": "Required. The authentication type of the connection target."
-                          }
-                        },
-                        "credentials": {
-                          "$ref": "#/definitions/workspaceConnectionManagedIdentityType",
-                          "metadata": {
-                            "description": "Required. The credentials for the connection."
-                          }
-                        }
-                      },
-                      "metadata": {
-                        "description": "The connection properties when the auth type is ManagedIdentity."
-                      }
-                    },
-                    "noneAuthTypeWorkspaceConnectionPropertyType": {
-                      "type": "object",
-                      "properties": {
-                        "authType": {
-                          "type": "string",
-                          "allowedValues": [
-                            "None"
-                          ],
-                          "metadata": {
-                            "description": "Required. The authentication type of the connection target."
-                          }
-                        }
-                      },
-                      "metadata": {
-                        "description": "The connection properties when the auth type is None."
-                      }
-                    },
-                    "oauth2AuthTypeWorkspaceConnectionPropertyType": {
-                      "type": "object",
-                      "properties": {
-                        "authType": {
-                          "type": "string",
-                          "allowedValues": [
-                            "OAuth2"
-                          ],
-                          "metadata": {
-                            "description": "Required. The authentication type of the connection target."
-                          }
-                        },
-                        "credentials": {
-                          "$ref": "#/definitions/workspaceConnectionOAuth2Type",
-                          "metadata": {
-                            "description": "Required. The credentials for the connection."
-                          }
-                        }
-                      },
-                      "metadata": {
-                        "description": "The connection properties when the auth type is OAuth2."
-                      }
-                    },
-                    "patAuthTypeWorkspaceConnectionPropertyType": {
-                      "type": "object",
-                      "properties": {
-                        "authType": {
-                          "type": "string",
-                          "allowedValues": [
-                            "PAT"
-                          ],
-                          "metadata": {
-                            "description": "Required. The authentication type of the connection target."
-                          }
-                        },
-                        "credentials": {
-                          "$ref": "#/definitions/workspaceConnectionPersonalAccessTokenType",
-                          "metadata": {
-                            "description": "Required. The credentials for the connection."
-                          }
-                        }
-                      },
-                      "metadata": {
-                        "description": "The connection properties when the auth type is PAT."
-                      }
-                    },
-                    "sasAuthTypeWorkspaceConnectionPropertyType": {
-                      "type": "object",
-                      "properties": {
-                        "authType": {
-                          "type": "string",
-                          "allowedValues": [
-                            "SAS"
-                          ],
-                          "metadata": {
-                            "description": "Required. The authentication type of the connection target."
-                          }
-                        },
-                        "credentials": {
-                          "$ref": "#/definitions/workspaceConnectionSharedAccessSignatureType",
-                          "metadata": {
-                            "description": "Required. The credentials for the connection."
-                          }
-                        }
-                      },
-                      "metadata": {
-                        "description": "The connection properties when the auth type is SAS."
-                      }
-                    },
-                    "servicePrincipalAuthTypeWorkspaceConnectionPropertyType": {
-                      "type": "object",
-                      "properties": {
-                        "authType": {
-                          "type": "string",
-                          "allowedValues": [
-                            "ServicePrincipal"
-                          ],
-                          "metadata": {
-                            "description": "Required. The authentication type of the connection target."
-                          }
-                        },
-                        "credentials": {
-                          "$ref": "#/definitions/workspaceConnectionServicePrincipalType",
-                          "metadata": {
-                            "description": "Required. The credentials for the connection."
-                          }
-                        }
-                      },
-                      "metadata": {
-                        "description": "The connection properties when the auth type is ServicePrincipal."
-                      }
-                    },
-                    "usernamePasswordAuthTypeWorkspaceConnectionPropertyType": {
-                      "type": "object",
-                      "properties": {
-                        "authType": {
-                          "type": "string",
-                          "allowedValues": [
-                            "UsernamePassword"
-                          ],
-                          "metadata": {
-                            "description": "Required. The authentication type of the connection target."
-                          }
-                        },
-                        "credentials": {
-                          "$ref": "#/definitions/workspaceConnectionUsernamePasswordType",
-                          "metadata": {
-                            "description": "Required. The credentials for the connection."
-                          }
-                        }
-                      },
-                      "metadata": {
-                        "description": "The connection properties when the auth type is UsernamePassword."
-                      }
-                    },
-                    "customKeysType": {
-                      "type": "object",
-                      "properties": {
-                        "keys": {
-                          "type": "object",
-                          "properties": {},
-                          "additionalProperties": {
-                            "type": "string",
-                            "metadata": {
-                              "description": "Required. Key-value pairs for the custom keys."
-                            }
-                          },
-                          "metadata": {
-                            "description": "Required. The custom keys for the connection."
-                          }
-                        }
-                      },
-                      "metadata": {
-                        "description": "The type fot the custom keys."
-                      }
-                    },
-                    "workspaceConnectionAccessKeyType": {
-                      "type": "object",
-                      "properties": {
-                        "accessKeyId": {
-                          "type": "string",
-                          "metadata": {
-                            "description": "Required. The connection access key ID."
-                          }
-                        },
-                        "secretAccessKey": {
-                          "type": "string",
-                          "metadata": {
-                            "description": "Required. The connection secret access key."
-                          }
-                        }
-                      },
-                      "metadata": {
-                        "description": "The type for the workspace connection access key."
-                      }
-                    },
-                    "workspaceConnectionAccountKeyType": {
-                      "type": "object",
-                      "properties": {
-                        "key": {
-                          "type": "string",
-                          "metadata": {
-                            "description": "Required. The connection key."
-                          }
-                        }
-                      },
-                      "metadata": {
-                        "description": "The type for the workspace connection account key."
-                      }
-                    },
-                    "workspaceConnectionApiKeyType": {
-                      "type": "object",
-                      "properties": {
-                        "key": {
-                          "type": "string",
-                          "metadata": {
-                            "description": "Required. The connection API key."
-                          }
-                        }
-                      },
-                      "metadata": {
-                        "description": "The type for the workspace connection API key."
-                      }
-                    },
-                    "workspaceConnectionManagedIdentityType": {
-                      "type": "object",
-                      "properties": {
-                        "clientId": {
-                          "type": "string",
-                          "metadata": {
-                            "description": "Required. The connection managed identity ID."
-                          }
-                        },
-                        "resourceId": {
-                          "type": "string",
-                          "metadata": {
-                            "description": "Required. The connection managed identity resource ID."
-                          }
-                        }
-                      },
-                      "metadata": {
-                        "description": "The type for the workspace connection managed identity."
-                      }
-                    },
-                    "workspaceConnectionOAuth2Type": {
-                      "type": "object",
-                      "properties": {
-                        "authUrl": {
-                          "type": "string",
-                          "nullable": true,
-                          "metadata": {
-                            "description": "Conditional. The connection auth URL. Required if connection category is Concur."
-                          }
-                        },
-                        "clientId": {
-                          "type": "string",
-                          "minLength": 36,
-                          "maxLength": 36,
-                          "metadata": {
-                            "description": "Required. The connection client ID in the format of UUID."
-                          }
-                        },
-                        "clientSecret": {
-                          "type": "string",
-                          "metadata": {
-                            "description": "Required. The connection client secret."
-                          }
-                        },
-                        "developerToken": {
-                          "type": "string",
-                          "nullable": true,
-                          "metadata": {
-                            "description": "Conditional. The connection developer token. Required if connection category is GoogleAdWords."
-                          }
-                        },
-                        "password": {
-                          "type": "string",
-                          "nullable": true,
-                          "metadata": {
-                            "description": "Conditional. The connection password. Required if connection category is Concur or ServiceNow where AccessToken grant type is 'Password'."
-                          }
-                        },
-                        "refreshToken": {
-                          "type": "string",
-                          "nullable": true,
-                          "metadata": {
-                            "description": "Conditional. The connection refresh token. Required if connection category is GoogleBigQuery, GoogleAdWords, Hubspot, QuickBooks, Square, Xero or Zoho."
-                          }
-                        },
-                        "tenantId": {
-                          "type": "string",
-                          "nullable": true,
-                          "metadata": {
-                            "description": "Conditional. The connection tenant ID. Required if connection category is QuickBooks or Xero."
-                          }
-                        },
-                        "username": {
-                          "type": "string",
-                          "nullable": true,
-                          "metadata": {
-                            "description": "Conditional. The connection username. Required if connection category is Concur or ServiceNow where AccessToken grant type is 'Password'."
-                          }
-                        }
-                      }
-                    },
-                    "workspaceConnectionPersonalAccessTokenType": {
-                      "type": "object",
-                      "properties": {
-                        "pat": {
-                          "type": "string",
-                          "metadata": {
-                            "description": "Required. The connection personal access token."
-                          }
-                        }
-                      },
-                      "metadata": {
-                        "description": "The type for the workspace connection personal access token."
-                      }
-                    },
-                    "workspaceConnectionSharedAccessSignatureType": {
-                      "type": "object",
-                      "properties": {
-                        "sas": {
-                          "type": "string",
-                          "metadata": {
-                            "description": "Required. The connection SAS token."
-                          }
-                        }
-                      },
-                      "metadata": {
-                        "description": "The type for the workspace connection shared access signature."
-                      }
-                    },
-                    "workspaceConnectionServicePrincipalType": {
-                      "type": "object",
-                      "properties": {
-                        "clientId": {
-                          "type": "string",
-                          "metadata": {
-                            "description": "Required. The connection client ID."
-                          }
-                        },
-                        "clientSecret": {
-                          "type": "string",
-                          "metadata": {
-                            "description": "Required. The connection client secret."
-                          }
-                        },
-                        "tenantId": {
-                          "type": "string",
-                          "metadata": {
-                            "description": "Required. The connection tenant ID."
-                          }
-                        }
-                      },
-                      "metadata": {
-                        "description": "The type for the workspace connection service principal."
-                      }
-                    },
-                    "workspaceConnectionUsernamePasswordType": {
-                      "type": "object",
-                      "properties": {
-                        "password": {
-                          "type": "string",
-                          "metadata": {
-                            "description": "Required. The connection password."
-                          }
-                        },
-                        "securityToken": {
-                          "type": "string",
-                          "nullable": true,
-                          "metadata": {
-                            "description": "Conditional. The connection security token. Required if connection is like SalesForce for extra security in addition to 'UsernamePassword'."
-                          }
-                        },
-                        "username": {
-                          "type": "string",
-                          "metadata": {
-                            "description": "Required. The connection username."
-                          }
-                        }
-                      },
-                      "metadata": {
-                        "description": "The type for the workspace connection username and password."
-                      }
-                    },
-                    "connectionPropertyType": {
-                      "type": "secureObject",
-                      "discriminator": {
-                        "propertyName": "authType",
-                        "mapping": {
-                          "AAD": {
-                            "$ref": "#/definitions/aadAuthTypeWorkspaceConnectionPropertyType"
-                          },
-                          "AccessKey": {
-                            "$ref": "#/definitions/accessKeyAuthTypeWorkspaceConnectionPropertyType"
-                          },
-                          "AccountKey": {
-                            "$ref": "#/definitions/accountKeyAuthTypeWorkspaceConnectionPropertyType"
-                          },
-                          "ApiKey": {
-                            "$ref": "#/definitions/apiKeyAuthWorkspaceConnectionPropertyType"
-                          },
-                          "CustomKeys": {
-                            "$ref": "#/definitions/customKeysWorkspaceConnectionPropertyType"
-                          },
-                          "ManagedIdentity": {
-                            "$ref": "#/definitions/managedIdentityAuthTypeWorkspaceConnectionPropertyType"
-                          },
-                          "None": {
-                            "$ref": "#/definitions/noneAuthTypeWorkspaceConnectionPropertyType"
-                          },
-                          "OAuth2": {
-                            "$ref": "#/definitions/oauth2AuthTypeWorkspaceConnectionPropertyType"
-                          },
-                          "PAT": {
-                            "$ref": "#/definitions/patAuthTypeWorkspaceConnectionPropertyType"
-                          },
-                          "SAS": {
-                            "$ref": "#/definitions/sasAuthTypeWorkspaceConnectionPropertyType"
-                          },
-                          "ServicePrincipal": {
-                            "$ref": "#/definitions/servicePrincipalAuthTypeWorkspaceConnectionPropertyType"
-                          },
-                          "UsernamePassword": {
-                            "$ref": "#/definitions/usernamePasswordAuthTypeWorkspaceConnectionPropertyType"
-                          }
-                        }
-                      },
-                      "metadata": {
-                        "__bicep_export!": true,
-                        "description": "The type of the connection properties."
-                      }
-                    },
-                    "connectionType": {
-                      "type": "object",
-                      "properties": {
-                        "name": {
-                          "type": "string",
-                          "metadata": {
-                            "description": "Required. Name of the connection to create."
-                          }
-                        },
-                        "category": {
-                          "$ref": "#/definitions/categoryType",
-                          "metadata": {
-                            "description": "Required. Category of the connection."
-                          }
-                        },
-                        "expiryTime": {
-                          "type": "string",
-                          "nullable": true,
-                          "metadata": {
-                            "description": "Optional. The expiry time of the connection."
-                          }
-                        },
-                        "isSharedToAll": {
-                          "type": "bool",
-                          "nullable": true,
-                          "metadata": {
-                            "description": "Optional. Indicates whether the connection is shared to all users in the workspace."
-                          }
-                        },
-                        "metadata": {
-                          "type": "object",
-                          "properties": {},
-                          "additionalProperties": {
-                            "type": "string",
-                            "metadata": {
-                              "description": "Required. The metadata key-value pairs."
-                            }
-                          },
-                          "nullable": true,
-                          "metadata": {
-                            "description": "Optional. User metadata for the connection."
-                          }
-                        },
-                        "sharedUserList": {
-                          "type": "array",
-                          "items": {
-                            "type": "string"
-                          },
-                          "nullable": true,
-                          "metadata": {
-                            "description": "Optional. The shared user list of the connection."
-                          }
-                        },
-                        "target": {
-                          "type": "string",
-                          "metadata": {
-                            "description": "Required. The target of the connection."
-                          }
-                        },
-                        "value": {
-                          "type": "string",
-                          "nullable": true,
-                          "metadata": {
-                            "description": "Optional. Value details of the workspace connection."
-                          }
-                        },
-                        "connectionProperties": {
-                          "$ref": "#/definitions/connectionPropertyType",
-                          "metadata": {
-                            "description": "Required. The properties of the connection, specific to the auth type."
-                          }
-                        }
-                      },
-                      "metadata": {
-                        "__bicep_export!": true,
-                        "description": "The type for the workspace connection."
-                      }
-                    }
-                  },
-                  "parameters": {
-                    "name": {
-                      "type": "string",
-                      "metadata": {
-                        "description": "Required. Name of the connection to create."
-                      }
-                    },
-                    "accountName": {
-                      "type": "string",
-                      "metadata": {
-                        "description": "Required. The name of the parent Cognitive Services account. Required if the template is used in a standalone deployment."
-                      }
-                    },
-                    "category": {
-                      "$ref": "#/definitions/categoryType",
-                      "metadata": {
-                        "description": "Required. Category of the connection."
-                      }
-                    },
-                    "expiryTime": {
-                      "type": "string",
-                      "nullable": true,
-                      "metadata": {
-                        "description": "Optional. The expiry time of the connection."
-                      }
-                    },
-                    "isSharedToAll": {
-                      "type": "bool",
-                      "nullable": true,
-                      "metadata": {
-                        "description": "Optional. Indicates whether the connection is shared to all users in the workspace."
-                      }
-                    },
-                    "metadata": {
-                      "$ref": "#/definitions/metadataType",
-                      "defaultValue": {},
-                      "metadata": {
-                        "description": "Optional. User metadata for the connection."
-                      }
-                    },
-                    "sharedUserList": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      },
-                      "nullable": true,
-                      "metadata": {
-                        "description": "Optional. The shared user list of the connection."
-                      }
-                    },
-                    "target": {
-                      "type": "string",
-                      "metadata": {
-                        "description": "Required. The target of the connection."
-                      }
-                    },
-                    "value": {
-                      "type": "string",
-                      "nullable": true,
-                      "metadata": {
-                        "description": "Optional. Value details of the workspace connection."
-                      }
-                    },
-                    "connectionProperties": {
-                      "$ref": "#/definitions/connectionPropertyType",
-                      "metadata": {
-                        "description": "Required. The properties of the connection, specific to the auth type."
-                      }
-                    }
-                  },
-                  "resources": {
-                    "cognitiveServicesAccount": {
-                      "existing": true,
-                      "type": "Microsoft.CognitiveServices/accounts",
-                      "apiVersion": "2025-10-01-preview",
-                      "name": "[parameters('accountName')]"
-                    },
-                    "connection": {
-                      "type": "Microsoft.CognitiveServices/accounts/connections",
-                      "apiVersion": "2025-10-01-preview",
-                      "name": "[format('{0}/{1}', parameters('accountName'), parameters('name'))]",
-                      "properties": "[union(createObject('category', parameters('category'), 'expiryTime', parameters('expiryTime'), 'isSharedToAll', parameters('isSharedToAll'), 'metadata', parameters('metadata'), 'sharedUserList', parameters('sharedUserList'), 'target', parameters('target'), 'value', parameters('value')), parameters('connectionProperties'))]"
-                    }
-                  },
-                  "outputs": {
-                    "resourceId": {
-                      "type": "string",
-                      "metadata": {
-                        "description": "The resource ID of the connection."
-                      },
-                      "value": "[resourceId('Microsoft.CognitiveServices/accounts/connections', parameters('accountName'), parameters('name'))]"
-                    },
-                    "name": {
-                      "type": "string",
-                      "metadata": {
-                        "description": "The name of the connection."
-                      },
-                      "value": "[parameters('name')]"
-                    },
-                    "resourceGroupName": {
-                      "type": "string",
-                      "metadata": {
-                        "description": "The name of the resource group the connection was created in."
-                      },
-                      "value": "[resourceGroup().name]"
-                    }
-                  }
-                }
-              },
-              "dependsOn": [
-                "cognitiveService",
                 "cognitiveService_deployments",
-                "cognitiveService_projects"
+                "cognitiveServices_connections"
               ]
             },
             "cognitiveServices_capabilityHosts": {
@@ -33030,8 +33018,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.43.8.12551",
-                      "templateHash": "2547187226422030368"
+                      "version": "0.44.1.10279",
+                      "templateHash": "13387876236338309390"
                     },
                     "name": "Cognitive Services Capability Hosts",
                     "description": "This module creates a capability host in a Cognitive Services account.\nCapability hosts enable AI agent functionality by configuring storage for threads, vectors, and files.\nSee: https://learn.microsoft.com/en-us/azure/ai-foundry/agents/concepts/capability-hosts\n"
@@ -33154,6 +33142,9 @@
                       "name": "[parameters('accountName')]"
                     },
                     "capabilityHost": {
+                      "@options": {
+                        "onlyIfNotExists": []
+                      },
                       "type": "Microsoft.CognitiveServices/accounts/capabilityHosts",
                       "apiVersion": "2025-10-01-preview",
                       "name": "[format('{0}/{1}', parameters('accountName'), parameters('name'))]",
@@ -33222,8 +33213,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.43.8.12551",
-                      "templateHash": "4555996534717415586"
+                      "version": "0.44.1.10279",
+                      "templateHash": "18372288849360567516"
                     }
                   },
                   "definitions": {
@@ -33529,8 +33520,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.43.8.12551",
-              "templateHash": "4367674868231359715"
+              "version": "0.44.1.10279",
+              "templateHash": "2106235090597559677"
             },
             "name": "Azure AI Search Role Assignments",
             "description": "Creates role assignments on an Azure AI Search service."
@@ -33729,8 +33720,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.43.8.12551",
-              "templateHash": "2280918084995031622"
+              "version": "0.44.1.10279",
+              "templateHash": "2121039106466563877"
             },
             "name": "Microsoft Foundry Role Assignments",
             "description": "Creates role assignments on a Microsoft Foundry account."
@@ -33947,8 +33938,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.43.8.12551",
-              "templateHash": "1990254475738160548"
+              "version": "0.44.1.10279",
+              "templateHash": "3370837972516071679"
             },
             "name": "Resource Group Role Assignments",
             "description": "Creates role assignments scoped to the resource group."
@@ -34134,8 +34125,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.43.8.12551",
-              "templateHash": "7071245367873875287"
+              "version": "0.44.1.10279",
+              "templateHash": "14959465664220218188"
             },
             "name": "Cosmos DB SQL Role Assignments",
             "description": "Creates SQL data-plane role assignments on an existing Cosmos DB account without redeploying the account resource."

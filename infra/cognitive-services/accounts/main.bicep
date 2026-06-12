@@ -382,7 +382,7 @@ resource cognitiveService 'Microsoft.CognitiveServices/accounts@2025-10-01-previ
   sku: {
     name: sku
   }
-  properties: {
+  properties: union({
     allowProjectManagement: allowProjectManagement
     customSubDomainName: customSubDomainName
     networkAcls: !empty(networkAcls ?? {})
@@ -433,8 +433,7 @@ resource cognitiveService 'Microsoft.CognitiveServices/accounts@2025-10-01-previ
     userOwnedStorage: !empty(userOwnedStorage) ? userOwnedStorage : null
     dynamicThrottlingEnabled: dynamicThrottlingEnabled
     storedCompletionsDisabled: storedCompletionsDisabled
-    defaultProject: defaultProject
-  }
+  }, !empty(defaultProject ?? '') ? { defaultProject: defaultProject } : {})
 }
 
 resource cognitiveService_raiPolicies 'Microsoft.CognitiveServices/accounts/raiPolicies@2025-10-01-preview' = [

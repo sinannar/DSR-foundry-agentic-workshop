@@ -42,6 +42,7 @@ resource cognitiveServicesAccount 'Microsoft.CognitiveServices/accounts@2025-10-
 // Resources      //
 // ============== //
 
+@onlyIfNotExists()
 resource capabilityHost 'Microsoft.CognitiveServices/accounts/capabilityHosts@2025-10-01-preview' = {
   name: name
   parent: cognitiveServicesAccount
