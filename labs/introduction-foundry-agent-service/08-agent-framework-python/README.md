@@ -36,9 +36,9 @@ Microsoft Agent Framework comes in.
 
 ### What the Agent Framework is
 
-The **Microsoft Agent Framework** is an open-source SDK, available for both
+The **[Microsoft Agent Framework](https://learn.microsoft.com/en-us/agent-framework/overview/?pivots=programming-language-python)** is an open-source SDK, available for both
 Python and .NET, for building, running, and orchestrating AI agents and
-multi-agent workflows. It brings together the lessons from Semantic Kernel and
+[multi-agent workflows](https://learn.microsoft.com/en-us/agent-framework/workflows/?pivots=programming-language-python). It brings together the lessons from Semantic Kernel and
 AutoGen into a single, consistent programming model.
 
 ### Why it exists
@@ -49,7 +49,7 @@ more:
 - Call an agent from your own app, API, or background job.
 - Add custom logic and your own function tools around the agent.
 - Stream responses to a UI as they are generated.
-- Orchestrate several agents into a multi-agent workflow.
+- [Orchestrate several agents into a multi-agent workflow](https://learn.microsoft.com/en-us/agent-framework/workflows/?pivots=programming-language-python).
 - Add observability, middleware, and consistent error handling.
 
 The Agent Framework provides these building blocks with one programming model
@@ -60,13 +60,16 @@ app when the underlying model or service changes.
 
 The framework gives you two complementary ways to work with Foundry:
 
-1. **Connect to an agent you already built** — `FoundryAgent` binds to an
+1. **Connect to an agent you already built** — [`FoundryAgent`](https://learn.microsoft.com/en-us/agent-framework/agents/providers/microsoft-foundry/?pivots=programming-language-python) binds to an
    existing Prompt Agent or Hosted Agent by name. Its model, instructions, and
    tools all live on the Foundry service; you simply connect and run. This is
    the path you use in this module.
-1. **Define an agent in code** — `FoundryChatClient` plus `Agent` let you
+1. **Define an agent in code** — [`FoundryChatClient`](https://learn.microsoft.com/en-us/agent-framework/agents/providers/microsoft-foundry/?pivots=programming-language-python) plus [`Agent`](https://learn.microsoft.com/en-us/agent-framework/agents/?pivots=programming-language-python) let you
    declare a model, instructions, and tools directly in Python. You use this
    pattern in Module 10.
+
+> [!NOTE]
+> While this workshop focuses on Foundry, the SDK supports many other providers — including OpenAI, Azure OpenAI, Ollama, and more — so the same agent code runs against different backends without rewriting. See the [Providers Overview](https://learn.microsoft.com/en-us/agent-framework/agents/providers/?pivots=programming-language-python) for the full list.
 
 In this module you take the agent that already exists in Foundry — the grounded
 `acl-remedy-advisor` Prompt Agent from Module 07 — and run it from Python with
@@ -122,14 +125,14 @@ your code.
    )
    ```
 
-   **Snippet 3 — run the agent once and print the full response** (TODO 3):
+   **Snippet 3 — [run the agent once](https://learn.microsoft.com/en-us/agent-framework/agents/running-agents/?pivots=programming-language-python) and print the full response** (TODO 3):
 
    ```python
    result = await agent.run(QUERY)
    print(f'\nAgent:\n{result.text}\n')
    ```
 
-   **Snippet 4 — run the agent again and stream the response** (TODO 4). Each chunk is printed as the agent generates it:
+   **Snippet 4 — run the agent again and [stream the response](https://learn.microsoft.com/en-us/agent-framework/agents/running-agents/?pivots=programming-language-python#streaming-and-non-streaming)** (TODO 4). Each chunk is printed as the agent generates it:
 
    ```python
    print('Agent (streaming): ', end='', flush=True)

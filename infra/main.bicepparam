@@ -34,6 +34,9 @@ param ensureFacilitatorProject = toLower(readEnvironmentVariable('AZURE_ENSURE_F
 param useUpnProjectNames = toLower(readEnvironmentVariable('AZURE_USE_UPN_PROJECT_NAMES', 'true')) != 'false'
 param attendeeDefaultRole = readEnvironmentVariable('AZURE_ATTENDEE_DEFAULT_ROLE', 'foundry-user')
 
+// Shared Container Registry SKU for hosted agents (Module 09). Basic is sufficient for the workshop.
+param containerRegistrySku = readEnvironmentVariable('AZURE_CONTAINER_REGISTRY_SKU', 'Basic')
+
 // Capability host flags (off by default)
 param azureAiSearchCapabilityHost = toLower(readEnvironmentVariable('AZURE_AI_SEARCH_CAPABILITY_HOST', 'false')) == 'true'
 param cosmosDbCapabilityHost = toLower(readEnvironmentVariable('AZURE_COSMOS_DB_CAPABILITY_HOST', 'false')) == 'true'

@@ -130,6 +130,14 @@ param azureStorageAccountCapabilityHost bool = false
 @description('Optional explicit capability hosts to create in the Foundry account.')
 param foundryCapabilityHosts capabilityHostType[] = []
 
+@description('SKU for the shared Azure Container Registry used by hosted agents (Module 09). Basic is sufficient for the workshop.')
+@allowed([
+  'Basic'
+  'Standard'
+  'Premium'
+])
+param containerRegistrySku string = 'Basic'
+
 var abbrs = loadJsonContent('./abbreviations.json')
 var modelDeployments = loadJsonContent('./model-deployments.json')
 
@@ -186,6 +194,7 @@ var storageAccounName = take(toLower(replace('${abbrs.storageStorageAccounts}${e
 var keyVaultName = take(toLower(replace('${abbrs.keyVaultVaults}${environmentName}', '-', '')), 24)
 var cosmosDbAccountName = toLower(replace('${abbrs.cosmosDBAccounts}${environmentName}', '-', ''))
 var aiSearchName = '${abbrs.aiSearchSearchServices}${environmentName}'
+var containerRegistryName = take(toLower(replace('${abbrs.containerRegistryRegistries}${environmentName}', '-', '')), 50)
 var aiFoundryName = '${abbrs.aiFoundryAccounts}${environmentName}'
 var aiFoundryCustomSubDomainName = aiFoundryName // toLower(replace(aiFoundryName, '-', ''))
 
@@ -318,6 +327,16 @@ var attendeeSearchRoleAssignments = flatten(map(resolvedAttendeesWithIds, a =>
   })
 ))
 
+// Azure Container Registry AcrPush role assignments (all resolved attendees). Required so each
+// attendee can build and push their hosted agent image to the shared registry in Module 09. The
+// AcrPush role GUID is 8311e382-0749-4cb8-b61a-304f252e45ec. Per-attendee image tags keep pushes
+// isolated; AcrPush grants push to the whole registry, which is acceptable for a shared lab.
+var attendeeAcrPushRoleAssignments = map(resolvedAttendeesWithIds, a => {
+  roleDefinitionIdOrName: '8311e382-0749-4cb8-b61a-304f252e45ec'
+  principalId: a.objectId
+  principalType: 'User'
+})
+
 // Resource group Reader role assignments (all resolved attendees).
 var attendeeResourceGroupReaderRoleAssignments = map(resolvedAttendeesWithIds, a => {
   roleDefinitionIdOrName: 'acdd72a7-3385-48ef-bd42-f606fba81ae7'
@@ -336,11 +355,29 @@ var attendeeAppInsightsLogAnalyticsReaderRoleAssignments = map(resolvedAttendees
   principalType: 'User'
 })
 
+// Constrained Role Based Access Control Administrator assignments (all resolved attendees) at the
+// Foundry account scope. Required for Module 09: each hosted agent receives a per-deploy Microsoft
+// Entra agent identity that needs the Foundry User role on the account to invoke models at runtime.
+// That identity's principal ID only exists after deployment, so it cannot be pre-assigned in Bicep —
+// the attendee's deploy script assigns it. The ABAC condition restricts each attendee to assigning
+// ONLY the Foundry User role to ServicePrincipals, enforcing least privilege. The Role Based Access
+// Control Administrator role GUID is f58310d9-a9f6-439a-9e8d-f62e7b41a168.
+// See: https://learn.microsoft.com/azure/role-based-access-control/delegate-role-assignments-portal
+var attendeeAgentIdentityRbacAdminRoleAssignments = map(resolvedAttendeesWithIds, a => {
+  roleDefinitionIdOrName: 'f58310d9-a9f6-439a-9e8d-f62e7b41a168'
+  principalId: a.objectId
+  principalType: 'User'
+  description: 'Constrained: assign Foundry User to hosted agent identities only (Module 09).'
+  conditionVersion: '2.0'
+  condition: '((!(ActionMatches{\'Microsoft.Authorization/roleAssignments/write\'})) OR (@Request[Microsoft.Authorization/roleAssignments:RoleDefinitionId] ForAnyOfAnyValues:GuidEquals {${foundryRoleCatalog['foundry-user']}} AND @Request[Microsoft.Authorization/roleAssignments:PrincipalType] StringEqualsIgnoreCase \'ServicePrincipal\')) AND ((!(ActionMatches{\'Microsoft.Authorization/roleAssignments/delete\'})) OR (@Resource[Microsoft.Authorization/roleAssignments:RoleDefinitionId] ForAnyOfAnyValues:GuidEquals {${foundryRoleCatalog['foundry-user']}}))'
+})
+
 // ---------- CAPABILITY HOSTS CONFIGURATION ----------
 var aiSearchConnectionName = replace(aiSearchName, '-', '')
 var appInsightsConnectionName = replace(applicationInsightsName, '-', '')
 var storageConnectionName = replace(storageAccounName, '-', '')
 var cosmosDbConnectionName = replace(cosmosDbAccountName, '-', '')
+var containerRegistryConnectionName = replace(containerRegistryName, '-', '')
 
 var foundryServiceConnections = concat(
   [
@@ -381,6 +418,23 @@ var foundryServiceConnections = concat(
         ResourceId: aiSearchService.outputs.resourceId
         ApiVersion: '2024-05-01-preview'
         DeploymentApiVersion: '2023-11-01'
+      }
+    }
+  ],
+  [
+    {
+      // Container Registry connection so Foundry hosted agents (Module 09) can pull images
+      // from the shared registry using the project managed identity (AcrPull).
+      category: 'ContainerRegistry'
+      connectionProperties: {
+        authType: 'AAD'
+      }
+      name: containerRegistryConnectionName
+      target: containerRegistry.outputs.loginServer
+      isSharedToAll: true
+      metadata: {
+        ApiType: 'Azure'
+        ResourceId: containerRegistry.outputs.resourceId
       }
     }
   ],
@@ -592,6 +646,36 @@ module aiSearchService 'br/public:avm/res/search/search-service:0.12.2' = {
   }
 }
 
+// Create an Azure Container Registry with public access using Azure Verified Module (AVM).
+// Hosted agents (Module 09) pull their container images from this registry, and attendees push
+// their built images here. A single shared registry is used for the whole workshop; per-attendee
+// image tags (<image>:<project-name>) keep each attendee's deployment isolated. Public network
+// access is enabled so attendees can push from GitHub Codespaces without private networking.
+// See: https://learn.microsoft.com/azure/ai-foundry/agents/how-to/deploy-hosted-agents
+module containerRegistry 'br/public:avm/res/container-registry/registry:0.12.1' = {
+  name: 'container-registry-deployment-${deploymentId}'
+  scope: az.resourceGroup(effectiveResourceGroupName)
+  dependsOn: [resourceGroup]
+  params: {
+    name: containerRegistryName
+    location: location
+    acrSku: containerRegistrySku
+    acrAdminUserEnabled: false
+    diagnosticSettings: [
+      {
+        metricCategories: [
+          {
+            category: 'AllMetrics'
+          }
+        ]
+        name: sendTologAnalyticsCustomSettingName
+        workspaceResourceId: logAnalyticsWorkspace.outputs.resourceId
+      }
+    ]
+    tags: tags
+  }
+}
+
 // Create the Microsoft Foundry account with public access and per-attendee projects.
 // Uses the local cognitive-services module to support Foundry features such as RAI policies.
 module aiFoundryAccount './cognitive-services/accounts/main.bicep' = {
@@ -768,6 +852,35 @@ module projectSearchRoleAssignments './core/security/role_aisearch.bicep' = [
   }
 ]
 
+// Per-project managed identity AcrPull role assignments for hosted agent image pulls (Module 09).
+// Each Foundry project's system-assigned managed identity authenticates to the shared Container
+// Registry to pull the hosted agent image when the agent version is created. Without the AcrPull
+// role, hosted agent deployment fails with an image-pull authorization error. A module loop is used
+// (rather than a variable loop) so the per-project principal IDs — only known after the Foundry
+// account deploys — can be referenced in the loop body. The loop count comes from allProjectNames
+// (compile-time), and the project array order matches aiFoundryAccount's projects input so IDs are
+// indexed by position. See: https://learn.microsoft.com/azure/ai-foundry/agents/how-to/deploy-hosted-agents
+module projectAcrRoleAssignments './core/security/role_acr.bicep' = [
+  for (name, i) in allProjectNames: {
+    name: 'project-acr-role-${i}-${deploymentId}'
+    scope: az.resourceGroup(effectiveResourceGroupName)
+    dependsOn: [
+      resourceGroup
+      containerRegistry
+    ]
+    params: {
+      containerRegistryName: containerRegistryName
+      roleAssignments: [
+        {
+          roleDefinitionIdOrName: 'AcrPull'
+          principalType: 'ServicePrincipal'
+          principalId: aiFoundryAccount.outputs.projectSystemAssignedMIPrincipalIds[i]
+        }
+      ]
+    }
+  }
+]
+
 // Per-project managed identity Application Insights Reader role assignments for trace access.
 // Each Foundry project's system-assigned managed identity needs the Reader role on the shared
 // Application Insights component to read traces in the Foundry portal. Without it, the portal
@@ -816,6 +929,24 @@ module attendeeAppInsightsRoleAssignments './core/security/role_appinsights.bice
   }
 }
 
+// Per-attendee Azure Container Registry AcrPush role assignments for hosted agent image pushes.
+// Each resolved attendee needs the AcrPush role on the shared Container Registry so they can build
+// and push their hosted agent image in Module 09. Without it, the docker push (or az acr login)
+// step fails with an authorization error.
+// See: https://learn.microsoft.com/azure/ai-foundry/agents/how-to/deploy-hosted-agents
+module attendeeAcrRoleAssignments './core/security/role_acr.bicep' = if (!empty(resolvedAttendeesWithIds)) {
+  name: 'attendee-acr-roles-${deploymentId}'
+  scope: az.resourceGroup(effectiveResourceGroupName)
+  dependsOn: [
+    resourceGroup
+    containerRegistry
+  ]
+  params: {
+    containerRegistryName: containerRegistryName
+    roleAssignments: attendeeAcrPushRoleAssignments
+  }
+}
+
 // ---------- FOUNDRY ROLE ASSIGNMENTS ----------
 // Role assignments for Foundry to allow AI Search and developer access
 var foundryRoleAssignmentsArray = [
@@ -847,6 +978,8 @@ var foundryRoleAssignmentsArray = [
   ] : [])
   // Per-attendee account-scoped Foundry role assignments (all roles except foundry-user).
   ...attendeeFoundryAccountRoleAssignments
+  // Per-attendee constrained RBAC Administrator (Module 09 hosted agent identity grants).
+  ...attendeeAgentIdentityRbacAdminRoleAssignments
 ]
 
 module foundryRoleAssignments './core/security/role_foundry.bicep' = {
@@ -963,3 +1096,9 @@ output AZURE_SEARCH_SERVICE_NAME string = aiSearchService.outputs.name
 
 @description('The name of the storage account.')
 output AZURE_STORAGE_ACCOUNT_NAME string = storageAccount.outputs.name
+
+@description('The name of the Azure Container Registry used by hosted agents (Module 09).')
+output AZURE_CONTAINER_REGISTRY_NAME string = containerRegistry.outputs.name
+
+@description('The login server endpoint of the Azure Container Registry used by hosted agents (Module 09).')
+output AZURE_CONTAINER_REGISTRY_ENDPOINT string = containerRegistry.outputs.loginServer

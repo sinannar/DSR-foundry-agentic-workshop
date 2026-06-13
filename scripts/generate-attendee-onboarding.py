@@ -24,6 +24,8 @@ Environment variables (azd outputs populated after provisioning):
                                 construct project and OpenAI endpoint URLs.
   AZURE_RESOURCE_GROUP          Resource group name (azd output).
   AZURE_SEARCH_SERVICE_NAME     Azure AI Search service name (azd output).
+  AZURE_CONTAINER_REGISTRY_NAME      Azure Container Registry name for hosted agents (azd output).
+  AZURE_CONTAINER_REGISTRY_ENDPOINT  Azure Container Registry login server (azd output).
   AZURE_SUBSCRIPTION_ID         Subscription ID (required; set automatically by azd after provision).
   AZURE_ENV_NAME                azd environment name (used in the audit CSV filename).
 """
@@ -226,6 +228,8 @@ def _write_attendee_markdowns(
     foundry_name: str,
     foundry_custom_domain_name: str,
     search_service_name: str,
+    container_registry_name: str,
+    container_registry_endpoint: str,
 ) -> list[Path]:
     """Write a per-attendee onboarding markdown file to audit_dir for resolved attendees."""
     written: list[Path] = []
@@ -240,6 +244,16 @@ def _write_attendee_markdowns(
             f'AZURE_SEARCH_SERVICE_NAME={search_service_name}'
             if search_service_name
             else '# AZURE_SEARCH_SERVICE_NAME=  # not configured'
+        )
+        registry_name_line = (
+            f'AZURE_CONTAINER_REGISTRY_NAME={container_registry_name}'
+            if container_registry_name
+            else '# AZURE_CONTAINER_REGISTRY_NAME=  # not configured'
+        )
+        registry_endpoint_line = (
+            f'AZURE_CONTAINER_REGISTRY_ENDPOINT={container_registry_endpoint}'
+            if container_registry_endpoint
+            else '# AZURE_CONTAINER_REGISTRY_ENDPOINT=  # not configured'
         )
         project_endpoint = (
             f'https://{foundry_custom_domain_name}.services.ai.azure.com/api/projects/{project_name}'
@@ -269,10 +283,13 @@ def _write_attendee_markdowns(
             f'FOUNDRY_PROJECT_NAME={project_name}\n'
             f'FOUNDRY_PROJECT_ENDPOINT={project_endpoint}\n'
             f'AGENT_NAME=acl-remedy-advisor\n'
+            f'HOSTED_AGENT_NAME=acl-remedy-advisor-hosted\n'
             f'KNOWLEDGE_BASE_NAME=acl-remedy-knowledge-{project_name}\n'
             f'TOOLBOX_NAME=acl-remedy-toolbox\n'
             f'AZURE_OPENAI_ENDPOINT={openai_endpoint}\n'
             f'{search_line}\n'
+            f'{registry_name_line}\n'
+            f'{registry_endpoint_line}\n'
             f'MCP_SERVER_PORT=8080\n'
             f'MCP_SERVER_URL=\n'
             f'MCP_SERVER_LABEL=retail_remedy_ops\n'
@@ -343,6 +360,8 @@ def main() -> int:
     foundry_custom_domain_name = os.getenv('FOUNDRY_CUSTOM_DOMAIN_NAME', '').strip()
     resource_group = os.getenv('AZURE_RESOURCE_GROUP', '').strip()
     search_service_name = os.getenv('AZURE_SEARCH_SERVICE_NAME', '').strip()
+    container_registry_name = os.getenv('AZURE_CONTAINER_REGISTRY_NAME', '').strip()
+    container_registry_endpoint = os.getenv('AZURE_CONTAINER_REGISTRY_ENDPOINT', '').strip()
     subscription_id = _resolve_subscription_id()
 
     missing = [
@@ -369,6 +388,8 @@ def main() -> int:
         foundry_name=foundry_name,
         foundry_custom_domain_name=foundry_custom_domain_name,
         search_service_name=search_service_name,
+        container_registry_name=container_registry_name,
+        container_registry_endpoint=container_registry_endpoint,
     )
 
     audit_path = _write_provisioning_summary(

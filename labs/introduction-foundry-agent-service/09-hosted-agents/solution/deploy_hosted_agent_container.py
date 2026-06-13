@@ -1,0 +1,90 @@
+"""Deploy the acl-remedy-advisor-hosted agent as a container image (Part 1).
+
+This is the lower-level deployment path. It builds the agent image with Docker, pushes it
+to the shared workshop Azure Container Registry under a project-specific tag, then creates
+a container-based hosted agent version. Requires Docker and the Azure CLI.
+
+Most attendees should use the source-code path (deploy_hosted_agent_code.py); this path
+shows what Foundry does under the hood and is useful when you want full control of the
+image. The image is tagged per project so attendees sharing one registry never collide.
+
+Usage:
+    python labs/introduction-foundry-agent-service/09-hosted-agents/solution/deploy_hosted_agent_container.py
+"""
+
+import os
+import re
+import subprocess
+from pathlib import Path
+
+from azure.ai.projects import AIProjectClient
+from azure.ai.projects.models import (
+    ContainerConfiguration,
+    HostedAgentDefinition,
+    ProtocolVersionRecord,
+)
+from azure.identity import DefaultAzureCredential
+from dotenv import load_dotenv
+
+from hosted_agent_support import ensure_agent_identity_rbac, wait_for_agent_version_active
+
+AGENT_DIR = Path(__file__).resolve().parent.parent / 'src' / 'agent'
+
+CPU = '1'
+MEMORY = '2Gi'
+IMAGE_REPOSITORY = 'acl-remedy-advisor-hosted'
+
+
+def project_image_tag(endpoint: str) -> str:
+    """Derive a unique, registry-safe image tag from the project endpoint."""
+    project_name = endpoint.rstrip('/').split('/api/projects/')[-1].split('/')[0]
+    slug = re.sub(r'[^a-z0-9-]', '-', project_name.lower()).strip('-')
+    return slug or 'default'
+
+
+def run_command(command: list[str]) -> None:
+    """Run a shell command, echoing it first and raising on a non-zero exit code."""
+    print(f'$ {" ".join(command)}')
+    subprocess.run(command, check=True)
+
+
+def run() -> None:
+    load_dotenv()
+
+    endpoint = os.environ['FOUNDRY_PROJECT_ENDPOINT']
+    agent_name = os.environ.get('HOSTED_AGENT_NAME', 'acl-remedy-advisor-hosted')
+    model_deployment = os.environ.get('AGENT_MODEL', 'chat')
+    registry_name = os.environ['AZURE_CONTAINER_REGISTRY_NAME']
+    registry_endpoint = os.environ['AZURE_CONTAINER_REGISTRY_ENDPOINT']
+
+    image = f'{registry_endpoint}/{IMAGE_REPOSITORY}:{project_image_tag(endpoint)}'
+
+    # Foundry hosted agents only run linux/amd64 images, so build for that platform
+    # explicitly even when building on an Arm machine.
+    run_command(['docker', 'build', '--platform', 'linux/amd64', '-t', image, str(AGENT_DIR)])
+    run_command(['az', 'acr', 'login', '--name', registry_name])
+    run_command(['docker', 'push', image])
+
+    credential = DefaultAzureCredential()
+    with AIProjectClient(endpoint=endpoint, credential=credential, allow_preview=True) as client:
+        created = client.agents.create_version(
+            agent_name=agent_name,
+            definition=HostedAgentDefinition(
+                cpu=CPU,
+                memory=MEMORY,
+                environment_variables={'AZURE_AI_MODEL_DEPLOYMENT_NAME': model_deployment},
+                container_configuration=ContainerConfiguration(image=image),
+                protocol_versions=[ProtocolVersionRecord(protocol='responses', version='1.0.0')],
+            ),
+            metadata={'enableVnextExperience': 'true'},
+        )
+        print(f'Created hosted agent {agent_name} version {created.version} from image {image}.')
+
+        wait_for_agent_version_active(client, agent_name, created.version)
+        ensure_agent_identity_rbac(created, credential)
+
+    print(f'Hosted agent {agent_name} is active. Run invoke_hosted_agent.py to chat with it.')
+
+
+if __name__ == '__main__':
+    run()

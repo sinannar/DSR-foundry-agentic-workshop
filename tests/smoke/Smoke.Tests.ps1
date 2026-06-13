@@ -256,6 +256,9 @@ BeforeAll {
     $storageRaw = ('st' + $EnvironmentName) -replace '-', ''
     $script:StorageAccountName  = if ($storageRaw.Length -gt 24) { $storageRaw.Substring(0, 24) } else { $storageRaw }
 
+    $crRaw = (('cr' + $EnvironmentName) -replace '-', '').ToLower()
+    $script:ContainerRegistryName = if ($crRaw.Length -gt 50) { $crRaw.Substring(0, 50) } else { $crRaw }
+
     $script:AccountResourceId = "/subscriptions/$SubscriptionId/resourceGroups/$script:ResourceGroup" +
         "/providers/Microsoft.CognitiveServices/accounts/$script:FoundryAccountName"
 
@@ -399,6 +402,17 @@ Describe 'Key Vault' {
             --output json 2>&1
         $LASTEXITCODE | Should -Be 0 -Because "Key Vault '$script:KeyVaultName' must exist"
         ($rawOutput | ConvertFrom-Json).properties.provisioningState | Should -Be 'Succeeded'
+    }
+}
+
+Describe 'Container Registry' {
+    It 'Exists and is in Succeeded provisioning state' {
+        $rawOutput = az acr show `
+            --name $script:ContainerRegistryName `
+            --resource-group $script:ResourceGroup `
+            --output json 2>&1
+        $LASTEXITCODE | Should -Be 0 -Because "Container Registry '$script:ContainerRegistryName' must exist"
+        ($rawOutput | ConvertFrom-Json).provisioningState | Should -Be 'Succeeded'
     }
 }
 
