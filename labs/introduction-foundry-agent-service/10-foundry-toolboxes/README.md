@@ -310,6 +310,14 @@ You consume the toolbox from a Python **Microsoft Agent Framework** app. The app
 - The printed response includes a clear remedy recommendation citing store policy and Australian Consumer Law.
 - The response includes a calculated figure (such as a pro-rata refund) from Code Interpreter, confirming the toolbox exposed all three tools through Tool Search.
 
+## Congratulations 🎉
+
+You packaged your tools for reuse. You assembled an `acl-remedy-toolbox` that exposes **Web Search**, the `retail_remedy_ops` MCP server, and **Code Interpreter** through a single Tool Search–enabled endpoint, then consumed it from a Python Microsoft Agent Framework app — proving one toolbox can serve all three tools to any agent. This is the capstone pattern for sharing curated capabilities across teams.
+
+> [!TIP]
+> **Next up → [Module 11: Agent operations and Agent ID](../11-agent-ops-and-agent-id/README.md)**
+> Operationalize your agent with monitoring, run history, and Agent ID. No need to scroll — jump straight in!
+
 ## Troubleshooting
 
 - **Toolboxes not visible in the portal:** This preview feature may not appear in all regions or portal versions. Use the Python SDK fallback script (`solution/setup_toolbox.py`) to create the toolbox, then continue with Part 3.

@@ -33,6 +33,14 @@
 - `python src/starter.py` invokes the hosted agent and prints its response.
 - A follow-up prompt returns a contextually consistent response.
 
+## Congratulations 🎉
+
+You shipped a code-first agent. You built and deployed a hosted agent, invoked it from Python, and confirmed it maintains conversational context across turns — giving you a fully managed endpoint with its own identity and complete control over the agent's logic. This is the pattern for production workloads that need custom orchestration.
+
+> [!TIP]
+> **Next up → [Module 10: Foundry Toolboxes](../10-foundry-toolboxes/README.md)**
+> Bundle your tools into a reusable Toolbox and consume it from any agent framework. No need to scroll — jump straight in!
+
 ## Troubleshooting
 
 - **Authentication fails** — the script uses `DefaultAzureCredential`, which relies on your Azure CLI session. Run `az login` in the terminal to re-authenticate, then retry.

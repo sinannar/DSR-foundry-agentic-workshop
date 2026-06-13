@@ -213,6 +213,14 @@ Foundry Toolkit can generate a ready-to-run Python (or TypeScript) file that cal
 - [ ] You can open the **Model Playground**, set a system prompt, send a user message, and receive a response in the role of the retail assistant.
 - [ ] The **View Code** button in the playground generates a Python code snippet.
 
+## Congratulations 🎉
+
+You brought Foundry right into your editor. You installed and connected the Foundry Toolkit for VS Code, explored your project's models, prompt agents, tools, knowledge, and evaluations from **My Resources**, and drove the Model Playground — even generating runnable Python with **View Code**. Your local development loop is now wired directly to your Foundry project.
+
+> [!TIP]
+> **Next up → [Module 04: Create and chat with a Prompt Agent](../04-prompt-based-agents/README.md)**
+> Build your first real agent — `acl-remedy-advisor` — and chat with it in the portal and from code. No need to scroll — jump straight in!
+
 ## Troubleshooting
 
 | Symptom | Fix |

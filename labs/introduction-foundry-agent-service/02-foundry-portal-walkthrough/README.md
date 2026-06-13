@@ -156,6 +156,14 @@ The sidebar also has **Assets**, **Compliance**, **Quota**, and **Admin** for go
 - You can find the **Agents**, **Knowledge**, and **Evaluations** sections on the Build tab.
 - You understand that the Operate tab is where you monitor agent health and cost.
 
+## Congratulations 🎉
+
+You toured the Microsoft Foundry portal end to end. You located your project endpoint on the Home tab, browsed the deployed models under Discover, and found the Agents, Knowledge, and Evaluations sections on the Build tab — plus the Operate tab where you monitor agent health and cost. You now know your way around the portal and where everything lives.
+
+> [!TIP]
+> **Next up → [Module 03: Foundry Toolkit for VS Code](../03-foundry-toolkit-vscode/README.md)**
+> Bring Foundry into your editor with the Foundry Toolkit and run your first model from the playground. No need to scroll — jump straight in!
+
 ## Troubleshooting
 
 - **Can't see your project?** Confirm the project name shown in the top breadcrumb matches the one assigned to you in Module 01. Use the breadcrumb dropdown to switch projects.

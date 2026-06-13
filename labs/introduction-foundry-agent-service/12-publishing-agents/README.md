@@ -30,6 +30,14 @@
 - The agent shows a published state after the publish action.
 - You can locate the published agent's connection or consumption details.
 
+## Congratulations 🎉
+
+You published an agent and located its connection and consumption details — the final step in taking an agent from idea to something real consumers can use. That completes the full end-to-end journey: setup, prompt and hosted agents, tools, MCP, Foundry IQ, the Agent Framework, Toolboxes, operations, and publishing. Outstanding work! 🚀
+
+> [!TIP]
+> **You finished the workshop! → [Back to the workshop overview](../README.md)**
+> Revisit any module from the overview, or take everything you've built into your own projects. No need to scroll — explore from here!
+
 ## Troubleshooting
 
 - If publishing is unavailable, confirm your role grants permission to publish

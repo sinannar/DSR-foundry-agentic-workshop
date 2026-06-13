@@ -319,6 +319,14 @@ The **Traces** tab in the Foundry portal shows each agent conversation as a stru
 - The final response includes a remedy recommendation, a refund or replacement option, and a policy citation.
 - The MCP server terminal shows incoming request logs during the agent run.
 
+## Congratulations 🎉
+
+You connected your agent to live, custom operations. You stood up the `retail_remedy_ops` MCP server, exposed it publicly, and wired its tools into `acl-remedy-advisor` — then watched the agent orchestrate MCP calls, Code Interpreter, and reasoning together to resolve a real battery-failure scenario end to end. Your agent can now act on domain-specific data, not just answer from general knowledge.
+
+> [!TIP]
+> **Next up → [Module 07: Ground the agent with Foundry IQ knowledge bases](../07-foundry-iq/README.md)**
+> Ground your agent in trusted knowledge so its answers cite your own indexed sources. No need to scroll — jump straight in!
+
 ## Troubleshooting
 
 - **Tools not discovered:** Confirm the MCP server is running (`http://localhost:8080/mcp` should respond) and the tunnel URL ends in `/mcp`. Restart the server if it stopped.

@@ -398,6 +398,46 @@
                 "reveal": "always",
                 "panel": "dedicated",
             }
+        },
+        {
+            "label": "introduction-foundry-agent-service: lab 08- run prompt agent (solution)",
+            "type": "shell",
+            "command": "${command:python.interpreterPath}",
+            "args": [
+                "labs/introduction-foundry-agent-service/08-agent-framework-python/solution/run_prompt_agent.py"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "icon": {
+                "id": "robot",
+                "color": "terminal.ansiGreen"
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "introduction-foundry-agent-service: lab 08- create knowledge base agent (solution)",
+            "type": "shell",
+            "command": "${command:python.interpreterPath}",
+            "args": [
+                "labs/introduction-foundry-agent-service/08-agent-framework-python/solution/create_knowledge_base_agent.py"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "icon": {
+                "id": "robot",
+                "color": "terminal.ansiGreen"
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
         }
     ]
 }

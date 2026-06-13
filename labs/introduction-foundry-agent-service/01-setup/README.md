@@ -116,6 +116,14 @@ Install the following before continuing:
 - `python scripts/health-check.py` reports a healthy environment.
 - Your assigned project is visible in the [Foundry portal](https://ai.azure.com).
 
+## Congratulations 🎉
+
+You built a solid foundation for the rest of the workshop. You created and activated a Python virtual environment, installed the shared dependencies, populated your `.env` file, signed in to Azure, and confirmed access to your assigned Foundry project — with the health check passing and your project visible in the portal. Everything is in place to start building agents.
+
+> [!TIP]
+> **Next up → [Module 02: Foundry portal walkthrough](../02-foundry-portal-walkthrough/README.md)**
+> Get oriented in the Microsoft Foundry portal so you know exactly where every model, tool, and setting lives. No need to scroll — jump straight in!
+
 ## Troubleshooting
 
 | Symptom | Likely cause | Fix |

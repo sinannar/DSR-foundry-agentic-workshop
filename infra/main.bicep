@@ -325,6 +325,17 @@ var attendeeResourceGroupReaderRoleAssignments = map(resolvedAttendeesWithIds, a
   principalType: 'User'
 })
 
+// Application Insights Log Analytics Reader role assignments (all resolved attendees).
+// Required so each attendee can query agent telemetry on the connected Application Insights
+// resource and view traces in the Foundry portal Traces view. The Log Analytics Reader role
+// GUID is 73c42c96-874c-492b-b04d-ab87d138a893.
+// See: https://learn.microsoft.com/azure/foundry/observability/how-to/trace-agent-setup#prerequisites
+var attendeeAppInsightsLogAnalyticsReaderRoleAssignments = map(resolvedAttendeesWithIds, a => {
+  roleDefinitionIdOrName: '73c42c96-874c-492b-b04d-ab87d138a893'
+  principalId: a.objectId
+  principalType: 'User'
+})
+
 // ---------- CAPABILITY HOSTS CONFIGURATION ----------
 var aiSearchConnectionName = replace(aiSearchName, '-', '')
 var appInsightsConnectionName = replace(applicationInsightsName, '-', '')
@@ -338,7 +349,11 @@ var foundryServiceConnections = concat(
       connectionProperties: {
         authType: 'ApiKey'
         credentials: {
-          key: applicationInsights.outputs.instrumentationKey
+          // Foundry's OpenTelemetry exporter requires the full Application Insights connection
+          // string (which carries the regional ingestion endpoint), not the legacy
+          // instrumentation key. An instrumentation-key-only connection falls back to the
+          // deprecated global endpoint, causing telemetry to arrive unreliably or not at all.
+          key: applicationInsights.outputs.connectionString
         }
       }
       name: appInsightsConnectionName
@@ -781,6 +796,25 @@ module projectAppInsightsRoleAssignments './core/security/role_appinsights.bicep
     }
   }
 ]
+
+// Per-attendee Application Insights Log Analytics Reader role assignments for trace querying.
+// Each resolved attendee needs the Log Analytics Reader role on the shared Application Insights
+// component to query agent telemetry and view traces in the Foundry portal Traces view. Without
+// it, attendees see authorization errors when opening traces. Separate from the per-project
+// managed identity Reader assignments above (which authorize trace ingestion, not human querying).
+// See: https://learn.microsoft.com/azure/foundry/observability/how-to/trace-agent-setup#prerequisites
+module attendeeAppInsightsRoleAssignments './core/security/role_appinsights.bicep' = if (!empty(resolvedAttendeesWithIds)) {
+  name: 'attendee-appinsights-roles-${deploymentId}'
+  scope: az.resourceGroup(effectiveResourceGroupName)
+  dependsOn: [
+    resourceGroup
+    applicationInsights
+  ]
+  params: {
+    applicationInsightsName: applicationInsightsName
+    roleAssignments: attendeeAppInsightsLogAnalyticsReaderRoleAssignments
+  }
+}
 
 // ---------- FOUNDRY ROLE ASSIGNMENTS ----------
 // Role assignments for Foundry to allow AI Search and developer access

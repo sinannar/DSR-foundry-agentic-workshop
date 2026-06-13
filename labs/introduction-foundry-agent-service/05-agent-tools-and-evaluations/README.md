@@ -450,6 +450,14 @@ The Foundry Toolkit generates the following files in `src/`:
 - The Foundry portal shows an `acl-remedy-advisor-tools-eval` evaluation with a **Completed** status and per-evaluator scores.
 - (Optional, Part 5) The evaluation scaffold generates these files in `src/`: `test_acl_remedy_advisor.py`, `data.jsonl`, `evaluators.py`, `requirements.txt`, `pytest.ini`, `README.md`.
 
+## Congratulations 🎉
+
+You made your agent both more capable and more measurable. You added **Code Interpreter** alongside web search, advanced `acl-remedy-advisor` to **v2**, and ran a structured evaluation in the Foundry portal — complete with per-evaluator scores and an optional pytest evaluation scaffold. You can now extend an agent with tools and quantify how well it performs.
+
+> [!TIP]
+> **Next up → [Module 06: Integrate MCP tools](../06-mcp-tools/README.md)**
+> Wire a custom MCP server into your agent to give it live, domain-specific operations. No need to scroll — jump straight in!
+
 ## Troubleshooting
 
 - **Code Interpreter does not appear after adding** — close and reopen Agent Builder. If the tool still does not appear, refresh the Foundry Toolkit sidebar by clicking the refresh icon next to **MY RESOURCES**.

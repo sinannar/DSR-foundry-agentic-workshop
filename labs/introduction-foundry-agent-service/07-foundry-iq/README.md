@@ -2,6 +2,8 @@
 
 **Estimated time:** 25 minutes
 
+![Diagram showing the Microsoft Foundry IQ knowledge base structure.](../../../docs/assets/diagrams/foundry-iq-knowledge-bases.png)
+
 > [!IMPORTANT]
 > Creating a Foundry IQ knowledge base requires the **`foundry-project-manager`** role or higher. If you were assigned the `foundry-user` role, ask your organizer to elevate it before proceeding. Organizers: ensure `AZURE_ATTENDEE_DEFAULT_ROLE=foundry-project-manager` (the recommended default).
 
@@ -327,6 +329,14 @@ The agent now has the knowledge base attached, but it needs guidance on *when* t
 - [ ] **Grounded policy answers**: Policy queries return answers with numbered citations to `mcp://searchindex/...` sources rather than generic retail conventions.
 - [ ] **Grounded product answers**: Product queries return specific product names, prices, and ratings that match the `retail-products` index.
 - [ ] **Tool routing intact**: Operational queries (with a receipt ID) still call the `retail-remedy-ops` MCP server, web search still answers consumer-law questions, and Code Interpreter still performs calculations. Adding the knowledge base does not displace the existing tools.
+
+## Congratulations 🎉
+
+You grounded your agent in trusted knowledge. You created a Foundry IQ knowledge base, connected the `retail-products` and `retail-policies` search indexes, and attached it to `acl-remedy-advisor` — so policy and product answers now cite grounded sources while your existing MCP, web search, and Code Interpreter tools keep routing correctly. Your agent now blends retrieval with reasoning and live operations.
+
+> [!TIP]
+> **Next up → [Module 08: Use Agent Framework for Python](../08-agent-framework-python/README.md)**
+> Drive your fully grounded agent from Python using the Microsoft Agent Framework. No need to scroll — jump straight in!
 
 ## Troubleshooting
 

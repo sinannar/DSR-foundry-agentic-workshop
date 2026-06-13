@@ -284,6 +284,14 @@ Every conversation your code creates is recorded by Foundry Agent Service and vi
 - Running `src/starter.py` prints a conversation ID and returns a cited response with at least one ACCC or state consumer affairs URL. A `[web search]` indicator should appear — it may be absent if the agent answers from its training data rather than searching.
 - The follow-up question receives an answer that references the TV from the first question, confirming conversation memory is working.
 
+## Congratulations 🎉
+
+You built your first real agent. You created the `acl-remedy-advisor` prompt agent, gave it grounded instructions and web search, and chatted with it both in the portal and from Python — confirming it cites real consumer-law sources and remembers earlier turns in a conversation. You now have a working agent to build on throughout the rest of the workshop.
+
+> [!TIP]
+> **Next up → [Module 05: Agent tools and evaluations](../05-agent-tools-and-evaluations/README.md)**
+> Extend your agent with Code Interpreter and measure its quality with a structured evaluation run. No need to scroll — jump straight in!
+
 ## Troubleshooting
 
 - **Save to Foundry fails** — confirm your Default Project is set correctly via the Foundry Toolkit **Set Default Project** action in My Resources. If the Codespace cannot reach the endpoint, create the agent from code using `PromptAgentDefinition` by running `solution/create_agent.py`:
