@@ -132,7 +132,7 @@ The solution script `run_prompt_agent.py` is the completed version of `starter.p
 
 ### Step 3 — Verify the streaming output
 
-1. Confirm a second block appears, prefixed with `Agent (streaming): `.
+1. Confirm a second block appears, prefixed with `Agent (streaming):`.
 1. Confirm the streamed answer is printed incrementally (token by token) rather than all at once, and that it conveys the same kind of grounded remedy guidance as the single-response block.
 1. Confirm the script exits cleanly with no traceback after the streaming block.
 
@@ -191,7 +191,7 @@ This part confirms the learner-facing path (completing the TODOs in `starter.py`
    python labs/introduction-foundry-agent-service/08-agent-framework-python/src/starter.py
    ```
 
-1. Confirm it produces the same two blocks as the solution: a complete `Agent:` response followed by an incremental `Agent (streaming): ` response.
+1. Confirm it produces the same two blocks as the solution: a complete `Agent:` response followed by an incremental `Agent (streaming):` response.
 1. Confirm the script exits cleanly with no traceback.
 
    **Check:** If the starter raises `TypeError` or `AttributeError` near the agent call, confirm TODO 2 created a real `FoundryAgent` (the `agent = None` placeholder must be replaced).
@@ -244,7 +244,7 @@ Work through each item in the lab's Validation section and confirm:
 
 1. The starter and solution scripts run without authentication or connection errors.
 1. The first call prints a complete answer under `Agent:`.
-1. The second call prints the same kind of answer token by token under `Agent (streaming): `.
+1. The second call prints the same kind of answer token by token under `Agent (streaming):`.
 1. Changing the `QUERY` string changes the response.
 1. (Optional) The runs appear under the agent's **Traces** tab in the Foundry portal.
 
