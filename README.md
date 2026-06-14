@@ -161,6 +161,23 @@ See the [Attendee Quickstart](./docs/quickstart-attendee.md) for the full flow.
 |------------|-------------|
 | [Introduction to Foundry Agent Service](./docs/labs/introduction-foundry-agent-service.md) | Build agents from first principles using Foundry Agent Service, MCP tools, Foundry IQ, the Python Agent Framework, and hosted agents |
 
+### Introduction to Foundry Agent Service — modules
+
+| Module | Description | Time |
+|--------|-------------|------|
+| [01 — Setup](./labs/introduction-foundry-agent-service/01-setup/README.md) | Configure your local environment, sign in to Azure, and verify access to your assigned Foundry project. | 15 min |
+| [02 — Foundry portal walkthrough](./labs/introduction-foundry-agent-service/02-foundry-portal-walkthrough/README.md) | Tour the Foundry portal and understand its core capabilities: models, Agent Service, IQ, and tools. | 10 min |
+| [03 — Foundry Toolkit for VS Code](./labs/introduction-foundry-agent-service/03-foundry-toolkit-vscode/README.md) | Install and connect the Foundry Toolkit VS Code extension, tour the model catalog, and generate starter code. | 15 min |
+| [04 — Prompt-based agents](./labs/introduction-foundry-agent-service/04-prompt-based-agents/README.md) | Create your first Prompt Agent using the Agent Builder and chat with it from Python using `AIProjectClient`. | 20 min |
+| [05 — Agent tools and evaluations](./labs/introduction-foundry-agent-service/05-agent-tools-and-evaluations/README.md) | Add Web Search and Code Interpreter built-in tools, then run quality and safety evaluations against the agent. | 30 min |
+| [06 — MCP tools](./labs/introduction-foundry-agent-service/06-mcp-tools/README.md) | Integrate a custom MCP server as an agent tool, giving the agent access to a retail operations API. | 30 min |
+| [07 — Foundry IQ](./labs/introduction-foundry-agent-service/07-foundry-iq/README.md) | Ground the agent in enterprise content by connecting an Azure AI Search–backed Foundry IQ knowledge base. | 25 min |
+| [08 — Agent Framework for Python](./labs/introduction-foundry-agent-service/08-agent-framework-python/README.md) | Run and orchestrate agents using the Microsoft Agent Framework Python SDK against the agents you built. | 25 min |
+| [09 — Hosted agents](./labs/introduction-foundry-agent-service/09-hosted-agents/README.md) | Package a code-first Agent Framework agent and deploy it as a fully managed hosted agent on Foundry. | 35 min |
+| [10 — Foundry Toolboxes](./labs/introduction-foundry-agent-service/10-foundry-toolboxes/README.md) | Discover and consume curated tool sets via Foundry Toolboxes (preview) through a hosted agent. | 30 min |
+| [11 — Agent ops and Agent ID](./labs/introduction-foundry-agent-service/11-agent-ops-and-agent-id/README.md) | Inspect traces, monitor agent operations, and explore Entra Agent Identities and continuous evaluation. | TBD |
+| [12 — Publishing agents](./labs/introduction-foundry-agent-service/12-publishing-agents/README.md) | Publish an agent and understand how published agents are consumed. Requires `foundry-project-manager` role. *(Optional)* | 15 min |
+
 ## Infrastructure
 
 The lab infrastructure is defined in [Bicep](https://learn.microsoft.com/azure/azure-resource-manager/bicep/overview) using [Azure Verified Modules](https://aka.ms/avm) for Foundry account, Azure AI Search, Azure Container Registry, Azure Container Apps, Storage, and supporting services. Deployments are driven by the [Azure Developer CLI](https://learn.microsoft.com/azure/developer/azure-developer-cli/) (`azd`).

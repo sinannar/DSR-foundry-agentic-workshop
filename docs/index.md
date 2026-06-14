@@ -13,7 +13,9 @@ Build and deliver a 3–4 hour, facilitator-led workshop for agentic application
 
 Labs are organized by series. Work through each lab in sequence within a series; every lab is independently runnable so you can resume at any point.
 
-- [Introduction to Foundry Agent Service](./labs/introduction-foundry-agent-service.md)
+| Lab series | Description | Modules | Total time |
+|------------|-------------|---------|------------|
+| [Introduction to Foundry Agent Service](./labs/introduction-foundry-agent-service.md) | Build agents from first principles using Foundry Agent Service, MCP tools, Foundry IQ, the Microsoft Agent Framework, and hosted agents and Agent ID. | 12 | ~4.5 hours |
 
 ## Roles
 
