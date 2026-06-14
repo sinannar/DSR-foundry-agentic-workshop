@@ -68,6 +68,9 @@ A toolbox is exposed as an MCP endpoint secured with Microsoft Entra authenticat
 
 The toolbox wraps the same `retail_remedy_ops` MCP server set up in Module 06. It must be running and publicly accessible before you create the toolbox.
 
+> [!IMPORTANT]
+> **Check the MCP server is running and publicly tunneled before creating the toolbox.** The toolbox's MCP tool points at the `retail_remedy_ops` MCP server from [Module 06](../06-mcp-tools/README.md), which must still be running locally and exposed on a **Public** port 8080 tunnel, with `MCP_SERVER_URL` set to its URL ending in `/mcp`. Complete the two checks below before continuing.
+
 #### 1. Confirm the server is running
 
 - [ ] Check the MCP server terminal. It should still show:

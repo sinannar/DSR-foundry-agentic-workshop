@@ -142,6 +142,13 @@ your code.
    print('\n')
    ```
 
+> [!IMPORTANT]
+> **Check the MCP server is running and publicly tunneled before running the starter.** The `retail_remedy_ops` MCP server from [Module 06](../06-mcp-tools/README.md) must still be running locally and exposed on a **Public** port 8080 tunnel, with `MCP_SERVER_URL` set to its URL ending in `/mcp`. When your `QUERY` triggers an operational lookup the agent calls this server, so if it stopped, restart it and re-expose the port (see [Module 06](../06-mcp-tools/README.md), Part 2):
+>
+> ```bash
+> python labs/introduction-foundry-agent-service/06-mcp-tools/src/server.py
+> ```
+
 - [ ] Run the completed starter and confirm it connects to your project and returns a response:
 
    ```bash

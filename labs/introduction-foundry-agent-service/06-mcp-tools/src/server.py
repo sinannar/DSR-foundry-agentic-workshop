@@ -14,6 +14,7 @@ connecting the agent (see the Module 06 README).
 
 import json
 import os
+from datetime import datetime, timezone
 from pathlib import Path
 
 from mcp.server.fastmcp import FastMCP
@@ -33,6 +34,13 @@ _PORT = int(os.environ.get('MCP_SERVER_PORT', '8080'))
 mcp = FastMCP('Retail Remedy Operations', host='0.0.0.0', port=_PORT)
 
 
+def _log_tool_call(tool_name: str, **arguments: object) -> None:
+    """Print a timestamped line for each tool call to the server console."""
+    timestamp = datetime.now(timezone.utc).strftime('%H:%M:%S')
+    args = ', '.join(f'{key}={value!r}' for key, value in arguments.items())
+    print(f'[{timestamp}] tool call: {tool_name}({args})', flush=True)
+
+
 @mcp.tool()
 def lookup_purchase(receipt_id: str) -> dict:
     """Return the purchase record for the given receipt ID.
@@ -41,6 +49,7 @@ def lookup_purchase(receipt_id: str) -> dict:
     purchase date, price paid, channel, and store location.
     Returns an error dict if the receipt ID is not found.
     """
+    _log_tool_call('lookup_purchase', receipt_id=receipt_id)
     record = _PURCHASES.get(receipt_id)
     if record is None:
         return {'error': f'Receipt {receipt_id} not found'}
@@ -55,6 +64,7 @@ def get_product_profile(product_id: str) -> dict:
     warranty period in months, repairability rating, and current RRP.
     Returns an error dict if the product ID is not found.
     """
+    _log_tool_call('get_product_profile', product_id=product_id)
     profile = _PRODUCTS.get(product_id)
     if profile is None:
         return {'error': f'Product {product_id} not found'}
@@ -69,6 +79,7 @@ def search_store_policy(topic: str) -> list[dict]:
     policy objects each containing a title and an excerpt. Returns a note
     dict if no policies match.
     """
+    _log_tool_call('search_store_policy', topic=topic)
     topic_lower = topic.lower()
     results = [
         p for p in _POLICIES
@@ -86,6 +97,7 @@ def find_replacement_options(product_id: str) -> dict:
     current prices and price deltas relative to the original purchase price.
     Returns an error dict if no inventory data exists for the product ID.
     """
+    _log_tool_call('find_replacement_options', product_id=product_id)
     entry = _INVENTORY.get(product_id)
     if entry is None:
         return {'error': f'No inventory data for product {product_id}'}
@@ -107,6 +119,15 @@ def draft_remedy_summary(
     present or record. Does not persist any data. The likely_failure_type
     should be 'major' or 'minor' based on the ACL assessment.
     """
+    _log_tool_call(
+        'draft_remedy_summary',
+        receipt_id=receipt_id,
+        product_name=product_name,
+        issue=issue,
+        likely_failure_type=likely_failure_type,
+        recommended_remedy=recommended_remedy,
+        notes=notes,
+    )
     return {
         'receipt_id': receipt_id,
         'product_name': product_name,
@@ -131,6 +152,12 @@ def create_remedy_case(
     No data is actually persisted — this is a mocked write operation
     that shows how the agent would log an approved remedy outcome.
     """
+    _log_tool_call(
+        'create_remedy_case',
+        receipt_id=receipt_id,
+        remedy_type=remedy_type,
+        notes=notes,
+    )
     receipt_num = ''.join(filter(str.isdigit, receipt_id)) or '0'
     case_id = f'CASE-2026-{int(receipt_num) % 10000:05d}'
     return {

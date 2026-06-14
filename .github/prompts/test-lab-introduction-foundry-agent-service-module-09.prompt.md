@@ -28,7 +28,6 @@ Before executing any lab steps, confirm all prerequisites are satisfied. **Do no
    ```bash
    ls labs/introduction-foundry-agent-service/09-hosted-agents/src/starter.py
    ls labs/introduction-foundry-agent-service/09-hosted-agents/src/agent/main.py
-   ls labs/introduction-foundry-agent-service/09-hosted-agents/src/agent/retail_tools.py
    ls labs/introduction-foundry-agent-service/09-hosted-agents/solution/deploy_hosted_agent_code.py
    ls labs/introduction-foundry-agent-service/09-hosted-agents/solution/deploy_hosted_agent_container.py
    ls labs/introduction-foundry-agent-service/09-hosted-agents/solution/invoke_hosted_agent.py
@@ -64,16 +63,31 @@ Before executing any lab steps, confirm all prerequisites are satisfied. **Do no
 1. Confirm `.env` exists and the required hosted-agent values are populated:
 
    ```bash
-   cat .env | grep -E 'FOUNDRY_PROJECT_ENDPOINT|AZURE_SUBSCRIPTION_ID|AZURE_RESOURCE_GROUP|FOUNDRY_RESOURCE_NAME|AZURE_CONTAINER_REGISTRY_NAME|AZURE_CONTAINER_REGISTRY_ENDPOINT|HOSTED_AGENT_NAME_CONTAINER|HOSTED_AGENT_NAME_CODE|AGENT_MODEL'
+   cat .env | grep -E 'FOUNDRY_PROJECT_ENDPOINT|AZURE_SUBSCRIPTION_ID|AZURE_RESOURCE_GROUP|FOUNDRY_RESOURCE_NAME|AZURE_CONTAINER_REGISTRY_NAME|AZURE_CONTAINER_REGISTRY_ENDPOINT|HOSTED_AGENT_NAME_CONTAINER|HOSTED_AGENT_NAME_CODE|AGENT_MODEL|MCP_SERVER_URL|MCP_SERVER_LABEL'
    ```
 
 1. Confirm `FOUNDRY_PROJECT_ENDPOINT` is set to a non-empty value of the form `https://<resource>.services.ai.azure.com/api/projects/<project>`.
 1. Confirm `AZURE_SUBSCRIPTION_ID`, `AZURE_RESOURCE_GROUP`, `FOUNDRY_RESOURCE_NAME`, `AZURE_CONTAINER_REGISTRY_NAME`, and `AZURE_CONTAINER_REGISTRY_ENDPOINT` are all set to non-empty values.
+1. Confirm `MCP_SERVER_URL` is set to a non-empty public URL ending in `/mcp` (the Module 06 MCP server endpoint), and that `MCP_SERVER_LABEL` is either unset (defaults to `retail_remedy_ops`) or set to `retail_remedy_ops`.
 1. Confirm `HOSTED_AGENT_NAME_CONTAINER` (defaults to `acl-remedy-advisor-hosted-container`) and `HOSTED_AGENT_NAME_CODE` (defaults to `acl-remedy-advisor-hosted-code`) are either unset or set to their defaults, and that `AGENT_MODEL` is either unset (defaults to `chat`) or set to `chat`.
 
    **Check:** If `.env` does not exist, confirm with the user that Module 01 has been completed, then copy `shared/.env.example` to `.env` and populate the values from the attendee onboarding file at `.azure/${input:envName}/<upn_local>.md` (where `<upn_local>` is the part of `${input:attendeeUpn}` before `@`), or from `azd env get-values`.
 
-### Check 4 — Confirm Azure authentication
+### Check 4 — Confirm the Module 06 MCP server is running and publicly exposed
+
+The hosted agent calls the **Retail Remedy Operations MCP server** from Module 06 over `MCP_SERVER_URL` at runtime. The server must be running and reachable on its public dev-tunnel URL for the deploy verification and invoke steps to succeed.
+
+1. Confirm the MCP server is running locally (Module 06 starts it with `python labs/introduction-foundry-agent-service/06-mcp-tools/src/server.py`).
+1. Confirm `MCP_SERVER_URL` points to the **public** dev-tunnel URL (ending in `/mcp`), not a `localhost` address — the hosted agent runs in Foundry's managed compute and cannot reach `localhost`.
+1. Confirm the public endpoint responds:
+
+   ```bash
+   curl -i -X POST "$MCP_SERVER_URL" -H 'Content-Type: application/json' -H 'Accept: application/json, text/event-stream' -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'
+   ```
+
+   **Check:** Expect an HTTP `200` with a JSON-RPC response listing the `retail_remedy_ops` tools. If the request fails or times out, restart the Module 06 server, re-expose the dev tunnel publicly, and update `MCP_SERVER_URL` before continuing. If you change the URL after deploying, you must redeploy the agent.
+
+### Check 5 — Confirm Azure authentication
 
 1. Confirm the Azure CLI is signed in as the attendee:
 
@@ -84,14 +98,14 @@ Before executing any lab steps, confirm all prerequisites are satisfied. **Do no
 1. Confirm the output shows `${input:attendeeUpn}` as the signed-in user and that the subscription ID matches `AZURE_SUBSCRIPTION_ID` from the environment.
 1. If the command fails or shows a different identity, pause and ask the user to run `az login` and complete the browser sign-in before continuing. Do not enter credentials automatically.
 
-### Check 5 — Confirm the constrained role-assignment permission
+### Check 6 — Confirm the constrained role-assignment permission
 
 The deploy scripts assign the hosted agent's own Microsoft Entra identity the **Foundry User** role after the version becomes active. This requires the project to have been provisioned with the constrained Role Based Access Control Administrator role.
 
 1. Confirm with the user that the lab environment `${input:envName}` was provisioned by the facilitator (which grants this constrained role).
 1. No command is required here — the assignment is attempted automatically during deploy. If it fails with `PrincipalNotFound` or an authorization error, capture the error for the Troubleshooting follow-up rather than retrying blindly.
 
-### Check 6 — Confirm the browser portal session is ready
+### Check 7 — Confirm the browser portal session is ready
 
 1. Use the already-open `open_browser_page` on `https://ai.azure.com` and confirm the signed-in account matches `${input:attendeeUpn}`.
 1. If a login dialog appears, pause and ask the user to sign in. Do not enter credentials automatically.
@@ -124,7 +138,7 @@ This part needs **Docker** and the **Azure CLI**. If Docker is not available, sk
 1. Watch the status messages: the script builds for `linux/amd64`, logs in to the shared registry, pushes the image under the project-specific tag, creates the hosted agent version, waits for it to become active, and assigns the agent identity the Foundry User role.
 1. Confirm the script prints `Hosted agent acl-remedy-advisor-hosted-container is active.`
 
-   **Check:** If a role-assignment error appears, note it for Troubleshooting (Check 5). The version may still be active even if the role takes a moment to propagate.
+   **Check:** If a role-assignment error appears, note it for Troubleshooting (Check 6). The version may still be active even if the role takes a moment to propagate.
 
 ---
 

@@ -89,11 +89,27 @@ The tools return **facts, not verdicts**. The agent combines MCP facts with Web 
 
 ### Part 2 — Expose the server with a public tunnel
 
-The agent runs in the cloud and cannot reach `localhost`. You must expose port 8080 with a **public** URL.
+The agent runs in the cloud and cannot reach `localhost`. You must expose port 8080 with a **public** URL. The
+mechanism that creates this URL depends on where you are running the workshop:
+
+| Environment | Tunnel mechanism | URL style | Sign-in required |
+|---|---|---|---|
+| Local VS Code or a devcontainer (Dev Containers extension) | [VS Code Dev Tunnels](https://code.visualstudio.com/docs/editor/port-forwarding) | `https://<id>-8080.<region>.devtunnels.ms` (for example `https://5p90rr96-8080.aue.devtunnels.ms`) | GitHub or Microsoft account |
+| GitHub Codespaces | [Codespaces port forwarding](https://docs.github.com/codespaces/developing-in-a-codespace/forwarding-ports-in-your-codespace) | `https://<codespace-name>-8080.app.github.dev` | GitHub account (already signed in) |
+
+> [!NOTE]
+> **Dev Tunnels sign-in.** The first time you forward a port from local VS Code or a devcontainer, VS Code prompts you
+> to sign in to the **Dev Tunnels** service with your **GitHub** or **Microsoft** account. This is required — the
+> `devtunnels.ms` host only issues a public URL to an authenticated session. In Codespaces you are already signed in to
+> GitHub, so no extra sign-in appears.
 
 #### 3. Forward port 8080
 
-- [ ] In the VS Code bottom panel, click the **PORTS** tab.
+The MCP server listens on port 8080. VS Code and Codespaces usually **auto-detect** this port and add it to the
+**PORTS** panel as soon as the server starts. If it appears automatically, skip to step 4. To add it manually:
+
+- [ ] In the VS Code bottom panel, click the **PORTS** tab. (If you don't see it, run **Ports: Focus on Ports View**
+      from the Command Palette, <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>.)
 - [ ] Click **Forward a Port** (or the `+` icon) and type `8080`, then press **Enter**.
 - [ ] Confirm port `8080` appears in the ports table.
 
@@ -105,21 +121,36 @@ The agent runs in the cloud and cannot reach `localhost`. You must expose port 8
 
   > [!IMPORTANT]
   > The port **must** be set to **Public**. A private port returns a 403 when the Azure-hosted agent tries to call it.
+  > In a devcontainer or Codespace the visibility default is **Private**, so this step is mandatory.
 
 #### 5. Copy the tunnel URL
 
 - [ ] In the **Forwarded Address** column, click the copy icon or hover over the URL to copy it.
 - [ ] The URL looks like one of these depending on your environment:
-  - **VS Code Dev Tunnels** (local VS Code): `https://abc123-8080.devtunnels.ms`
+  - **Local VS Code or devcontainer** (Dev Tunnels): `https://5p90rr96-8080.aue.devtunnels.ms`
   - **GitHub Codespaces**: `https://<codespace-name>-8080.app.github.dev`
 - [ ] Append `/mcp` to the copied URL. For example:
 
   ```text
-  https://abc123-8080.devtunnels.ms/mcp
+  https://5p90rr96-8080.aue.devtunnels.ms/mcp
   ```
 
 - [ ] Save this full URL — you will paste it into Agent Builder in the next part.
 - [ ] Optionally, set `MCP_SERVER_URL` in your `.env` file to this URL.
+
+> [!IMPORTANT]
+> **Keep this MCP server running and tunneled for the rest of the workshop.** Leave the server terminal open and the
+> port 8080 tunnel set to **Public**. The `acl-remedy-advisor` agent reuses these MCP tools in later modules (such as
+> Module 09 — Hosted Agents and Module 10 — Foundry Toolboxes), so do not stop the server or close the tunnel until you
+> finish those modules.
+
+<!-- markdownlint-disable-next-line MD028 -->
+> [!TIP]
+> **Test the tunnel before wiring it to the agent.** Open the `/mcp` URL in a browser or run
+> `curl https://<your-tunnel>-8080.<region>.devtunnels.ms/mcp`. A reachable public tunnel returns a response from the
+> server rather than a 403 or a connection error. For more detail, see the VS Code
+> [port forwarding documentation](https://code.visualstudio.com/docs/editor/port-forwarding) and the GitHub
+> [Codespaces port forwarding guide](https://docs.github.com/codespaces/developing-in-a-codespace/forwarding-ports-in-your-codespace).
 
 ### Part 3 — Connect the MCP server to the agent
 
