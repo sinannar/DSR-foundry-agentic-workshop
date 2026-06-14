@@ -101,7 +101,7 @@ it against the assignment your organizer shared.
 <details>
 <summary>📸 Screenshot: A passing health check</summary>
 
-![The Python health check script passing in the terminal.](../../../docs/assets/screenshots/health-check-passed.png)
+![The Python health check script passing in the terminal.](./assets/screenshots/health-check-passed.png)
   *The Python health check script passing in the terminal.*
 
 </details>

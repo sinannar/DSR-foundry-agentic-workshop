@@ -495,11 +495,16 @@ def _check_mcp_server(mcp_url: str) -> None:
             'clientInfo': {'name': 'health-check', 'version': '1.0.0'},
         },
     }
+    session_id: str = ''
     try:
         resp = requests.post(mcp_url, json=init_payload, headers=headers, timeout=10)
         if not resp.ok:
             check('MCP server reachable', False, f'{mcp_url} | HTTP {resp.status_code}')
             return
+
+        # Streamable HTTP transport returns a session ID that must be echoed back
+        # in all subsequent requests (MCP spec §Transport / Streamable HTTP).
+        session_id = resp.headers.get('Mcp-Session-Id', '')
 
         data = _parse_jsonrpc(resp)
         server_info = data.get('result', {}).get('serverInfo', {})
@@ -511,10 +516,24 @@ def _check_mcp_server(mcp_url: str) -> None:
         check('MCP server reachable', False, f'{mcp_url} | {_net_err(exc)}')
         return
 
+    # Build session-aware headers for all requests after initialize.
+    session_headers = {**headers}
+    if session_id:
+        session_headers['Mcp-Session-Id'] = session_id
+
+    # ── notifications/initialized ─────────────────────────────────────────────
+    # The MCP spec requires the client to send this notification before issuing
+    # any further requests; omitting it causes some servers to reject tool calls.
+    notify_payload = {'jsonrpc': '2.0', 'method': 'notifications/initialized', 'params': {}}
+    try:
+        requests.post(mcp_url, json=notify_payload, headers=session_headers, timeout=10)
+    except requests.RequestException:
+        pass  # Notification failure is non-fatal; proceed to tools/list.
+
     # ── tools/list ────────────────────────────────────────────────────────────
     tools_payload = {'jsonrpc': '2.0', 'id': 2, 'method': 'tools/list', 'params': {}}
     try:
-        tresp = requests.post(mcp_url, json=tools_payload, headers=headers, timeout=10)
+        tresp = requests.post(mcp_url, json=tools_payload, headers=session_headers, timeout=10)
         if not tresp.ok:
             check('MCP server tools available', False, f'HTTP {tresp.status_code}')
             return

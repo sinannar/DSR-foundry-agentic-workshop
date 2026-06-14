@@ -87,12 +87,12 @@ This single command runs three stages automatically:
 Re-run `azd provision` any time you change `AZURE_ATTENDEE_LIST`, `AZURE_ATTENDEE_COUNT`, or the project prefix.
 
 > [!TIP]
-> The shared **Retail Remedy Operations** MCP server for [Module 06](../labs/introduction-foundry-agent-service/06-mcp-tools/README.md) is published for you during provisioning, and its URL is saved into every attendee onboarding file as `MCP_SERVER_URL` — attendees use it without running anything locally. This step needs **Docker** running and a signed-in **Azure CLI**. To skip the shared server and have attendees tunnel their own copy instead, run `azd env set AZURE_CONTAINER_APPS_DEPLOY false` before provisioning.
+> The shared **Retail Remedy Operations** MCP server for [Module 06](./lab-steps/introduction-foundry-agent-service/06-mcp-tools.md) is published for you during provisioning, and its URL is saved into every attendee onboarding file as `MCP_SERVER_URL` — attendees use it without running anything locally. This step needs **Docker** running and a signed-in **Azure CLI**. To skip the shared server and have attendees tunnel their own copy instead, run `azd env set AZURE_CONTAINER_APPS_DEPLOY false` before provisioning.
 
 <details>
 <summary>📸 Screenshot: Azure Portal showing the deploy resources</summary>
 
-![Azure portal resource group showing the Foundry account and one project per attendee.](../../../docs/assets/screenshots/azure-deployed-resources.png)
+![Azure portal resource group showing the Foundry account and one project per attendee.](./assets/screenshots/azure-deployed-resources.png)
   *The Azure portal showing the deployed Foundry account and projects, one per attendee as well as the other supporting resources.*
 
 </details>
@@ -113,7 +113,7 @@ Open the [Foundry portal](https://ai.azure.com) and confirm the projects and mod
 <details>
 <summary>📸 Screenshot: The project list in the Foundry portal</summary>
 
-![Foundry Projects list](../../../docs/assets/screenshots/foundry-deployed-projects.png)
+![Foundry Projects list](./assets/screenshots/foundry-deployed-projects.png)
   *The Foundry Projects list showing one project per attendee.*
 
 </details>

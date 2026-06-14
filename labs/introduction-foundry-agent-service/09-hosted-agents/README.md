@@ -51,7 +51,7 @@ from agent_framework_foundry_hosting import ResponsesHostServer
 ResponsesHostServer(agent).run()
 ```
 
-The agent bundle for this module lives in [`src/agent/`](src/agent/):
+The agent bundle for this module lives in [`src/agent/`](https://github.com/PlagueHO/foundry-agentic-workshop/tree/main/labs/introduction-foundry-agent-service/09-hosted-agents/src/agent):
 
 | File | Purpose |
 |------|---------|
@@ -151,11 +151,11 @@ agent is scoped to your own project, so attendees never overwrite each other.
 
 <!-- markdownlint-disable-next-line MD028 -->
 > [!NOTE]
-> The container deploy script ([`solution/deploy_hosted_agent_container.py`](solution/deploy_hosted_agent_container.py)) remains in the repository for reference and for facilitators, but it is **not expected to succeed for attendees** in the current lab. This is being tracked in GitHub issue [#9](https://github.com/PlagueHO/foundry-agentic-workshop/issues/9).
+> The container deploy script ([`solution/deploy_hosted_agent_container.py`](https://github.com/PlagueHO/foundry-agentic-workshop/blob/main/labs/introduction-foundry-agent-service/09-hosted-agents/solution/deploy_hosted_agent_container.py)) remains in the repository for reference and for facilitators, but it is **not expected to succeed for attendees** in the current lab. This is being tracked in GitHub issue [#9](https://github.com/PlagueHO/foundry-agentic-workshop/issues/9).
 
 ### Part 2 — deploy from source code (preview, recommended)
 
-You complete [`src/starter.py`](src/starter.py) to deploy the `src/agent/` bundle as a hosted agent. The starter already zips the bundle into `zip_bytes` / `zip_sha256`, opens an `AIProjectClient`, reads `MCP_SERVER_URL` / `MCP_SERVER_LABEL`, and imports the two shared deploy helpers — you fill in **three TODOs** inside the `with AIProjectClient(...) as client:` block. The code for each is below so you can complete the lab without leaving this page; the full reference is in [`solution/deploy_hosted_agent_code.py`](solution/deploy_hosted_agent_code.py).
+You complete [`src/starter.py`](https://github.com/PlagueHO/foundry-agentic-workshop/blob/main/labs/introduction-foundry-agent-service/09-hosted-agents/src/starter.py) to deploy the `src/agent/` bundle as a hosted agent. The starter already zips the bundle into `zip_bytes` / `zip_sha256`, opens an `AIProjectClient`, reads `MCP_SERVER_URL` / `MCP_SERVER_LABEL`, and imports the two shared deploy helpers — you fill in **three TODOs** inside the `with AIProjectClient(...) as client:` block. The code for each is below so you can complete the lab without leaving this page; the full reference is in [`solution/deploy_hosted_agent_code.py`](https://github.com/PlagueHO/foundry-agentic-workshop/blob/main/labs/introduction-foundry-agent-service/09-hosted-agents/solution/deploy_hosted_agent_code.py).
 
 - [ ] **TODO 1 — describe the hosted agent.** Build a `CreateAgentVersionFromCodeContent` that hands Foundry your zipped bundle and tells it how to build and run the image — 1 vCPU, 2 GiB of memory, a remote Python 3.13 build, and the **Responses** protocol:
 
@@ -194,7 +194,7 @@ You complete [`src/starter.py`](src/starter.py) to deploy the `src/agent/` bundl
    print(f'Created hosted agent {agent_name} version {created.version}; Foundry is building it.')
    ```
 
-- [ ] **TODO 3 — wait for active, then grant the agent its identity role.** Poll until the new version reports `active`, then give the agent's own Microsoft Entra identity the **Foundry User** role so it can call the model at runtime. Both helpers are already imported at the top of the starter from [`solution/hosted_agent_support.py`](solution/hosted_agent_support.py):
+- [ ] **TODO 3 — wait for active, then grant the agent its identity role.** Poll until the new version reports `active`, then give the agent's own Microsoft Entra identity the **Foundry User** role so it can call the model at runtime. Both helpers are already imported at the top of the starter from [`solution/hosted_agent_support.py`](https://github.com/PlagueHO/foundry-agentic-workshop/blob/main/labs/introduction-foundry-agent-service/09-hosted-agents/solution/hosted_agent_support.py):
 
    ```python
    wait_for_agent_version_active(client, agent_name, created.version)

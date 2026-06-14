@@ -49,12 +49,13 @@ Before executing any lab steps, confirm all prerequisites are satisfied. **Do no
 1. In the Codespace terminal, run:
 
    ```bash
-   cat .env | grep -E 'FOUNDRY_PROJECT_ENDPOINT|AGENT_NAME'
+   cat .env | grep -E 'FOUNDRY_PROJECT_ENDPOINT|AGENT_NAME|MCP_SERVER_URL'
    ```
 
 1. Confirm `FOUNDRY_PROJECT_ENDPOINT` is populated with a non-empty value.
 1. Confirm `AGENT_NAME` is set to `acl-remedy-advisor`.
-1. If `.env` does not exist, confirm with the user that module 01 has been completed, then copy `shared/.env.example` to `.env` and populate `FOUNDRY_PROJECT_ENDPOINT` from the attendee onboarding file at `.azure/${input:envName}/<upn_local>.md` (where `<upn_local>` is the part of `${input:attendeeUpn}` before `@`).
+1. Confirm `MCP_SERVER_URL` is populated with the shared **Azure Container Apps** MCP server URL the organizer deployed. It ends in `/mcp` and the host looks like `https://ca-mcp-<env>.<region>.azurecontainerapps.io/mcp`.
+1. If `.env` does not exist, confirm with the user that module 01 has been completed, then copy `shared/.env.example` to `.env` and populate `FOUNDRY_PROJECT_ENDPOINT` and `MCP_SERVER_URL` from the attendee onboarding file at `.azure/${input:envName}/<upn_local>.md` (where `<upn_local>` is the part of `${input:attendeeUpn}` before `@`).
 
 ### Check 5 — Confirm the `acl-remedy-advisor` agent exists at the end state of module 05
 
@@ -81,107 +82,73 @@ This module requires the `acl-remedy-advisor` agent to already exist with both *
 
 ---
 
-## Part 1 — Run the MCP server locally
+## Part 1 — Confirm the deployed MCP server
 
-### Step 1 — Open a dedicated terminal for the server
+By default the organizer deploys the shared **Retail Remedy Operations** MCP server to **Azure Container Apps**, and its public HTTPS URL is already in the attendee's `.env` file as `MCP_SERVER_URL`. Nothing needs to run locally — the agent calls the deployed server directly, and this URL must always be present in `.env`.
 
-1. In the Codespace, open a new terminal panel (**Terminal > New Terminal**, or press <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>`</kbd>).
-1. Confirm the new terminal is open and ready at the repository root.
+### Step 1 — Confirm the deployed MCP server URL
 
-   > This terminal must remain open for the rest of the workshop. The MCP server must continue running while the agent is used in modules 06 through 10.
+1. In the Codespace terminal, print the configured URL:
 
-### Step 2 — Start the MCP server
+   ```bash
+   grep '^MCP_SERVER_URL=' .env
+   ```
 
-1. In the new terminal, run:
+1. Confirm `MCP_SERVER_URL` is set to the shared Azure Container Apps URL. It ends in `/mcp` and the host looks like:
+
+   ```text
+   https://ca-mcp-<env>.<region>.azurecontainerapps.io/mcp
+   ```
+
+   **Check:** If `MCP_SERVER_URL` is empty, populate it from the attendee onboarding file at `.azure/${input:envName}/<upn_local>.md` (where `<upn_local>` is the part of `${input:attendeeUpn}` before `@`), or from `azd env get-values`. The `.env` file must always contain this value before continuing.
+
+### Step 2 — Verify the deployed server is reachable
+
+1. Confirm the deployed endpoint responds by running:
+
+   ```bash
+   curl -s -o /dev/null -w "%{http_code}" "$(grep '^MCP_SERVER_URL=' .env | cut -d= -f2-)"
+   ```
+
+1. Confirm the HTTP status code is `200`, `405`, or `406` (a non-connection response confirms the endpoint is reachable).
+1. Take a screenshot of the terminal showing the status code.
+
+   **Check:** If the command times out or returns a connection error, the deployed Azure Container Apps server is unavailable. Pause and ask the user to confirm with the organizer that the shared MCP server is running before continuing.
+
+<details>
+<summary>Optional — run your own MCP server locally and expose it with a public tunnel</summary>
+
+If the shared Azure Container Apps server is unavailable, or you want to run and modify the server yourself, host it locally and expose it with a public HTTPS tunnel. The Azure-hosted agent runs in the cloud and cannot reach `localhost`, so the forwarded port must be **Public**.
+
+1. In a dedicated terminal that stays open for the rest of the workshop, start the server:
 
    ```bash
    python shared/mcp-servers/retail-remedy-ops/src/server.py
    ```
 
-1. Confirm the server prints the following startup line (take a screenshot):
+   Confirm it prints `Starting Retail Remedy Operations MCP server on http://0.0.0.0:8080/mcp`.
 
-   ```text
-   Starting Retail Remedy Operations MCP server on http://0.0.0.0:8080/mcp
-   ```
-
-   **Check:** If the command fails with `ModuleNotFoundError`, confirm the Python dependencies are installed:
-
-   ```bash
-   pip install -r shared/requirements.txt
-   ```
-
-   Then retry starting the server.
-
-   **Check:** If port 8080 is already in use, identify and stop the conflicting process before restarting.
-
----
-
-## Part 2 — Expose the server with a public tunnel
-
-The agent runs in the Azure cloud and cannot reach `localhost`. Port 8080 must be exposed with a public HTTPS URL.
-
-### Step 3 — Forward port 8080
-
-1. In the VS Code bottom panel, click the **PORTS** tab.
-1. Click **Forward a Port** (or the `+` icon) and type `8080`, then press **Enter**.
-1. Confirm port `8080` appears in the ports table.
-1. Take a screenshot of the PORTS tab showing port 8080 forwarded.
-
-### Step 4 — Set visibility to Public
-
-1. Right-click the `8080` row in the PORTS panel.
-1. Select **Port Visibility** → **Public**.
-
-   > [!IMPORTANT]
-   > If a browser dialog appears asking you to authenticate or confirm the action, pause and ask the user to complete it. Do not attempt to enter credentials automatically.
-
-1. Confirm the **Visibility** column now shows **Public**.
-
-   **Check:** If **Public** is not available (the option is greyed out or missing), the Codespace may not support public port forwarding. Report this as a failure — the lab cannot proceed without a public URL.
-
-1. Take a screenshot of the PORTS panel confirming visibility is set to Public.
-
-### Step 5 — Copy the tunnel URL
-
-1. In the **Forwarded Address** column of the PORTS panel, hover over the `8080` row and copy the tunnel URL.
-1. Confirm the URL matches one of these patterns depending on the environment:
-   - **GitHub Codespaces**: `https://<codespace-name>-8080.app.github.dev`
-   - **VS Code Dev Tunnels**: `https://abc123-8080.devtunnels.ms`
-1. Append `/mcp` to the copied URL. For example:
-
-   ```text
-   https://<codespace-name>-8080.app.github.dev/mcp
-   ```
-
-1. Verify the URL is reachable by running in a second terminal (do not use the server terminal):
-
-   ```bash
-   curl -s -o /dev/null -w "%{http_code}" <tunnel-url>
-   ```
-
-   Confirm the HTTP status code is `200` or `405` (Method Not Allowed is acceptable — it confirms the endpoint is reachable).
-
-   **Check:** If the status code is `403`, the port visibility is not set to Public. Return to Step 4 and re-confirm.
-
-   **Check:** If the command times out or returns a connection error, the tunnel is not active. Re-forward the port and retry.
-
-1. Record the full tunnel URL (ending in `/mcp`) — it will be used in Steps 7 and the `.env` file.
-1. Optionally, set `MCP_SERVER_URL` in the `.env` file to this URL now:
+1. In the VS Code **PORTS** panel, forward port `8080`, then right-click the row and set **Port Visibility** → **Public**. A private port returns `403` to the Azure-hosted agent.
+1. Copy the forwarded address, append `/mcp`, and set `MCP_SERVER_URL` in `.env` to the full tunnel URL:
 
    ```bash
    echo "MCP_SERVER_URL=<tunnel-url>" >> .env
    ```
 
+1. Verify reachability with the same `curl` command from Step 2.
+
+</details>
+
 ---
 
-## Part 3 — Connect the MCP server to the agent
+## Part 2 — Connect the MCP server to the agent
 
-### Step 6 — Open the agent in Agent Builder
+### Step 3 — Open the agent in Agent Builder
 
 1. In the Foundry Toolkit panel (**MY RESOURCES → Prompt Agents**), expand `acl-remedy-advisor` and click **v2** to open Agent Builder.
 1. Confirm the Agent Builder header shows `acl-remedy-advisor | Microsoft Foundry | v2`.
 
-### Step 7 — Add the MCP tool
+### Step 4 — Add the MCP tool
 
 1. Scroll to the **TOOL** section and click the **+** button.
 1. In the tool picker, look for an option labelled **MCP**, **Custom MCP**, or **Model Context Protocol**.
@@ -190,7 +157,7 @@ The agent runs in the Azure cloud and cannot reach `localhost`. Port 8080 must b
    | Field | Value |
    |---|---|
    | Label / Name | `retail_remedy_ops` |
-   | Server URL | The tunnel URL from Step 5, ending in `/mcp` |
+   | Server URL | Your `MCP_SERVER_URL` from `.env`, ending in `/mcp` |
    | Authentication | None / Anonymous |
 
 1. Confirm and save the MCP tool connection. Agent Builder discovers the tools from the server's `/mcp` endpoint.
@@ -210,15 +177,15 @@ The agent runs in the Azure cloud and cannot reach `localhost`. Port 8080 must b
 
    Confirm `MCP_SERVER_URL` is set in `.env` before running. After the script completes, re-open `acl-remedy-advisor` in Agent Builder and verify the six tools are listed.
 
-   **Check:** If only some tools appear (fewer than six), the server may have started with an error. Check the server terminal for error output and restart if needed.
+   **Check:** If only some tools appear (fewer than six), the deployed server may be unhealthy. Re-run the `curl` reachability check from Step 2, and if it fails ask the user to confirm the shared MCP server status with the organizer.
 
 1. Take a screenshot of the Agent Builder TOOL section showing all six MCP tool names.
 
 ---
 
-## Part 4 — Update the agent instructions
+## Part 3 — Update the agent instructions
 
-### Step 8 — Add the MCP tool-boundary instruction
+### Step 5 — Add the MCP tool-boundary instruction
 
 1. Scroll to the **Instructions** field in Agent Builder.
 1. Confirm the existing instructions include both the base ACL advisor text (from module 04) and the Code Interpreter paragraph (from module 05).
@@ -241,7 +208,7 @@ The agent runs in the Azure cloud and cannot reach `localhost`. Port 8080 must b
 
    **Check:** If the instructions field shows only the base text without the Code Interpreter paragraph from module 05, the wrong agent version is open. Confirm the header shows `v2` and re-add the missing Code Interpreter paragraph before adding the MCP paragraph.
 
-### Step 9 — Save as v3
+### Step 6 — Save as v3
 
 1. Click **Save to Foundry** in Agent Builder.
 1. Wait for the confirmation notification: *Agent 'acl-remedy-advisor' updated successfully.*
@@ -251,9 +218,9 @@ The agent runs in the Azure cloud and cannot reach `localhost`. Port 8080 must b
 
 ---
 
-## Part 5 — Test with a realistic scenario
+## Part 4 — Test with a realistic scenario
 
-### Step 10 — Run the battery-failure test prompt
+### Step 7 — Run the battery-failure test prompt
 
 1. Click the **Playground** tab in Agent Builder (ensure it is targeting `acl-remedy-advisor v3`).
 1. Paste the following prompt and send it:
@@ -272,9 +239,9 @@ The agent runs in the Azure cloud and cannot reach `localhost`. Port 8080 must b
    - A refund or replacement option.
    - At least one policy citation.
 
-   **Check:** If the agent answers from general knowledge without calling any MCP tools, the instructions may not have been saved or the MCP connection may be broken. Verify the tunnel is still active and retry.
+   **Check:** If the agent answers from general knowledge without calling any MCP tools, the instructions may not have been saved or the MCP connection may be broken. Re-run the `curl` reachability check from Step 2 to confirm the deployed server responds, then retry.
 
-### Step 11 — Inspect the run trace
+### Step 8 — Inspect the run trace
 
 1. Open the **Run** trace in the playground or the **Runs** panel in Agent Builder.
 1. Confirm MCP tool calls appear in the trace. Look for at least these three calls:
@@ -285,17 +252,17 @@ The agent runs in the Azure cloud and cannot reach `localhost`. Port 8080 must b
 1. Confirm the final response includes a clear remedy recommendation.
 1. Take a screenshot of the run trace showing the MCP tool calls and Code Interpreter call.
 
-   **Check:** If MCP tool calls do not appear in the trace, confirm the MCP tool instructions were saved (Step 9) and the MCP tool shows in the TOOL section of Agent Builder. Also confirm the server terminal shows incoming request logs during the agent run.
+   **Check:** If MCP tool calls do not appear in the trace, confirm the MCP tool instructions were saved (Step 6) and the MCP tool shows in the TOOL section of Agent Builder. Also confirm `MCP_SERVER_URL` still points at the deployed server and that the `curl` reachability check from Step 2 succeeds.
 
    **Check:** If Code Interpreter does not appear in the trace, the calculation may have been answered from general knowledge. Try adding the phrase *"Show your working using code."* to the prompt to force Code Interpreter.
 
 ---
 
-## Part 6 (optional) — Verify from code
+## Part 5 (optional) — Verify from code
 
-### Step 12 — Chat from the terminal
+### Step 9 — Chat from the terminal
 
-1. Open a second terminal in the Codespace (the server terminal from Step 2 must remain running).
+1. Open a terminal in the Codespace.
 1. Run the chat client:
 
    ```bash
@@ -303,7 +270,7 @@ The agent runs in the Azure cloud and cannot reach `localhost`. Port 8080 must b
    ```
 
 1. Confirm the output begins with `Conversation started:` followed by a UUID-format conversation ID.
-1. At the `You:` prompt, send the battery-failure prompt from Step 10.
+1. At the `You:` prompt, send the battery-failure prompt from Step 7.
 1. Confirm `[tool: ...]` indicators appear before the final response, showing the agent called tools during the turn. Look for entries such as:
    - `[tool: mcp_call]` or similar MCP tool indicators
    - Indicators for Code Interpreter
@@ -315,7 +282,7 @@ The agent runs in the Azure cloud and cannot reach `localhost`. Port 8080 must b
 
    **Check:** If the script raises an authentication error, run `az login` in the terminal.
 
-   **Check:** If no tool indicators appear, the agent may be using a cached version without MCP tools. Confirm `AGENT_NAME=acl-remedy-advisor` in `.env` and that v3 was saved successfully in Step 9.
+   **Check:** If no tool indicators appear, the agent may be using a cached version without MCP tools. Confirm `AGENT_NAME=acl-remedy-advisor` in `.env` and that v3 was saved successfully in Step 6.
 
 ---
 
@@ -323,18 +290,18 @@ The agent runs in the Azure cloud and cannot reach `localhost`. Port 8080 must b
 
 Work through each item in the lab's Validation section and confirm:
 
-1. The MCP server terminal shows the startup line `Starting Retail Remedy Operations MCP server on http://0.0.0.0:8080/mcp`.
-1. Port 8080 is forwarded and visible as **Public** in the PORTS panel.
+1. `MCP_SERVER_URL` in `.env` is set to the shared Azure Container Apps URL ending in `/mcp`.
+1. The deployed MCP server responds to the `curl` reachability check (status `200`, `405`, or `406`).
 1. `acl-remedy-advisor` in Agent Builder shows all six MCP tool names (`lookup_purchase`, `get_product_profile`, `search_store_policy`, `find_replacement_options`, `draft_remedy_summary`, `create_remedy_case`) in its tool list.
 1. The Agent Builder header shows `acl-remedy-advisor | Microsoft Foundry | v3` after saving.
 1. The battery-failure test prompt triggers at least three MCP tool calls visible in the run trace.
 1. The run trace also shows Code Interpreter used for the pro-rata calculation.
 1. The final response includes a remedy recommendation, a refund or replacement option, and a policy citation.
-1. The MCP server terminal shows incoming request logs during the agent run.
+1. The MCP tool calls in the run trace return purchase, product, and policy facts, confirming the agent reached the deployed server.
 
 ---
 
-## Step 13 — Report results
+## Step 10 — Report results
 
 Report the outcome of every step above. For each step state whether it **passed** or **failed**. For any failure, include:
 
