@@ -495,6 +495,46 @@
                 "reveal": "always",
                 "panel": "shared"
             }
+        },
+        {
+            "label": "introduction-foundry-agent-service: lab 10- deploy hosted agent (code)",
+            "type": "shell",
+            "command": "${command:python.interpreterPath}",
+            "args": [
+                "labs/introduction-foundry-agent-service/10-foundry-toolboxes/solution/deploy_hosted_agent_code.py"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "icon": {
+                "id": "robot",
+                "color": "terminal.ansiGreen"
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "introduction-foundry-agent-service: lab 10- invoke hosted agent (solution)",
+            "type": "shell",
+            "command": "${command:python.interpreterPath}",
+            "args": [
+                "labs/introduction-foundry-agent-service/10-foundry-toolboxes/solution/invoke_hosted_agent.py"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "icon": {
+                "id": "robot",
+                "color": "terminal.ansiGreen"
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
         }
     ]
 }

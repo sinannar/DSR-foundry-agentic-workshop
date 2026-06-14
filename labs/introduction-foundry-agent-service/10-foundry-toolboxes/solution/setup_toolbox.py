@@ -2,8 +2,8 @@
 
 Use this script when the Foundry portal does not yet expose the Toolboxes UI in
 your region, or when you skipped the portal toolbox creation step in Module 10,
-Part 1. It builds the same toolbox that consume_toolbox.py consumes with the
-Microsoft Agent Framework.
+Part 2. It builds the same toolbox that the hosted agent (deploy_hosted_agent_code.py)
+uses through the Microsoft Agent Framework.
 
 The script:
   1. Creates the acl-remedy-toolbox toolbox version with Web Search, the Retail
@@ -67,20 +67,20 @@ def run() -> None:
         name=toolbox_name,
         description=TOOLBOX_DESCRIPTION,
         tools=[
-            WebSearchTool(description=WEB_SEARCH_DESCRIPTION),
+            WebSearchTool(name='web_search', description=WEB_SEARCH_DESCRIPTION),
             MCPTool(
                 server_label='retail_remedy_ops',
                 server_url=mcp_server_url,
                 require_approval='never',
-                description=MCP_DESCRIPTION,
+                server_description=MCP_DESCRIPTION,
             ),
-            CodeInterpreterTool(),
-            ToolboxSearchPreviewTool(),
+            CodeInterpreterTool(name='code_interpreter'),
+            ToolboxSearchPreviewTool(name='toolbox_search'),
         ],
     )
     print(f'Toolbox created: {toolbox_version.name} (version: {toolbox_version.version})')
 
-    # Derive the consumer endpoint URL used by consume_toolbox.py.
+    # Derive the consumer endpoint URL the hosted agent builds at runtime.
     toolbox_endpoint = (
         f'{endpoint.rstrip("/")}/toolboxes/{toolbox_name}/mcp?api-version=v1'
     )
@@ -88,7 +88,7 @@ def run() -> None:
     print()
     print('Next steps:')
     print('  - Set this toolbox version as the default in the Foundry portal if it is not already.')
-    print('  - Run consume_toolbox.py to query the toolbox with the Microsoft Agent Framework.')
+    print('  - Run deploy_hosted_agent_code.py to deploy the hosted agent that uses the toolbox.')
 
 
 if __name__ == '__main__':

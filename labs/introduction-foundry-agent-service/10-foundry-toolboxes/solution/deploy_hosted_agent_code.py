@@ -1,0 +1,105 @@
+"""Deploy the acl-remedy-advisor-hosted-code agent, toolbox edition, from source code.
+
+This is the primary deployment path for Module 10, Part 3. It zips the agent bundle in
+``src/agent/`` and uploads it to Foundry, which builds the container image remotely and runs
+it as a new version of the ``acl-remedy-advisor-hosted-code`` hosted agent from Module 09 — no
+local Docker required. The new version swaps Module 09's three separately wired tools for the
+single ``acl-remedy-toolbox`` Foundry Toolbox. After the version becomes active it grants the
+agent's per-deploy identity the Foundry User role so the agent can call models and authenticate
+to the toolbox MCP endpoint.
+
+Usage:
+    python labs/introduction-foundry-agent-service/10-foundry-toolboxes/solution/deploy_hosted_agent_code.py
+"""
+
+import hashlib
+import io
+import os
+import zipfile
+from pathlib import Path
+
+from azure.ai.projects import AIProjectClient
+from azure.ai.projects.models import (
+    CodeConfiguration,
+    CodeDependencyResolution,
+    CreateAgentVersionFromCodeContent,
+    CreateAgentVersionFromCodeMetadata,
+    HostedAgentDefinition,
+    ProtocolVersionRecord,
+)
+from azure.identity import DefaultAzureCredential
+from dotenv import load_dotenv
+
+from hosted_agent_support import ensure_agent_identity_rbac, wait_for_agent_version_active
+
+# The agent bundle lives one directory up under src/agent/. Every file in that folder is
+# zipped flat (no parent directory entry) so Foundry's remote build finds main.py and
+# requirements.txt at the archive root.
+AGENT_DIR = Path(__file__).resolve().parent.parent / 'src' / 'agent'
+
+CPU = '1'
+MEMORY = '2Gi'
+RUNTIME = 'python_3_13'
+
+
+def build_code_zip(agent_dir: Path) -> tuple[bytes, str]:
+    """Zip the agent bundle flat and return ``(zip_bytes, sha256_hexdigest)``."""
+    buffer = io.BytesIO()
+    with zipfile.ZipFile(buffer, 'w', zipfile.ZIP_DEFLATED) as archive:
+        for path in sorted(agent_dir.rglob('*')):
+            if path.is_dir() or '__pycache__' in path.parts or path.suffix == '.pyc':
+                continue
+            archive.write(path, path.relative_to(agent_dir).as_posix())
+    zip_bytes = buffer.getvalue()
+    return zip_bytes, hashlib.sha256(zip_bytes).hexdigest()
+
+
+def run() -> None:
+    load_dotenv()
+
+    endpoint = os.environ['FOUNDRY_PROJECT_ENDPOINT']
+    agent_name = os.environ.get('HOSTED_AGENT_NAME_CODE', 'acl-remedy-advisor-hosted-code')
+    model_deployment = os.environ.get('AGENT_MODEL', 'chat')
+    toolbox_name = os.environ.get('TOOLBOX_NAME', 'acl-remedy-toolbox')
+
+    zip_bytes, zip_sha256 = build_code_zip(AGENT_DIR)
+    print(f'Built code archive from {AGENT_DIR} ({len(zip_bytes)} bytes, sha256={zip_sha256}).')
+
+    credential = DefaultAzureCredential()
+    with AIProjectClient(endpoint=endpoint, credential=credential, allow_preview=True) as client:
+        content = CreateAgentVersionFromCodeContent(
+            metadata=CreateAgentVersionFromCodeMetadata(
+                description='ACL Remedy Advisor hosted agent (toolbox edition) from source code.',
+                definition=HostedAgentDefinition(
+                    cpu=CPU,
+                    memory=MEMORY,
+                    environment_variables={
+                        'AZURE_AI_MODEL_DEPLOYMENT_NAME': model_deployment,
+                        'TOOLBOX_NAME': toolbox_name,
+                    },
+                    code_configuration=CodeConfiguration(
+                        runtime=RUNTIME,
+                        entry_point=['python', 'main.py'],
+                        dependency_resolution=CodeDependencyResolution.REMOTE_BUILD,
+                    ),
+                    protocol_versions=[ProtocolVersionRecord(protocol='responses', version='1.0.0')],
+                ),
+            ),
+            code=(f'{agent_name}.zip', zip_bytes, 'application/zip'),
+        )
+
+        created = client.beta.agents.create_version_from_code(
+            agent_name=agent_name,
+            content=content,
+            code_zip_sha256=zip_sha256,
+        )
+        print(f'Created hosted agent {agent_name} version {created.version}; Foundry is building it.')
+
+        wait_for_agent_version_active(client, agent_name, created.version)
+        ensure_agent_identity_rbac(created, credential)
+
+    print(f'Hosted agent {agent_name} is active. Run invoke_hosted_agent.py to chat with it.')
+
+
+if __name__ == '__main__':
+    run()
