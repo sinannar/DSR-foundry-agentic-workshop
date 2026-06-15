@@ -21,6 +21,59 @@ updates:
         patterns:
           - "*"
 
+  # Python dependencies for the MCP server container (retail-remedy-ops)
+  - package-ecosystem: pip
+    directory: /shared/mcp-servers/retail-remedy-ops
+    schedule:
+      interval: weekly
+      time: "06:00"
+      timezone: UTC
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: deps
+    labels:
+      - dependencies
+      - pip
+    rebase-strategy: auto
+    groups:
+      pip-dependencies:
+        patterns:
+          - "*"
+
+  # Python dependencies for the data-generator tools package (pyproject.toml)
+  - package-ecosystem: pip
+    directory: /tools/python
+    schedule:
+      interval: weekly
+      time: "06:00"
+      timezone: UTC
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: deps
+    labels:
+      - dependencies
+      - pip
+    rebase-strategy: auto
+    groups:
+      pip-dependencies:
+        patterns:
+          - "*"
+
+  # Docker base image for the containerized MCP server (retail-remedy-ops)
+  - package-ecosystem: docker
+    directory: /shared/mcp-servers/retail-remedy-ops
+    schedule:
+      interval: weekly
+      time: "06:00"
+      timezone: UTC
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: deps
+    labels:
+      - dependencies
+      - docker
+    rebase-strategy: auto
+
   # JavaScript documentation/tooling dependencies managed with pnpm
   - package-ecosystem: npm
     directory: /
